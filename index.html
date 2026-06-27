@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
     <title>👑 CRAZY 👑</title>
+    
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#f0a500">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CRAZY">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
+    
     <style>
         :root {
             --bg: #06060e;
@@ -36,6 +47,11 @@
             position: relative; z-index: 1;
         }
         .screen.active { display: flex; }
+        .screen-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center; background-repeat: no-repeat;
+            opacity: 1; z-index: 0; pointer-events: none;
+        }
         .stars-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;
             background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
@@ -44,41 +60,36 @@
             position: absolute; background: #fff; border-radius: 50%;
             animation: twinkle var(--dur) ease-in-out infinite; animation-delay: var(--delay); opacity: 0;
         }
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.2; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.5); }
-        }
+        @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(1); } 50% { opacity: 1; transform: scale(1.5); } }
         .shooting-star {
             position: absolute; width: 2px; height: 80px;
             background: linear-gradient(to bottom, rgba(255,255,255,0), #fff); border-radius: 50%;
             animation: shoot 3s linear infinite; animation-delay: var(--sdelay); opacity: 0;
         }
-        @keyframes shoot {
-            0% { opacity: 0; transform: translate(0, 0) rotate(-45deg); }
-            5% { opacity: 1; }
-            15% { opacity: 0; transform: translate(-300px, 300px) rotate(-45deg); }
-            100% { opacity: 0; transform: translate(-300px, 300px) rotate(-45deg); }
-        }
+        @keyframes shoot { 0% { opacity: 0; transform: translate(0, 0) rotate(-45deg); } 5% { opacity: 1; } 15% { opacity: 0; transform: translate(-300px, 300px) rotate(-45deg); } 100% { opacity: 0; transform: translate(-300px, 300px) rotate(-45deg); } }
         .header {
             text-align: center; padding: 10px 6px; background: rgba(22, 22, 58, 0.7);
             backdrop-filter: blur(10px); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0;
+            position: relative; z-index: 1;
         }
         .header h1 { font-size: 18px; color: var(--red); margin: 0; }
         .header.admin-h { border-color: var(--gold); box-shadow: 0 0 20px rgba(240, 165, 0, 0.3); }
         .header.admin-h h1 { color: var(--gold); }
-        .game-header-mini { text-align: center; padding: 6px; font-size: 10px; color: var(--muted); flex-shrink: 0; }
+        .game-header-mini { text-align: center; padding: 6px; font-size: 10px; color: var(--muted); flex-shrink: 0; position: relative; z-index: 1; }
         .btn {
             background: var(--red); color: #fff; border: none; padding: 12px; border-radius: 20px;
             font-size: 14px; font-weight: bold; cursor: pointer; width: 100%; font-family: inherit; flex-shrink: 0;
+            transition: all 0.2s ease; position: relative; z-index: 1;
         }
-        .btn:active { transform: scale(0.96); opacity: 0.85; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn:active:not(:disabled) { transform: scale(0.96); opacity: 0.85; }
         .btn.sm { padding: 6px 12px; font-size: 11px; width: auto; border-radius: 14px; }
         .btn.gold { background: linear-gradient(135deg, #f0a500, #d49400); color: #000; }
         .btn.outline { background: transparent; border: 2px solid var(--gold); color: var(--gold); }
         .btn.cyan { background: var(--cyan); color: #000; }
         .btn.danger { background: #b91c1c; }
         .btn.purple { background: var(--purple); color: #fff; }
-        .btn-row { display: flex; gap: 5px; flex-shrink: 0; }
+        .btn-row { display: flex; gap: 5px; flex-shrink: 0; position: relative; z-index: 1; }
         .btn-row .btn { flex: 1; }
         input, select, textarea {
             width: 100%; padding: 12px; font-size: 14px; background: rgba(22, 22, 58, 0.7);
@@ -86,53 +97,71 @@
             border-radius: 10px; text-align: center; outline: none; font-family: inherit; flex-shrink: 0;
         }
         textarea { text-align: right; min-height: 60px; resize: vertical; }
-        .status-msg { text-align: center; font-size: 10px; padding: 3px; border-radius: 6px; flex-shrink: 0; }
+        .status-msg { text-align: center; font-size: 10px; padding: 3px; border-radius: 6px; flex-shrink: 0; position: relative; z-index: 1; }
         .status-msg.online { color: #4e9f3d; background: rgba(5, 26, 5, 0.7); }
         .status-msg.offline { color: #ff6b6b; background: rgba(26, 5, 5, 0.7); }
-        .pred-count-selector {
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            background: rgba(22, 22, 58, 0.7); backdrop-filter: blur(10px); border-radius: 10px;
-            padding: 6px; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0;
+        .ad-container {
+            width: 100%; flex-shrink: 0; border-radius: 12px; overflow: hidden;
+            background: rgba(22, 22, 58, 0.3); border: 1px solid rgba(255,255,255,0.15);
+            position: relative; display: flex; align-items: center; justify-content: center; z-index: 1;
         }
-        .pred-count-selector span { font-size: 12px; color: var(--gold); font-weight: bold; }
+        .ad-container.login-ad { min-height: 200px; max-height: 250px; margin-bottom: 8px; }
+        .ad-container.games-ad { min-height: 200px; max-height: 250px; margin-bottom: 10px; }
+        .ad-container img { width: 100%; height: 100%; max-height: 250px; object-fit: fill; display: block; transition: opacity 0.5s ease; }
+        .ad-container .ad-placeholder { color: var(--muted); font-size: 14px; text-align: center; padding: 40px 20px; }
+
+        .pred-count-selector {
+            display: flex; align-items: center; justify-content: flex-start; gap: 4px;
+            background: rgba(22, 22, 58, 0.8); backdrop-filter: blur(10px);
+            border-radius: 20px; padding: 4px 8px; border: 1px solid rgba(255,255,255,0.2);
+            position: absolute; top: 8px; left: 8px; z-index: 10; width: auto; flex-shrink: 0;
+        }
+        .pred-count-selector span { font-size: 9px; color: var(--gold); font-weight: bold; }
         .count-btn {
-            width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--gold);
-            background: transparent; color: var(--gold); font-size: 16px; font-weight: bold;
+            width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--gold);
+            background: transparent; color: var(--gold); font-size: 12px; font-weight: bold;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
         }
         .count-btn:active { background: var(--gold); color: #000; }
-        .count-value { font-size: 18px; font-weight: bold; color: #fff; min-width: 24px; text-align: center; }
-        .wheel-container { position: relative; width: 320px; height: 320px; margin: 5px auto; flex-shrink: 0; }
+        .count-value { font-size: 13px; font-weight: bold; color: #fff; min-width: 16px; text-align: center; }
+
+        .wheel-container { 
+            position: relative; 
+            width: 420px; 
+            height: 420px; 
+            margin: 25px auto 5px; 
+            flex-shrink: 0; 
+            z-index: 1; 
+        }
         .wheel-center {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 70px; height: 70px; border-radius: 50%; background: rgba(240, 165, 0, 0.9);
-            display: flex; align-items: center; justify-content: center; font-size: 36px;
-            font-weight: bold; color: #000; z-index: 2; box-shadow: 0 0 25px rgba(240, 165, 0, 0.7); overflow: hidden;
+            width: 128px; height: 128px; border-radius: 50%; background: rgba(240, 165, 0, 0.9);
+            display: flex; align-items: center; justify-content: center; font-size: 50px;
+            font-weight: bold; color: #000; z-index: 2; box-shadow: 0 0 30px rgba(240, 165, 0, 0.8); overflow: hidden;
         }
         .wheel-center img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
         .wheel-slot {
-            position: absolute; width: 75px; height: 75px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 50px;
+            position: absolute; width: 90px; height: 90px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 58px;
             cursor: pointer; background: rgba(22, 22, 58, 0.8); backdrop-filter: blur(5px);
             transition: all 0.2s; z-index: 1; top: 50%; left: 50%; transform: translate(-50%, -50%);
             flex-direction: column; gap: 1px;
         }
-        .wheel-slot:active { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 20px rgba(240, 165, 0, 0.6); z-index: 3; }
+        .wheel-slot:active { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 25px rgba(240, 165, 0, 0.7); z-index: 3; }
         .wheel-slot.veg { box-shadow: 0 0 12px rgba(78, 159, 61, 0.4); }
         .wheel-slot.meat { box-shadow: 0 0 12px rgba(233, 69, 96, 0.4); }
         .wheel-slot.pred-top { box-shadow: 0 0 25px rgba(255, 0, 0, 0.9); animation: pulse-evil 0.8s infinite; background: rgba(40, 10, 10, 0.9); }
         .wheel-slot.pred-mid { box-shadow: 0 0 18px rgba(255, 140, 0, 0.7); background: rgba(40, 25, 5, 0.85); }
         .wheel-slot.pred-none { opacity: 0.45; box-shadow: none; background: rgba(22, 22, 58, 0.5); }
-        @keyframes pulse-evil {
-            0%, 100% { box-shadow: 0 0 18px rgba(255, 0, 0, 0.7); }
-            50% { box-shadow: 0 0 35px rgba(255, 0, 0, 1); }
-        }
-        .slot-badge { font-size: 24px; line-height: 1; margin-top: 2px; }
-        .slot-prob { font-size: 10px; color: var(--gold); font-weight: bold; }
+        @keyframes pulse-evil { 0%, 100% { box-shadow: 0 0 18px rgba(255, 0, 0, 0.7); } 50% { box-shadow: 0 0 35px rgba(255, 0, 0, 1); } }
+        .slot-badge { font-size: 22px; line-height: 1; margin-top: 2px; }
+        .slot-prob { font-size: 9px; color: var(--gold); font-weight: bold; }
+
         .gear-strip {
             background: rgba(2, 2, 8, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);
             border-radius: 10px; padding: 6px; display: flex; gap: 3px; justify-content: center;
-            flex-wrap: wrap; min-height: 38px; align-items: center; flex-shrink: 0;
+            flex-wrap: wrap; min-height: 38px; align-items: center; flex-shrink: 0; position: relative; z-index: 1;
+            margin-top: auto;
         }
         .gear-slot {
             width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center;
@@ -142,98 +171,85 @@
         .counter-box {
             display: flex; justify-content: space-around; background: rgba(22, 22, 58, 0.7);
             backdrop-filter: blur(10px); border-radius: 10px; padding: 6px;
-            border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; text-align: center;
+            border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; text-align: center; position: relative; z-index: 1;
         }
         .counter-value { font-size: 18px; font-weight: bold; }
         .counter-value.correct { color: var(--green); }
         .counter-value.wrong { color: var(--red); }
         .counter-label { font-size: 9px; color: var(--muted); }
         .counter-percent { font-size: 12px; font-weight: bold; color: var(--gold); }
-        .game-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .game-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; position: relative; z-index: 1; padding: 10px 0; touch-action: pan-y; }
         .game-card {
-            background: rgba(22, 22, 58, 0.7); backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px 6px;
-            text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;
+            background: transparent; border: none; border-radius: 0; padding: 5px;
+            text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center;
+            gap: 12px; transition: all 0.3s ease; position: relative; touch-action: manipulation;
         }
-        .game-card:active { transform: scale(0.95); border-color: var(--gold); }
-        .game-card h3 { font-size: 13px; color: var(--gold); }
-        .game-card .game-emojis { font-size: 18px; }
-        .game-card .game-icon { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
-        .section {
-            background: rgba(22, 22, 58, 0.7); backdrop-filter: blur(10px); border-radius: 10px;
-            padding: 8px; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0;
-        }
+        .game-card:active { transform: scale(0.9); }
+        .game-card h3 { font-size: 16px; color: #fff; margin: 0; font-weight: bold; text-shadow: 0 0 10px rgba(240, 165, 0, 0.5); }
+        .game-card .game-icon-large { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 3px solid var(--gold); box-shadow: 0 0 25px rgba(240, 165, 0, 0.4), 0 0 50px rgba(240, 165, 0, 0.2); transition: all 0.3s; }
+        .game-card:active .game-icon-large { border-color: #fff; box-shadow: 0 0 40px rgba(240, 165, 0, 0.8), 0 0 80px rgba(240, 165, 0, 0.4); transform: scale(1.05); }
+        .game-card .game-emoji-icon { font-size: 80px; line-height: 1; filter: drop-shadow(0 0 15px rgba(240, 165, 0, 0.5)); transition: all 0.3s; }
+        .game-card:active .game-emoji-icon { filter: drop-shadow(0 0 25px rgba(240, 165, 0, 0.8)); transform: scale(1.1); }
+        .section { background: rgba(22, 22, 58, 0.7); backdrop-filter: blur(10px); border-radius: 10px; padding: 8px; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; position: relative; z-index: 1; }
         .section h3 { font-size: 13px; color: var(--gold); margin-bottom: 6px; }
         .row { display: flex; gap: 5px; align-items: center; margin-bottom: 5px; flex-wrap: wrap; }
         .row label { font-size: 10px; color: var(--muted); min-width: 55px; }
         .row input, .row select, .row textarea { flex: 1; min-width: 70px; padding: 7px; font-size: 11px; }
         .pass-list { max-height: 160px; overflow-y: auto; font-size: 9px; font-family: monospace; }
-        .pass-item {
-            display: flex; justify-content: space-between; align-items: center; padding: 4px;
-            border-bottom: 1px solid rgba(26, 26, 58, 0.5); gap: 3px; font-size: 8px;
-        }
+        .pass-item { display: flex; justify-content: space-between; align-items: center; padding: 4px; border-bottom: 1px solid rgba(26, 26, 58, 0.5); gap: 3px; font-size: 8px; }
         .pass-item button { background: #b91c1c; color: #fff; border: none; padding: 2px 5px; border-radius: 4px; font-size: 8px; cursor: pointer; }
-        .game-list-item {
-            display: flex; justify-content: space-between; align-items: center; padding: 6px 8px;
-            background: rgba(10, 10, 40, 0.7); border-radius: 8px; margin-bottom: 4px; gap: 6px; font-size: 10px;
-        }
+        .game-list-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; background: rgba(10, 10, 40, 0.7); border-radius: 8px; margin-bottom: 4px; gap: 6px; font-size: 10px; }
         .game-list-item .game-list-icon { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
         .game-list-item .game-list-info { flex: 1; text-align: right; }
         .game-list-item .game-list-name { color: var(--gold); font-weight: bold; }
         .game-list-item button { background: #b91c1c; color: #fff; border: none; padding: 3px 6px; border-radius: 4px; font-size: 8px; cursor: pointer; margin: 1px; }
         .game-list-item button.edit { background: var(--purple); }
-        .learn-log {
-            font-size: 9px; color: var(--muted); font-family: monospace; background: rgba(2, 2, 8, 0.7);
-            padding: 6px; border-radius: 8px; line-height: 1.4; flex-shrink: 0; max-height: 50px; overflow-y: auto;
-        }
+        .learn-log { font-size: 9px; color: var(--muted); font-family: monospace; background: rgba(2, 2, 8, 0.7); padding: 6px; border-radius: 8px; line-height: 1.4; flex-shrink: 0; max-height: 50px; overflow-y: auto; position: relative; z-index: 1; }
         .learn-log div { padding: 1px 0; border-bottom: 1px solid rgba(17, 17, 17, 0.5); }
-        .spacer { flex: 1; }
-        .error-msg { color: #ff6b6b; text-align: center; font-size: 12px; flex-shrink: 0; }
-        .alert { display: none; border-radius: 10px; padding: 6px; text-align: center; font-size: 11px; font-weight: bold; flex-shrink: 0; }
+        .spacer { flex: 1; min-height: 5px; }
+        .error-msg { color: #ff6b6b; text-align: center; font-size: 12px; flex-shrink: 0; position: relative; z-index: 1; }
+        .alert { display: none; border-radius: 10px; padding: 6px; text-align: center; font-size: 11px; font-weight: bold; flex-shrink: 0; position: relative; z-index: 1; }
         .alert.show { display: block; }
         .alert-info { background: rgba(5, 26, 26, 0.7); border: 2px solid var(--cyan); color: var(--cyan); }
         .alert-cloud { background: rgba(5, 5, 30, 0.8); border: 2px solid #f0a500; color: #f0a500; }
-        .tabs { display: flex; gap: 4px; flex-shrink: 0; }
-        .tabs .tab {
-            flex: 1; padding: 8px; text-align: center; background: rgba(22, 22, 58, 0.5);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer; font-size: 11px; color: var(--muted);
-        }
+        .tabs { display: flex; gap: 4px; flex-shrink: 0; position: relative; z-index: 1; }
+        .tabs .tab { flex: 1; padding: 8px; text-align: center; background: rgba(22, 22, 58, 0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer; font-size: 11px; color: var(--muted); }
         .tabs .tab.active { background: rgba(139, 92, 246, 0.3); border-color: var(--purple); color: #fff; font-weight: bold; }
-        .admin-tabs { display: flex; gap: 4px; flex-shrink: 0; margin-bottom: 5px; }
-        .admin-tab {
-            flex: 1; padding: 8px; text-align: center; background: rgba(22, 22, 58, 0.5);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer; font-size: 11px; color: var(--muted);
-        }
+        .admin-tabs { display: flex; gap: 4px; flex-shrink: 0; margin-bottom: 5px; position: relative; z-index: 1; }
+        .admin-tab { flex: 1; padding: 8px; text-align: center; background: rgba(22, 22, 58, 0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer; font-size: 11px; color: var(--muted); }
         .admin-tab.active { background: rgba(240, 165, 0, 0.3); border-color: var(--gold); color: #fff; font-weight: bold; }
+        .bg-preview { width: 100%; height: 80px; border-radius: 12px; background-size: cover; background-position: center; margin-bottom: 5px; border: 2px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; }
     </style>
 </head>
 <body>
     <div class="stars-bg" id="starsBg"></div>
     <div class="app" id="appRoot">
         <div class="screen active" id="loginScreen">
-            <div class="spacer"></div>
+            <div class="screen-bg" id="loginBg"></div>
+            <div class="ad-container login-ad" id="loginAdContainer"><div class="ad-placeholder">📢 مساحة إعلانية<br><small>400 × 200</small></div></div>
             <div class="header"><h1>👑 CRAZY 👑</h1></div>
-            <div class="status-msg online" id="connectionStatus">🟡</div>
-            <div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0;">
-                <input type="password" id="passInput" placeholder="🔐 كلمة المرور" maxlength="30" autocomplete="off">
-                <button class="btn" id="loginBtn" onclick="cpw()">🔓 دخول</button>
+            <div class="status-msg online" id="connectionStatus">🟡 جاري الاتصال بقاعدة البيانات...</div>
+            <div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0;position:relative;z-index:1;">
+                <input type="password" id="passInput" placeholder="🔐 كلمة المرور" maxlength="30" autocomplete="off" disabled>
+                <button class="btn" id="loginBtn" onclick="cpw()" disabled>⏳ انتظر...</button>
                 <p class="error-msg" id="loginError"></p>
             </div>
             <div class="spacer"></div>
         </div>
         <div class="screen" id="gameSelectScreen">
+            <div class="screen-bg" id="gamesBg"></div>
+            <div class="ad-container games-ad" id="gamesAdContainer"><div class="ad-placeholder">📢 مساحة إعلانية<br><small>400 × 200</small></div></div>
             <div class="header"><h1>🎮 اختر اللعبة</h1><div style="font-size:9px;color:var(--muted);" id="selectUser"></div></div>
             <div class="game-cards" style="margin-top:6px;" id="gameCardsContainer"></div>
-            <div class="btn-row" style="margin-top:6px;">
-                <button class="btn sm outline" onclick="lo()">🚪 خروج</button>
-            </div>
+            <div class="btn-row" style="margin-top:6px;"><button class="btn sm outline" onclick="lo()">🚪 خروج</button></div>
         </div>
         <div class="screen" id="gameScreen">
+            <div class="screen-bg" id="gameBg"></div>
             <div class="game-header-mini" id="currentUser">لاعب: ---</div>
             <div class="alert alert-info" id="learnAlert">🧠</div>
             <div class="alert alert-cloud" id="cloudAlert" style="display:none;">☁️ تم رفع التعلم للسحابة</div>
-            <div class="pred-count-selector">
-                <span>عدد الاحتمالات:</span>
+            <div class="pred-count-selector" id="predCountSelector">
+                <span>الاحتمالات:</span>
                 <button class="count-btn" onclick="changePredCount(-1)">−</button>
                 <span class="count-value" id="predCountDisplay">5</span>
                 <button class="count-btn" onclick="changePredCount(1)">+</button>
@@ -241,56 +257,49 @@
             <div class="wheel-container" id="wheelContainer">
                 <div class="wheel-center" id="wheelCenter">🎯</div>
             </div>
+            <div class="spacer"></div>
             <div class="gear-strip" id="gearStrip"></div>
-            <div class="counter-box">
+            <div class="counter-box" id="counterBox">
                 <div><span class="counter-value correct" id="correctCount">0</span><span class="counter-label"> ✅</span></div>
                 <div><span class="counter-percent" id="percentDisplay">0%</span></div>
                 <div><span class="counter-value wrong" id="wrongCount">0</span><span class="counter-label"> ❌</span></div>
             </div>
-            <div class="learn-log" id="learnLog"><div>🟢</div></div>
+            <div class="learn-log" id="learnLog"><div>🟢 جاهز</div></div>
             <div class="btn-row">
-                <button class="btn sm danger" onclick="rg()">🔄</button>
-                <button class="btn sm cyan" onclick="ex()">📊</button>
-                <button class="btn sm outline" onclick="btg()">🔙</button>
+                <button class="btn sm danger" onclick="rg()">🔄 إعادة</button>
+                <button class="btn sm cyan" onclick="ex()">📊 تصدير</button>
+                <button class="btn sm outline" onclick="btg()">🔙 رجوع</button>
             </div>
         </div>
         <div class="screen" id="adminScreen">
+            <div class="screen-bg" id="adminBg"></div>
             <div class="header admin-h"><h1>👑 لوحة التحكم</h1></div>
-            <div class="status-msg online" id="adminConnStatus">🟡</div>
+            <div class="status-msg online" id="adminConnStatus">🟡 جاري الاتصال بقاعدة البيانات...</div>
             <div class="admin-tabs">
                 <div class="admin-tab active" onclick="switchAdminTab('players')">👥 اللاعبين</div>
                 <div class="admin-tab" onclick="switchAdminTab('games')">🎮 البرامج</div>
+                <div class="admin-tab" onclick="switchAdminTab('ads')">📢 الإعلانات</div>
+                <div class="admin-tab" onclick="switchAdminTab('bg')">🖼 الخلفيات</div>
             </div>
             <div id="adminPlayersTab">
-                <div class="section">
-                    <h3>➕ إضافة لاعب جديد</h3>
-                    <div class="row"><label>المعرف:</label><input type="text" id="newId" placeholder="اسم"></div>
-                    <div class="row"><label>المفتاح:</label><input type="text" id="newKey" placeholder="المفتاح"></div>
+                <div class="section"><h3>➕ إضافة لاعب جديد</h3>
+                    <div class="row"><label>المعرف:</label><input type="text" id="newId" placeholder="اسم اللاعب"></div>
+                    <div class="row"><label>المفتاح:</label><input type="text" id="newKey" placeholder="المفتاح السري"></div>
                     <div class="row"><label>النمط:</label><select id="newMode"><option value="fixed">ثابت</option><option value="day">يومي</option><option value="hour">ساعي</option><option value="month">شهري</option></select></div>
                     <div class="row"><label>ساعات:</label><input type="number" id="newHours" value="0" min="0"></div>
                     <div class="row"><label>أيام:</label><input type="number" id="newDays" value="0" min="0"></div>
-                    <button class="btn sm" style="background:#f97316;" onclick="ap()">✅ إضافة للسحابة</button>
+                    <button class="btn sm" style="background:#f97316;" id="addPlayerBtn" onclick="ap()">✅ إضافة للسحابة</button>
                 </div>
                 <div class="section" style="flex:1;display:flex;flex-direction:column;min-height:100px;">
                     <h3>📋 اللاعبين (<span id="passCount">0</span>/200)</h3>
                     <div class="pass-list" id="passList" style="flex:1;"></div>
-                    <div class="btn-row" style="margin-top:5px;">
-                        <button class="btn sm danger" onclick="da_()">🗑 الكل</button>
-                        <button class="btn sm" style="background:#f97316;" onclick="rad_()">🔓 فك</button>
-                    </div>
+                    <div class="btn-row" style="margin-top:5px;"><button class="btn sm danger" onclick="da_()">🗑 حذف الكل</button><button class="btn sm" style="background:#f97316;" onclick="rad_()">🔓 فك القفل</button></div>
                 </div>
             </div>
             <div id="adminGamesTab" style="display:none;">
-                <div class="tabs" id="settingsTabs">
-                    <div class="tab active" onclick="switchSettingsTab('list')">📋 البرامج</div>
-                    <div class="tab" onclick="switchSettingsTab('add')">➕ إضافة</div>
-                </div>
-                <div class="section" id="settingsList" style="flex:1;">
-                    <h3>🎮 البرامج الحالية</h3>
-                    <div id="gameListContainer" style="max-height:300px;overflow-y:auto;"></div>
-                </div>
-                <div class="section" id="settingsForm" style="display:none;flex:1;">
-                    <h3 id="settingsFormTitle">➕ إضافة برنامج جديد</h3>
+                <div class="tabs" id="settingsTabs"><div class="tab active" onclick="switchSettingsTab('list')">📋 البرامج</div><div class="tab" onclick="switchSettingsTab('add')">➕ إضافة</div></div>
+                <div class="section" id="settingsList" style="flex:1;"><h3>🎮 البرامج الحالية</h3><div id="gameListContainer" style="max-height:300px;overflow-y:auto;"></div></div>
+                <div class="section" id="settingsForm" style="display:none;flex:1;"><h3 id="settingsFormTitle">➕ إضافة برنامج جديد</h3>
                     <input type="hidden" id="editGameKey" value="">
                     <div class="row"><label>المفتاح:</label><input type="text" id="gameKey" placeholder="مثلاً: zena"></div>
                     <div class="row"><label>الاسم:</label><input type="text" id="gameName" placeholder="مثلاً: 🎯 زينا لايف"></div>
@@ -298,366 +307,229 @@
                     <div class="row"><label>الخضار:</label><input type="text" id="gameVeg" placeholder="🥕,🌽,🍅,🌶"></div>
                     <div class="row"><label>اللحوم:</label><input type="text" id="gameMeat" placeholder="🍤,🐮,🐟,🐤"></div>
                     <div class="row"><label>الساعة:</label><textarea id="gameClock" placeholder="الساعة 12: 🥕&#10;الساعة 1:30: 🍤&#10;الساعة 3: 🍅&#10;الساعة 4:30: 🍗&#10;الساعة 6: 🌽&#10;الساعة 7:30: 🥩&#10;الساعة 9: 🥦&#10;الساعة 10:30: 🐟"></textarea></div>
-                    <div class="btn-row">
-                        <button class="btn sm purple" onclick="saveGame()">💾 حفظ</button>
-                        <button class="btn sm danger" onclick="cancelEdit()">❌ إلغاء</button>
+                    <div class="row"><label>الخلفية:</label><input type="text" id="gameBgInput" placeholder="رابط صورة خلفية اللعبة (اختياري)"></div>
+                    <div class="btn-row"><button class="btn sm purple" onclick="saveGame()">💾 حفظ</button><button class="btn sm danger" onclick="cancelEdit()">❌ إلغاء</button></div>
+                </div>
+            </div>
+            <div id="adminAdsTab" style="display:none;">
+                <div class="section" style="flex:1;"><h3>📢 إدارة الإعلانات</h3>
+                    <div class="section" style="margin-bottom:8px;"><h3>➕ إضافة/تعديل إعلان</h3>
+                        <div class="row"><label>المفتاح:</label><select id="adKey"><option value="login_ad">إعلان تسجيل الدخول (فوق)</option><option value="games_ad">إعلان البرامج (فوق)</option></select></div>
+                        <div class="row"><label>الصور:</label><textarea id="adImages" placeholder="روابط الصور (رابط في كل سطر)&#10;المقاس المثالي: 400×200 بكسل" style="min-height:100px;"></textarea></div>
+                        <small style="color:var(--muted);display:block;margin-bottom:5px;">📌 أقصى عدد: 10 صور - تتغير كل 3 ثواني</small>
+                        <div class="btn-row"><button class="btn sm purple" onclick="saveAd()">💾 حفظ الإعلان</button><button class="btn sm danger" onclick="deleteAd()">🗑 حذف الإعلان</button></div>
                     </div>
+                    <h3>📋 الإعلانات الحالية</h3><div id="adsListContainer" style="max-height:250px;overflow-y:auto;"></div>
+                </div>
+            </div>
+            <div id="adminBgTab" style="display:none;">
+                <div class="section" style="flex:1;"><h3>🖼 تغيير خلفيات الشاشات</h3>
+                    <div class="section" style="margin-bottom:8px;"><h3>🔐 خلفية تسجيل الدخول</h3><div class="bg-preview" id="bgPreviewLogin" style="background-image: url('');">لا توجد خلفية</div><div class="row"><label>رابط الصورة:</label><input type="text" id="bgLogin" placeholder="https://example.com/bg-login.jpg"></div><button class="btn sm purple" onclick="saveBg('login')">💾 حفظ</button></div>
+                    <div class="section" style="margin-bottom:8px;"><h3>🎮 خلفية البرامج</h3><div class="bg-preview" id="bgPreviewGames" style="background-image: url('');">لا توجد خلفية</div><div class="row"><label>رابط الصورة:</label><input type="text" id="bgGames" placeholder="https://example.com/bg-games.jpg"></div><button class="btn sm purple" onclick="saveBg('games')">💾 حفظ</button></div>
+                    <div class="section" style="margin-bottom:8px;"><h3>🎯 خلفية اللعبة (الافتراضية)</h3><div class="bg-preview" id="bgPreviewGame" style="background-image: url('');">لا توجد خلفية</div><div class="row"><label>رابط الصورة:</label><input type="text" id="bgGame" placeholder="https://example.com/bg-game.jpg"></div><button class="btn sm purple" onclick="saveBg('game')">💾 حفظ</button></div>
+                    <div class="section" style="margin-bottom:8px;"><h3>👑 خلفية المدير</h3><div class="bg-preview" id="bgPreviewAdmin" style="background-image: url('');">لا توجد خلفية</div><div class="row"><label>رابط الصورة:</label><input type="text" id="bgAdmin" placeholder="https://example.com/bg-admin.jpg"></div><button class="btn sm purple" onclick="saveBg('admin')">💾 حفظ</button></div>
                 </div>
             </div>
             <button class="btn outline" onclick="gtl()" style="margin-top:5px;">🚪 خروج</button>
         </div>
     </div>
 
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-<script>
-(function createStars() {
-    const bg = document.getElementById('starsBg');
-    for (let i = 0; i < 120; i++) {
-        const star = document.createElement('div'); star.className = 'star';
-        const size = Math.random() * 2.5 + 1;
-        star.style.width = size + 'px'; star.style.height = size + 'px';
-        star.style.left = Math.random() * 100 + '%'; star.style.top = Math.random() * 100 + '%';
-        star.style.setProperty('--dur', (Math.random() * 3 + 2) + 's');
-        star.style.setProperty('--delay', Math.random() * 5 + 's');
-        bg.appendChild(star);
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js').then(r => console.log('✅ SW')).catch(e => console.log('❌'));
+        });
     }
-    for (let i = 0; i < 3; i++) {
-        const shoot = document.createElement('div'); shoot.className = 'shooting-star';
-        shoot.style.left = Math.random() * 80 + '%'; shoot.style.top = Math.random() * 40 + '%';
-        shoot.style.setProperty('--sdelay', (Math.random() * 8 + i * 4) + 's');
-        bg.appendChild(shoot);
+
+    (function createStars() { const bg = document.getElementById('starsBg'); if (!bg) return; for (let i = 0; i < 120; i++) { const s = document.createElement('div'); s.className = 'star'; const sz = Math.random() * 2.5 + 1; s.style.width = sz + 'px'; s.style.height = sz + 'px'; s.style.left = Math.random() * 100 + '%'; s.style.top = Math.random() * 100 + '%'; s.style.setProperty('--dur', (Math.random() * 3 + 2) + 's'); s.style.setProperty('--delay', Math.random() * 5 + 's'); bg.appendChild(s); } for (let i = 0; i < 3; i++) { const sh = document.createElement('div'); sh.className = 'shooting-star'; sh.style.left = Math.random() * 80 + '%'; sh.style.top = Math.random() * 40 + '%'; sh.style.setProperty('--sdelay', (Math.random() * 8 + i * 4) + 's'); bg.appendChild(sh); } })();
+    
+    const AD = 'Admin@Khal2024', MK = 'AdminMasterKey2024';
+    const firebaseConfig = { apiKey: "AIzaSyB9rN0N-0YlO5lW5l5l5l5l5l5l5l5l5l5", authDomain: "hamdi-791e5.firebaseapp.com", databaseURL: "https://hamdi-791e5-default-rtdb.firebaseio.com", projectId: "hamdi-791e5", storageBucket: "hamdi-791e5.appspot.com", messagingSenderId: "123456789012", appId: "1:123456789012:web:abcdef1234567890" };
+    let db = null, on = null;
+    const PK = 'kf_';
+    function ls(k, f = null) { try { const d = localStorage.getItem(k); return d ? JSON.parse(d) : f; } catch (e) { return f; } }
+    function ss(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { const ak = Object.keys(localStorage).filter(kk => kk.startsWith(PK)); const td = ak.sort().slice(0, Math.floor(ak.length * 0.2)); td.forEach(kk => localStorage.removeItem(kk)); try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e2) { return false; } } }
+    function cp(c, t) { if (!t || t <= 0 || !c || c <= 0) return 0; return Math.min(100, Math.max(0, Math.round((c / t) * 100))); }
+
+    let bgData = {}; const BG_KEY = 'kf_bg';
+    function loadBg() { bgData = ls(BG_KEY, {}); ['login','games','game','admin'].forEach(k => { if (!bgData[k]) bgData[k] = ''; }); }
+    function saveBgData() { ss(BG_KEY, bgData); if (on && db) db.ref('backgrounds').set(bgData).catch(() => {}); }
+    function applyAllBackgrounds() { const screens = { login: 'loginBg', games: 'gamesBg', game: 'gameBg', admin: 'adminBg' }; for (const [k, eid] of Object.entries(screens)) { const el = document.getElementById(eid); if (el && bgData[k]) el.style.backgroundImage = `url(${bgData[k]})`; else if (el) el.style.backgroundImage = ''; } }
+    function applyGameBackground(gk) { const gbg = document.getElementById('gameBg'); if (!gbg) return; const g = G[gk]; if (g && g.bg) gbg.style.backgroundImage = `url(${g.bg})`; else if (bgData.game) gbg.style.backgroundImage = `url(${bgData.game})`; else gbg.style.backgroundImage = ''; }
+    function saveBg(sk) { const iid = 'bg'+sk.charAt(0).toUpperCase()+sk.slice(1), url = document.getElementById(iid).value.trim(); bgData[sk] = url; saveBgData(); applyAllBackgrounds(); const pid = 'bgPreview'+sk.charAt(0).toUpperCase()+sk.slice(1), pv = document.getElementById(pid); if (pv) { if (url) { pv.style.backgroundImage = `url(${url})`; pv.textContent = ''; } else { pv.style.backgroundImage = ''; pv.textContent = 'لا توجد خلفية'; } } document.getElementById(iid).value = ''; alert('✅ تم حفظ الخلفية'); }
+    function loadBgInputs() { ['login','games','game','admin'].forEach(k => { if (bgData[k]) { const inp = document.getElementById('bg'+k.charAt(0).toUpperCase()+k.slice(1)); if (inp) inp.value = bgData[k]; const pv = document.getElementById('bgPreview'+k.charAt(0).toUpperCase()+k.slice(1)); if (pv) { pv.style.backgroundImage = `url(${bgData[k]})`; pv.textContent = ''; } } }); }
+
+    let adsData = {}, adIntervals = {}; const AD_KEY = 'kf_ads';
+    function loadAds() { adsData = ls(AD_KEY, {}); if (!adsData.login_ad) adsData.login_ad = { key: 'login_ad', images: [] }; if (!adsData.games_ad) adsData.games_ad = { key: 'games_ad', images: [] }; }
+    function saveAds() { ss(AD_KEY, adsData); if (on && db) db.ref('ads').set(adsData).catch(() => {}); }
+    function startAdRotation(ak, cid) { if (adIntervals[ak]) clearInterval(adIntervals[ak]); const ad = adsData[ak], c = document.getElementById(cid); if (!c) return; if (!ad || !ad.images || ad.images.length === 0) { c.innerHTML = '<div class="ad-placeholder">📢 مساحة إعلانية<br><small>400 × 200</small></div>'; return; } let ci = 0; showAdImage(c, ad.images[0]); if (ad.images.length > 1) { adIntervals[ak] = setInterval(() => { ci = (ci + 1) % ad.images.length; showAdImage(c, ad.images[ci]); }, 3000); } }
+    function showAdImage(c, url) { if (!c) return; c.innerHTML = `<img src="${url}" alt="إعلان" onerror="this.parentElement.innerHTML='<div class=\\'ad-placeholder\\'>📢 تعذر تحميل الإعلان</div>'" style="width:100%;height:100%;max-height:250px;object-fit:fill;">`; }
+    function stopAllAds() { for (const k in adIntervals) { clearInterval(adIntervals[k]); delete adIntervals[k]; } }
+    function refreshAds() { stopAllAds(); loadAds(); startAdRotation('login_ad', 'loginAdContainer'); startAdRotation('games_ad', 'gamesAdContainer'); refreshAdsList(); }
+    function refreshAdsList() { const c = document.getElementById('adsListContainer'); if (!c) return; const aa = Object.values(adsData); if (aa.length === 0) { c.innerHTML = '<p style="color:#888;">لا توجد إعلانات</p>'; return; } c.innerHTML = aa.map(a => `<div class="ad-item"><span class="ad-key">📢 ${a.key==='login_ad'?'تسجيل الدخول':'البرامج'}</span><span class="ad-images">${(a.images||[]).length}/10 صور</span><button class="edit" onclick="editAd('${a.key}')">✏️</button><button onclick="deleteAdConfirm('${a.key}')">🗑</button></div>`).join(''); }
+    function editAd(ak) { document.getElementById('adKey').value = ak; const a = adsData[ak]; document.getElementById('adImages').value = a && a.images ? a.images.join('\n') : ''; }
+    function saveAd() { const ak = document.getElementById('adKey').value, ir = document.getElementById('adImages').value.trim(); if (!ak) return; const imgs = ir.split('\n').map(u => u.trim()).filter(u => u.length > 0); if (imgs.length > 10) { alert('10 صور كحد أقصى'); return; } adsData[ak] = { key: ak, images: imgs }; saveAds(); refreshAds(); document.getElementById('adImages').value = ''; alert('✅ تم الحفظ'); }
+    function deleteAdConfirm(ak) { if (!confirm('حذف؟')) return; if (adsData[ak]) { adsData[ak].images = []; saveAds(); refreshAds(); document.getElementById('adImages').value = ''; } }
+    function deleteAd() { const ak = document.getElementById('adKey').value; if (!confirm('حذف؟')) return; if (adsData[ak]) { adsData[ak].images = []; saveAds(); refreshAds(); document.getElementById('adImages').value = ''; } }
+
+    function ifb() { try { if (!firebase.apps.length) firebase.initializeApp(firebaseConfig); db = firebase.database(); on = null; uc(null); firebase.database().ref('.info/connected').on('value', s => { on = s.val() === true; uc(on); if (on) { enableLoginUI(); loadAdsFromCloud(); loadBgFromCloud(); } }); setTimeout(() => { if (on === null) { on = false; uc(false); enableLoginUI(); } }, 5000); } catch (e) { on = false; uc(false); enableLoginUI(); } }
+    async function loadAdsFromCloud() { if (!db || !on) return; try { const s = await db.ref('ads').once('value'); const ca = s.val(); if (ca && Object.keys(ca).length > 0) { adsData = ca; saveAds(); refreshAds(); } } catch (e) {} }
+    async function loadBgFromCloud() { if (!db || !on) return; try { const s = await db.ref('backgrounds').once('value'); const cb = s.val(); if (cb && Object.keys(cb).length > 0) { bgData = cb; saveBgData(); applyAllBackgrounds(); } } catch (e) {} }
+    function enableLoginUI() { const lb = document.getElementById('loginBtn'), pi = document.getElementById('passInput'); if (lb) { lb.disabled = false; lb.textContent = '🔓 دخول'; } if (pi) { pi.disabled = false; pi.focus(); } }
+    function uc(o) { const s1 = document.getElementById('connectionStatus'), s2 = document.getElementById('adminConnStatus'); const ms = { null: ['🟡 جاري الاتصال...', 'status-msg online'], true: ['🟢 متصل', 'status-msg online'], false: ['🟠 وضع محلي', 'status-msg offline'] }; const [t, c] = ms[o===null?'null':o] || ms.false; if (s1) { s1.textContent = t; s1.className = c; } if (s2) { s2.textContent = t; s2.className = c; } }
+
+    const DEFAULT_GAMES = { zena: { n: '🎯 زينا لايف', v: ['🥕','🌽','🍅','🌶'], m: ['🍤','🐮','🐟','🐤'], a: ['🥕','🌽','🌶','🍅','🍤','🐮','🐟','🐤'], clock: ['🐤','🍅','🐮','🌶','🐟','🌽','🍤','🥕'], img: '', bg: '' }, yoho: { n: '🎯 يوهو لايف', v: ['🥕','🌽','🍅','🌶'], m: ['🍤','🐮','🐟','🐤'], a: ['🥕','🌽','🍅','🌶','🍤','🐮','🐟','🐤'], clock: ['🐤','🍅','🐮','🌶','🐟','🌽','🍤','🥕'], img: '', bg: '' }, berti: { n: '🎯 برتي ستار', v: ['🥕','🌽','🍅','🥦'], m: ['🍤','🍗','🥩','🐟'], a: ['🥕','🌽','🍅','🥦','🍤','🍗','🥩','🐟'], clock: ['🥕','🍤','🍅','🍗','🌽','🥩','🥦','🐟'], img: '', bg: '' }, majles: { n: '🎯 المجلس', v: ['🥕','🌽','🍅','🥦'], m: ['🍤','🍗','🥩','🐟'], a: ['🥕','🌽','🍅','🥦','🍤','🍗','🥩','🐟'], clock: ['🥕','🍤','🍅','🍗','🌽','🥩','🥦','🐟'], img: '', bg: '' } };
+    const GK = 'kf_games';
+    function vg(g) { if (!g || typeof g !== 'object') return JSON.parse(JSON.stringify(DEFAULT_GAMES)); for (const [k, gm] of Object.entries(g)) { if (!gm.v) gm.v = ['🥕','🌽','🍅','🌶']; if (!gm.m) gm.m = ['🍤','🐮','🐟','🐤']; if (!gm.a) gm.a = [...gm.v, ...gm.m]; if (!gm.clock || gm.clock.length < 8) gm.clock = [...gm.a.slice(0, 8)]; if (!gm.img) gm.img = ''; if (!gm.bg) gm.bg = ''; if (!gm.n) gm.n = '🎯 لعبة ' + k; } return g; }
+    function lg() { let g = ls(GK, null); if (!g || !Object.keys(g).length) { g = JSON.parse(JSON.stringify(DEFAULT_GAMES)); ss(GK, g); } return vg(g); }
+    function saveGames(g) { const v = vg(g); ss(GK, v); if (on && db) db.ref('games').set(v).catch(e => { ps.push({ path: 'games', data: v }); }); }
+    let G = lg();
+
+    const BR = { '🥕':['🍅','🌽'], '🌽':['🥕','🥦'], '🥦':['🍅','🌽'], '🍅':['🥕','🥦'], '🌶':['🥕','🌽','🍅'], '🍤':['🌽','🥕'], '🐮':['🌽','🍅'], '🐟':['🍅','🥦'], '🐤':['🍅','🥦'], '🍗':['🌽','🍅'], '🥩':['🍅','🥦'], '🍇':['🍓','🥬'], '🥬':['🍇','🌽'], '🍓':['🍇','🥕'], '🐙':['🐟','🍤'], '🦐':['🐟','🥩'], '🐠':['🐟','🍅'], '🐔':['🐤','🥬'] };
+    const RR = { '🌽':{2:['🍅','🥕'],3:['🍅','🥕'],4:['🍅','🥕']}, '🥦':{2:['🥕','🍅'],3:['🥕','🍅'],4:['🥕','🍅']}, '🍅':{2:['🌽','🥦'],3:['🌽','🥦'],4:['🌽','🥦']}, '🥕':{2:['🍅','🌽'],3:['🍅','🌽'],4:['🍅','🌽']} };
+    const TR = { '🍤':{d:'🌽'}, '🐮':{d:'🍅'}, '🐟':{d:'🍅'}, '🐤':{d:'🍅'}, '🍗':{d:'🍅'}, '🥩':{d:'🥦'}, '🐙':{d:'🍤'}, '🦐':{d:'🥩'}, '🐠':{d:'🍅'}, '🐔':{d:'🥬'} };
+    function gtp(b, m) { const n = new Date(), p = v => ('' + v).padStart(2, '0'); if (m === 'hour') return `${b}_${n.getFullYear()}${p(n.getMonth()+1)}${p(n.getDate())}${p(n.getHours())}`; if (m === 'day') return `${b}_${n.getFullYear()}${p(n.getMonth()+1)}${p(n.getDate())}`; if (m === 'month') return `${b}_${n.getFullYear()}${p(n.getMonth()+1)}`; return `${b}_static`; }
+    function gex(pe) { if (!pe.createdAt) return { ex: false, rm: 'غير محدود' }; const cr = new Date(pe.createdAt), nw = new Date(); let mh = Infinity; if (pe.maxHours > 0) mh = pe.maxHours; if (pe.maxDays > 0) mh = Math.min(mh, pe.maxDays * 24); if (mh === Infinity) return { ex: false, rm: 'غير محدود' }; const rm = new Date(cr.getTime() + mh * 3600000) - nw; if (rm <= 0) return { ex: true, rm: 'منتهي' }; const rh = Math.floor(rm / 3600000); return { ex: false, rm: rh > 23 ? Math.floor(rh / 24) + ' يوم' : rh + ' ساعة' }; }
+    function dfp() { const c = [navigator.userAgent || '', screen.width + '', new Date().getTimezoneOffset() + ''].join('|'); let h = 0; for (let i = 0; i < c.length; i++) h = ((h << 5) - h) + c.charCodeAt(i); return 'D' + Math.abs(h).toString(36).toUpperCase(); }
+    const CD = dfp();
+    async function cgp() { if (!db || !on) return null; try { const r = await Promise.race([db.ref('players').once('value'), new Promise((_, rj) => setTimeout(() => rj(new Error('t')), 8000))]); return r.val() || {}; } catch (e) { return null; } }
+    async function csp(id, d) { if (!db || !on) return false; try { await Promise.race([db.ref('players/' + id).set(d), new Promise((_, rj) => setTimeout(() => rj(new Error('t')), 5000))]); return true; } catch (e) { ps.push({ path: 'players/' + id, data: d }); return false; } }
+    async function cdp(id) { if (!db || !on) return false; try { await db.ref('players/' + id).remove(); return true; } catch (e) { return false; } }
+    async function cda() { if (!db || !on) return false; try { await db.ref('players').remove(); return true; } catch (e) { return false; } }
+    let ps = [];
+    setInterval(async () => { if (ps.length > 0 && on && db) { const items = [...ps]; ps = []; for (const item of items) { try { await Promise.race([db.ref(item.path).set(item.data), new Promise((_, rj) => setTimeout(() => rj(new Error('t')), 3000))]); } catch (e) { ps.push(item); } } } }, 30000);
+    async function ul(gk, lp2, dp2) { if (!db || !on) return false; try { await Promise.race([Promise.all([db.ref('learning/' + gk + '/patterns').set(lp2), db.ref('learning/' + gk + '/discovered').set(dp2)]), new Promise((_, rj) => setTimeout(() => rj(new Error('t')), 5000))]); return true; } catch (e) { return false; } }
+    async function dl(gk) { if (!db || !on) return null; try { const s = await Promise.race([db.ref('learning/' + gk).once('value'), new Promise((_, rj) => setTimeout(() => rj(new Error('t')), 5000))]); return s.val() || { patterns: {}, discovered: {} }; } catch (e) { return null; } }
+    function ml(ll, ld, cd) { if (!cd) return { lp: ll, dp: ld }; const ml2 = { ...ll }, md = { ...ld }; if (cd.patterns) { for (const [k, v] of Object.entries(cd.patterns)) ml2[k] = Math.max(ml2[k] || 0, v); } if (cd.discovered) { for (const [k, v] of Object.entries(cd.discovered)) { if (!md[k] || v.confidence > md[k].confidence) md[k] = v; } } return { lp: ml2, dp: md }; }
+    const glp = () => ls(PK + 'p', {}); const slp = pl => ss(PK + 'p', pl);
+    let cu = null, cg = null, gs = [], las = null, cV = [], cM = [], cA = [], cClock = [], lp = {}, dp = {}, fh = [], cc = 0, wc = 0, al = [], predCount = 5, cloudSynced = false; const MS = 10;
+    function alog(msg) { al.unshift({ t: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' }), m: msg }); if (al.length > 20) al = al.slice(0, 20); const le = document.getElementById('learnLog'); if (le) le.innerHTML = al.map(l => `<div>${l.t} ${l.m}</div>`).join(''); }
+    function ivs(sym) { return sym && typeof sym === 'string' && cA.includes(sym); }
+    function gco(strip, sym) { if (!sym || !strip || !strip.length) return 0; let c = 0; for (let i = strip.length - 1; i >= 0; i--) { if (strip[i] === sym) c++; else break; } return c; }
+    function ans(strip) { if (!strip || strip.length === 0) return { last: null, cons: 0, pred: cV[0] || '🥕', conf: 10, forced: cV.slice(0, 3), src: ['افتراضي'] }; if (strip.length < 2) { const rp = cV[Math.floor(Math.random() * cV.length)]; return { last: strip[strip.length - 1], cons: 1, pred: rp, conf: 20, forced: cV.slice(0, 3), src: ['عشوائي'] }; } const last = strip[strip.length - 1], cons = gco(strip, last), res = { last, cons, pred: null, conf: 0, forced: [], src: [] }; if (cons >= 2) { const rp = gfrp(last, Math.min(cons, 4)); if (rp.length > 0) { res.forced = [...rp]; res.pred = rp[0]; res.conf = 70 + cons * 5; res.src.push('تكرار'); } } const lr = []; for (const [k, c] of Object.entries(lp)) { if (k.startsWith(last + '>') && c >= 2) lr.push({ sym: k.split('>')[1], count: c }); } lr.sort((a, b) => b.count - a.count); if (!res.pred && lr[0]?.count >= 3) { res.pred = lr[0].sym; res.conf = 40 + lr[0].count * 3; res.src.push('متعلم'); res.forced = [...new Set([...res.forced, ...lr.slice(0, 3).map(l => l.sym)])]; } if (!res.pred) { const disc = []; for (const [k, d] of Object.entries(dp)) { if (k.startsWith(last + '>') && d.confidence >= 40) disc.push({ sym: k.split('>')[1], conf: d.confidence }); } disc.sort((a, b) => b.conf - a.conf); if (disc[0]?.conf >= 50) { res.pred = disc[0].sym; res.conf = disc[0].conf; res.src.push('مكتشف'); if (!res.forced.includes(disc[0].sym)) res.forced.push(disc[0].sym); } } if (!res.pred && TR[last]) { const t = TR[last]; if (cA.includes(t.d)) { if (!res.forced.includes(t.d)) res.forced.push(t.d); res.pred = t.d; res.conf = 45; res.src.push('محفز'); } } if (!res.pred) { const bn = gfr(last); if (bn.length > 0) { res.pred = bn[0]; res.conf = 30; res.src.push('طبيعي'); if (!res.forced.length) res.forced = bn; } } if (!res.pred || !cA.includes(res.pred)) { res.pred = cA[0] || '🥕'; res.conf = 15; res.src.push('احتياطي'); } return res; }
+    function gfr(sym) { if (!sym) return []; return (BR[sym] || []).filter(s => cA.includes(s)); }
+    function gfrp(sym, cnt) { if (!sym || !cnt) return []; return (RR[sym]?.[cnt] || []).filter(s => cA.includes(s)); }
+    function uc_() { const total = cc + wc; document.getElementById('correctCount').textContent = cc; document.getElementById('wrongCount').textContent = wc; document.getElementById('percentDisplay').textContent = cp(cc, total) + '%'; }
+    let st; function ssv() { clearTimeout(st); st = setTimeout(() => { ss(PK + cg + '_p', lp); ss(PK + cg + '_d', dp); }, 2000); }
+    async function lrn(f, t) { if (!f || !t) return; const k = f + '>' + t; lp[k] = (lp[k] || 0) + 1; ssv(); if (!gfr(f).includes(t) && lp[k] >= 2 && !dp[k]) { dp[k] = { count: lp[k], confidence: Math.min(lp[k] * 15, 90) }; ss(PK + cg + '_d', dp); const la = document.getElementById('learnAlert'); if (la) { la.textContent = '🧠 اكتشاف: ' + f + ' → ' + t; la.classList.add('show'); setTimeout(() => la.classList.remove('show'), 3000); } alog('🆕 ' + f + '→' + t + ' (' + dp[k].confidence + '%)'); } if (dp[k]) { dp[k].count = lp[k]; dp[k].confidence = Math.min(lp[k] * 15, 95); ss(PK + cg + '_d', dp); } if (on && db && lp[k] % 5 === 0) { const up = await ul(cg, lp, dp); if (up) { const ca = document.getElementById('cloudAlert'); if (ca) { ca.style.display = 'block'; setTimeout(() => { ca.style.display = 'none'; }, 2000); } alog('☁️ رفع للسحابة'); } } }
+    function addSymbol(sym) { if (!ivs(sym)) return; if (cu && gex(cu).ex) { alert('⏰ انتهت الصلاحية'); lo(); return; } if (gs.length > 0) { const a = ans(gs), pr = gpr(), ps2 = pr.map(p => p.emoji); ps2.includes(sym) ? cc++ : wc++; localStorage.setItem(PK + cg + '_c', cc); localStorage.setItem(PK + cg + '_w', wc); uc_(); lrn(gs[gs.length - 1], sym); } fh.push(sym); if (fh.length > 500) fh = fh.slice(-250); ss(PK + cg + '_h', fh); gs.push(sym); if (gs.length > MS) gs.shift(); las = sym; if (fh.length % 50 === 0) alog('📈 50 | ✅' + cc + ' ❌' + wc); alog('➕ ' + sym); ra(); }
+    function rg() { if (!cg || !G[cg]) return; gs = []; las = null; cc = 0; wc = 0; localStorage.setItem(PK + cg + '_c', '0'); localStorage.setItem(PK + cg + '_w', '0'); uc_(); const ss3 = cV[Math.floor(Math.random() * cV.length)]; gs.push(ss3); las = ss3; alog('🔄 إعادة تعيين'); ra(); }
+    function lo() { cu = null; cg = null; showScreen('loginScreen'); }
+    function gtl() { showScreen('loginScreen'); }
+    async function btg() { cg = null; await showScreen('gameSelectScreen'); }
+    function changePredCount(d) { predCount = Math.max(4, Math.min(6, predCount + d)); document.getElementById('predCountDisplay').textContent = predCount; if (cg) localStorage.setItem(PK + cg + '_pc', predCount); ra(); }
+    function gpr() { const hv = Math.ceil(predCount / 2), hm = predCount - hv, preds = [], used = new Set(); let vc = 0, mc = 0; const ap2 = (sym, prob, forced, learned) => { if (!sym || used.has(sym) || !cA.includes(sym)) return; const t = cV.includes(sym) ? 'veg' : 'meat'; if (t === 'veg' && vc >= hv) return; if (t === 'meat' && mc >= hm) return; preds.push({ emoji: sym, prob: Math.round(Math.min(Math.max(prob, 1), 95)), type: t, forced, learned, last: sym === las }); used.add(sym); if (t === 'veg') vc++; else mc++; }; if (gs.length === 0) { for (let i = 0; i < hv && i < cV.length; i++) ap2(cV[i], 35, false, false); for (let i = 0; i < hm && i < cM.length; i++) ap2(cM[i], 25, false, false); return preds; } const a = ans(gs); for (const s of a.forced) ap2(s, a.conf + 20, true, a.src.includes('متعلم')); if (las && !used.has(las)) ap2(las, 35, false, false); const bn = gfr(a.last || gs[gs.length - 1]); for (const s of bn) { if (!used.has(s)) ap2(s, 25, false, false); } for (const s of cA) { if (!used.has(s)) ap2(s, 15, false, false); } preds.sort((a2, b2) => { if (a2.last !== b2.last) return a2.last ? -1 : 1; if (a2.forced !== b2.forced) return a2.forced ? -1 : 1; return b2.prob - a2.prob; }); return preds.slice(0, predCount); }
+
+    function buildWheel(preds) {
+        const container = document.getElementById('wheelContainer'); if (!container) return;
+        while (container.children.length > 1) { const child = container.lastChild; if (child.id === 'wheelCenter') break; if (child.classList && child.classList.contains('wheel-slot')) child.onclick = null; container.removeChild(child); }
+        const radius = 170, cx = 225, cy = 205;
+        if (!cClock || cClock.length === 0) cClock = [...cA.slice(0, 8)];
+        const tpe = preds.slice(0, predCount).map(p => p.emoji), tpm = {}; preds.slice(0, predCount).forEach((p, i) => { tpm[p.emoji] = { prob: p.prob, rank: i }; });
+        const ai = cClock.map((emoji, i) => { const ip = tpe.includes(emoji), pi = tpm[emoji]; return { emoji, type: cV.includes(emoji) ? 'veg' : 'meat', isPred: ip, rank: pi ? pi.rank : -1, prob: pi ? pi.prob : 0 }; });
+        const as2 = 360 / ai.length;
+        ai.forEach((item, i) => { const ad = -90 + (i * as2), ar = (ad * Math.PI) / 180, x = cx + radius * Math.cos(ar), y = cy + radius * Math.sin(ar); const slot = document.createElement('div'); slot.className = 'wheel-slot ' + item.type; if (item.isPred) { if (item.rank < 2) { slot.classList.add('pred-top'); slot.innerHTML = `<span style="font-size:54px;">${item.emoji}</span><span class="slot-badge">👹</span><span class="slot-prob">${item.prob}%</span>`; } else { slot.classList.add('pred-mid'); slot.innerHTML = `<span style="font-size:54px;">${item.emoji}</span><span class="slot-badge">😈</span><span class="slot-prob">${item.prob}%</span>`; } } else { slot.classList.add('pred-none'); slot.innerHTML = `<span style="font-size:54px;">${item.emoji}</span>`; } slot.style.left = x + 'px'; slot.style.top = y + 'px'; slot.title = item.isPred ? (item.rank < 2 ? '👹 ' : '😈 ') + item.prob + '%' : item.emoji; slot.onclick = () => addSymbol(item.emoji); container.appendChild(slot); });
+        const ce = document.getElementById('wheelCenter'); if (ce) { const g = G[cg]; if (g && g.img && g.img.startsWith('http')) { ce.innerHTML = `<img src="${g.img}" alt="${g.n || 'لعبة'}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`; } else if (g && g.img) { ce.textContent = g.img; } else { ce.textContent = las || '🎯'; } }
     }
-})();
 
-const firebaseConfig = {
-    apiKey: "AIzaSyB9rN0N-0YlO5lW5l5l5l5l5l5l5l5l5l5",
-    authDomain: "hamdi-791e5.firebaseapp.com",
-    databaseURL: "https://hamdi-791e5-default-rtdb.firebaseio.com",
-    projectId: "hamdi-791e5",
-    storageBucket: "hamdi-791e5.appspot.com",
-    messagingSenderId: "123456789012",
-    appId: "1:123456789012:web:abcdef1234567890"
-};
+    function ra() { const preds = gpr(); buildWheel(preds); const se = document.getElementById('gearStrip'); if (se) { se.innerHTML = Array.from({ length: MS }, (_, i) => { const s = gs[i] || ''; return `<div class="gear-slot${i === gs.length - 1 && s ? ' newest' : ''}">${s}</div>`; }).join(''); } uc_(); }
+    function ex() { if (!cg) return; const data = { game: cg, gameName: G[cg]?.n || 'غير معروف', user: cu?.id || 'غير معروف', timestamp: new Date().toISOString(), strip: [...gs], analysis: ans(gs), correct: cc, wrong: wc, percent: cp(cc, cc + wc), learned: lp, discovered: dp, history: fh.slice(-50), predCount, cloudSynced }; const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }), a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `khal_${cg}_${new Date().toISOString().split('T')[0]}.json`; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href); alog('📦 تم تصدير البيانات'); }
 
-let db = null, on = false;
-function ifb() {
-    try {
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        db = firebase.database(); on = true; uc(true);
-        firebase.database().ref('.info/connected').on('value', s => { on = s.val() === true; uc(on); });
-    } catch (e) { on = false; uc(false); }
-}
-function uc(o) {
-    const s1 = document.getElementById('connectionStatus');
-    if (s1) { s1.textContent = o ? '🟢' : '🔴'; s1.className = o ? 'status-msg online' : 'status-msg offline'; }
-    const s2 = document.getElementById('adminConnStatus');
-    if (s2) { s2.textContent = o ? '🟢' : '🔴'; s2.className = o ? 'status-msg online' : 'status-msg offline'; }
-}
-
-const DEFAULT_GAMES = {
-    zena: { n: '🎯 زينا لايف', v: ['🥕','🌽','🍅','🌶'], m: ['🍤','🐮','🐟','🐤'], a: ['🥕','🌽','🌶','🍅','🍤','🐮','🐟','🐤'], clock: ['🐤','🍅','🐮','🌶','🐟','🌽','🍤','🥕'], img: '' },
-    yoho: { n: '🎯 يوهو لايف', v: ['🥕','🌽','🍅','🌶'], m: ['🍤','🐮','🐟','🐤'], a: ['🥕','🌽','🍅','🌶','🍤','🐮','🐟','🐤'], clock: ['🐤','🍅','🐮','🌶','🐟','🌽','🍤','🥕'], img: '' },
-    berti: { n: '🎯 برتي ستار', v: ['🥕','🌽','🍅','🥦'], m: ['🍤','🍗','🥩','🐟'], a: ['🥕','🌽','🍅','🥦','🍤','🍗','🥩','🐟'], clock: ['🥕','🍤','🍅','🍗','🌽','🥩','🥦','🐟'], img: '' },
-    majles: { n: '🎯 المجلس', v: ['🥕','🌽','🍅','🥦'], m: ['🍤','🍗','🥩','🐟'], a: ['🥕','🌽','🍅','🥦','🍤','🍗','🥩','🐟'], clock: ['🥕','🍤','🍅','🍗','🌽','🥩','🥦','🐟'], img: '' }
-};
-
-const GK = 'kf_games', PK = 'kf_';
-const ls = (k, f = null) => { try { return JSON.parse(localStorage.getItem(k)) || f; } catch (e) { return f; } };
-const ss = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
-function loadGames() {
-    let games = ls(GK, null);
-    if (!games || !Object.keys(games).length) { games = JSON.parse(JSON.stringify(DEFAULT_GAMES)); ss(GK, games); }
-    for (const [k, g] of Object.entries(games)) {
-        if (!g.a) g.a = [...(g.v||[]), ...(g.m||[])];
-        if (!g.img) g.img = '';
-        if (!g.clock || g.clock.length < 8) g.clock = [...g.a.slice(0, 8)];
+    async function sg(gk) {
+        if (!G[gk]) { alert('البرنامج غير موجود: ' + gk); return; }
+        if (on && db) { try { const snap = await Promise.race([db.ref('games').once('value'), new Promise((_, rj) => setTimeout(() => rj(new Error('t')), 5000))]); const cg2 = snap.val(); if (cg2 && Object.keys(cg2).length > 0) { G = vg(cg2); ss(GK, G); } } catch (e) { G = lg(); } } else { G = lg(); }
+        cg = gk; const g = G[gk]; if (!g) { alert('خطأ في تحميل البرنامج'); return; }
+        document.getElementById('currentUser').textContent = '👤 ' + (cu?.id || '---');
+        cV = g.v || ['🥕','🌽','🍅','🌶']; cM = g.m || ['🍤','🐮','🐟','🐤']; cA = g.a || [...cV, ...cM]; cClock = (g.clock && g.clock.length >= 8) ? g.clock : [...cA.slice(0, 8)];
+        cloudSynced = false; lp = ls(PK + gk + '_p', {}); dp = ls(PK + gk + '_d', {});
+        if (on && db) { const cd = await dl(gk); if (cd && (Object.keys(cd.patterns || {}).length > 0 || Object.keys(cd.discovered || {}).length > 0)) { const m = ml(lp, dp, cd); lp = m.lp; dp = m.dp; ss(PK + gk + '_p', lp); ss(PK + gk + '_d', dp); cloudSynced = true; alog('☁️ تم تحميل التعلم المشترك'); } }
+        fh = ls(PK + gk + '_h', []); cc = parseInt(localStorage.getItem(PK + gk + '_c') || '0') || 0; wc = parseInt(localStorage.getItem(PK + gk + '_w') || '0') || 0;
+        predCount = parseInt(localStorage.getItem(PK + gk + '_pc') || '5') || 5; document.getElementById('predCountDisplay').textContent = predCount;
+        gs = []; las = null; al = []; const ss3 = cV[Math.floor(Math.random() * cV.length)]; gs.push(ss3); las = ss3;
+        await showScreen('gameScreen'); applyGameBackground(gk); ra(); alog('🟢 ' + g.n);
     }
-    return games;
-}
-function saveGames(games) { ss(GK, games); if (on && db) db.ref('games').set(games).catch(() => {}); }
-let G = loadGames();
 
-const BR = { '🥕':['🍅','🌽'],'🌽':['🥕','🥦'],'🥦':['🍅','🌽'],'🍅':['🥕','🥦'],'🌶':['🥕','🌽','🍅'],'🍤':['🌽','🥕'],'🐮':['🌽','🍅'],'🐟':['🍅','🥦'],'🐤':['🍅','🥦'],'🍗':['🌽','🍅'],'🥩':['🍅','🥦'],'🍇':['🍓','🥬'],'🥬':['🍇','🌽'],'🍓':['🍇','🥕'],'🐙':['🐟','🍤'],'🦐':['🐟','🥩'],'🐠':['🐟','🍅'],'🐔':['🐤','🥬'] };
-const RR = { '🌽':{2:['🍅','🥕'],3:['🍅','🥕'],4:['🍅','🥕']},'🥦':{2:['🥕','🍅'],3:['🥕','🍅'],4:['🥕','🍅']},'🍅':{2:['🌽','🥦'],3:['🌽','🥦'],4:['🌽','🥦']},'🥕':{2:['🍅','🌽'],3:['🍅','🌽'],4:['🍅','🌽']} };
-const TR = { '🍤':{d:'🌽'},'🐮':{d:'🍅'},'🐟':{d:'🍅'},'🐤':{d:'🍅'},'🍗':{d:'🍅'},'🥩':{d:'🥦'},'🐙':{d:'🍤'},'🦐':{d:'🥩'},'🐠':{d:'🍅'},'🐔':{d:'🥬'} };
-const AD = 'Admin@Khal2024', MK = 'AdminMasterKey2024';
-
-function gtp(b, m) {
-    const n = new Date(), p = v => ('' + v).padStart(2, '0');
-    if (m === 'hour') return `${b}_${n.getFullYear()}${p(n.getMonth()+1)}${p(n.getDate())}${p(n.getHours())}`;
-    if (m === 'day') return `${b}_${n.getFullYear()}${p(n.getMonth()+1)}${p(n.getDate())}`;
-    if (m === 'month') return `${b}_${n.getFullYear()}${p(n.getMonth()+1)}`;
-    return `${b}_static`;
-}
-function gex(pe) {
-    if (!pe.createdAt) return { ex: false, rm: 'غير محدود' };
-    const cr = new Date(pe.createdAt), nw = new Date(); let mh = Infinity;
-    if (pe.maxHours > 0) mh = pe.maxHours;
-    if (pe.maxDays > 0) mh = Math.min(mh, pe.maxDays * 24);
-    if (mh === Infinity) return { ex: false, rm: 'غير محدود' };
-    const rm = new Date(cr.getTime() + mh * 3600000) - nw;
-    if (rm <= 0) return { ex: true, rm: 'منتهي' };
-    const rh = Math.floor(rm / 3600000);
-    return { ex: false, rm: rh > 23 ? Math.floor(rh / 24) + ' يوم' : rh + ' ساعة' };
-}
-const dfp = () => {
-    const c = [navigator.userAgent || '', screen.width + '', new Date().getTimezoneOffset() + ''].join('|');
-    let h = 0; for (let i = 0; i < c.length; i++) h = ((h << 5) - h) + c.charCodeAt(i);
-    return 'D' + Math.abs(h).toString(36).toUpperCase();
-};
-const CD = dfp();
-
-async function cgp() { if (!db || !on) return null; try { return (await db.ref('players').once('value')).val() || {}; } catch (e) { return null; } }
-async function csp(id, d) { if (!db || !on) return false; try { await db.ref('players/' + id).set(d); return true; } catch (e) { return false; } }
-async function cdp(id) { if (!db || !on) return false; try { await db.ref('players/' + id).remove(); return true; } catch (e) { return false; } }
-async function cda() { if (!db || !on) return false; try { await db.ref('players').remove(); return true; } catch (e) { return false; } }
-
-async function uploadLearning(gameKey, lpData, dpData) {
-    if (!db || !on) return false;
-    try { await db.ref('learning/' + gameKey + '/patterns').set(lpData); await db.ref('learning/' + gameKey + '/discovered').set(dpData); return true; } catch (e) { return false; }
-}
-async function downloadLearning(gameKey) {
-    if (!db || !on) return null;
-    try { const snap = await db.ref('learning/' + gameKey).once('value'); return snap.val() || { patterns: {}, discovered: {} }; } catch (e) { return null; }
-}
-function mergeLearning(localLp, localDp, cloudData) {
-    if (!cloudData) return { lp: localLp, dp: localDp };
-    const mergedLp = { ...localLp }, mergedDp = { ...localDp };
-    if (cloudData.patterns) { for (const [k, v] of Object.entries(cloudData.patterns)) mergedLp[k] = Math.max(mergedLp[k] || 0, v); }
-    if (cloudData.discovered) { for (const [k, v] of Object.entries(cloudData.discovered)) { if (!mergedDp[k] || v.confidence > mergedDp[k].confidence) mergedDp[k] = v; } }
-    return { lp: mergedLp, dp: mergedDp };
-}
-
-const glp = () => ls(PK + 'p', {}), slp = pl => ss(PK + 'p', pl);
-let cu = null, cg = null, gs = [], las = null, cV = [], cM = [], cA = [], cClock = [], lp = {}, dp = {}, fh = [], cc = 0, wc = 0, al = [], predCount = 5, cloudSynced = false;
-const MS = 10;
-
-function alog(msg) {
-    al.unshift({ t: new Date().toLocaleTimeString('ar-EG'), m: msg });
-    if (al.length > 20) al = al.slice(0, 20);
-    document.getElementById('learnLog').innerHTML = al.map(l => `<div>${l.t} ${l.m}</div>`).join('');
-}
-
-async function cpw() {
-    document.getElementById('loginError').textContent = '';
-    const inp = document.getElementById('passInput').value.trim(); if (!inp) return;
-    if (inp === AD || inp === MK) { document.getElementById('passInput').value = ''; showScreen('adminScreen'); await lap(); return; }
-    document.getElementById('loginBtn').textContent = '⏳';
-    let fd = null, ap = {};
-    if (on && db) { const cl = await cgp(); if (cl) { ap = cl; slp(cl); } }
-    if (!Object.keys(ap).length) ap = glp();
-    for (const p of Object.values(ap)) { if ([p.key + '_master', p.key + '_static', gtp(p.key, p.mode), p.key].includes(inp)) { fd = p; break; } }
-    document.getElementById('loginBtn').textContent = '🔓 دخول';
-    if (!fd) { document.getElementById('loginError').textContent = '❌ باسورد غير صحيح'; return; }
-    if (gex(fd).ex) { document.getElementById('loginError').textContent = '⏰ منتهي'; return; }
-    if (fd.lockedDevice && fd.lockedDevice !== CD) { document.getElementById('loginError').textContent = '🚫 جهاز آخر'; return; }
-    if (!fd.lockedDevice) { fd.lockedDevice = CD; fd.createdAt = fd.createdAt || new Date().toISOString(); if (on && db) csp(fd.id, fd); ap[fd.id] = fd; slp(ap); }
-    cu = fd; document.getElementById('selectUser').textContent = 'لاعب: ' + fd.id;
-    document.getElementById('passInput').value = ''; showScreen('gameSelectScreen');
-}
-async function lap() { let pl = {}; if (on && db) { const cl = await cgp(); if (cl) { pl = cl; slp(cl); } else pl = glp(); } else pl = glp(); rpl(pl); }
-async function ap() {
-    const id = document.getElementById('newId').value.trim(), key = document.getElementById('newKey').value.trim(), mode = document.getElementById('newMode').value, hrs = parseInt(document.getElementById('newHours').value) || 0, dys = parseInt(document.getElementById('newDays').value) || 0;
-    if (!id || !key) return alert('املأ');
-    const all = on && db ? (await cgp()) || glp() : glp();
-    if (Object.keys(all).length >= 200) return alert('200 كحد أقصى');
-    if (all[id]) return alert('مكرر');
-    const pd = { id, key, mode, maxHours: hrs, maxDays: dys, lockedDevice: null, createdAt: null };
-    if (on && db) await csp(id, pd);
-    const lc = glp(); lc[id] = pd; slp(lc);
-    ['newId','newKey'].forEach(d => document.getElementById(d).value = '');
-    document.getElementById('newHours').value = '0'; document.getElementById('newDays').value = '0';
-    await lap(); alert('✅ ' + id);
-}
-async function dp_(id) { if (on && db) await cdp(id); const l = glp(); delete l[id]; slp(l); await lap(); }
-async function da_() { if (!confirm('حذف الكل؟')) return; if (on && db) await cda(); slp({}); await lap(); }
-async function rad_() { if (!confirm('فك الكل؟')) return; const all = on && db ? (await cgp()) || glp() : glp(); for (const [id, p] of Object.entries(all)) { p.lockedDevice = null; p.createdAt = null; if (on && db) await csp(id, p); } slp(all); await lap(); alert('✅'); }
-function rpl(players) {
-    const arr = Object.values(players || {}); document.getElementById('passCount').textContent = arr.length;
-    const c = document.getElementById('passList'); if (!c) return;
-    c.innerHTML = arr.length ? arr.map(p => {
-        const v = gtp(p.key, p.mode), ei = gex(p), di = p.lockedDevice ? '<span class="device-badge">📱</span>' : '<span style="color:#888;">-</span>', ex = ei.ex ? '<span class="expired-badge">منتهي</span>' : '<span class="valid-badge">' + ei.rm + '</span>';
-        return `<div class="pass-item"><strong>${p.id}</strong><span>${v}</span><small>[${p.mode}]</small>${di}${ex}<button onclick="dp_('${p.id}')">🗑</button></div>`;
-    }).join('') : '<p style="color:#888;text-align:center;">لا يوجد</p>';
-}
-
-async function buildGameCards() {
-    if (on && db) { try { const snap = await db.ref('games').once('value'); const cg = snap.val(); if (cg && Object.keys(cg).length > 0) { G = cg; ss(GK, G); } } catch (e) {} } else { G = loadGames(); }
-    const container = document.getElementById('gameCardsContainer'); if (!container) return;
-    container.innerHTML = Object.entries(G).map(([key, g]) => {
-        const iconHtml = g.img ? `<img class="game-icon" src="${g.img}" alt="${g.n}">` : (g.n.split(' ')[0] || '🎯');
-        return `<div class="game-card" onclick="sg('${key}')"><div style="font-size:24px;">${g.img ? iconHtml : iconHtml}</div><h3>${g.n}</h3><div class="game-emojis">${g.a.slice(0,8).join('')}</div></div>`;
-    }).join('');
-}
-
-function switchAdminTab(tab) {
-    const tabs = document.querySelectorAll('.admin-tab');
-    if (tab === 'players') { tabs[0].classList.add('active'); tabs[1].classList.remove('active'); } else { tabs[1].classList.add('active'); tabs[0].classList.remove('active'); }
-    document.getElementById('adminPlayersTab').style.display = tab === 'players' ? 'block' : 'none';
-    document.getElementById('adminGamesTab').style.display = tab === 'games' ? 'block' : 'none';
-    if (tab === 'games') refreshGameList();
-}
-function switchSettingsTab(tab) {
-    const tabs = document.querySelectorAll('#settingsTabs .tab');
-    if (tab === 'list') { tabs[0].classList.add('active'); tabs[1].classList.remove('active'); } else { tabs[1].classList.add('active'); tabs[0].classList.remove('active'); }
-    document.getElementById('settingsList').style.display = tab === 'list' ? 'block' : 'none';
-    document.getElementById('settingsForm').style.display = tab === 'add' ? 'block' : 'none';
-    if (tab === 'list') refreshGameList();
-    if (tab === 'add') { document.getElementById('settingsFormTitle').textContent = '➕ إضافة برنامج جديد'; clearGameForm(); }
-}
-function refreshGameList() {
-    const container = document.getElementById('gameListContainer');
-    container.innerHTML = Object.entries(G).map(([key, g]) => {
-        const iconHtml = g.img ? `<img class="game-list-icon" src="${g.img}" alt="${g.n}">` : (g.n.split(' ')[0] || '🎯');
-        return `<div class="game-list-item"><div>${iconHtml}</div><div class="game-list-info"><div class="game-list-name">${g.n}</div><div style="font-size:8px;color:var(--muted);">${key} | 🟢${g.v.length} 🥩${g.m.length}</div></div><button class="edit" onclick="editGame('${key}')">✏️</button><button onclick="deleteGame('${key}')">🗑</button></div>`;
-    }).join('');
-}
-function clearGameForm() { ['editGameKey','gameKey','gameName','gameImage','gameVeg','gameMeat','gameClock'].forEach(id => document.getElementById(id).value = ''); }
-function editGame(key) {
-    const g = G[key]; if (!g) return;
-    document.getElementById('editGameKey').value = key; document.getElementById('gameKey').value = key;
-    document.getElementById('gameName').value = g.n; document.getElementById('gameImage').value = g.img || '';
-    document.getElementById('gameVeg').value = (g.v || []).join(','); document.getElementById('gameMeat').value = (g.m || []).join(',');
-    document.getElementById('gameClock').value = (g.clock || []).map((s, i) => { const times = ['12:00','1:30','3:00','4:30','6:00','7:30','9:00','10:30']; return `الساعة ${times[i] || (i+1)}: ${s}`; }).join('\n');
-    document.getElementById('settingsFormTitle').textContent = '✏️ تعديل: ' + g.n;
-    document.getElementById('settingsList').style.display = 'none'; document.getElementById('settingsForm').style.display = 'block';
-}
-function cancelEdit() { document.getElementById('settingsList').style.display = 'block'; document.getElementById('settingsForm').style.display = 'none'; clearGameForm(); refreshGameList(); }
-async function saveGame() {
-    const editKey = document.getElementById('editGameKey').value, key = document.getElementById('gameKey').value.trim().toLowerCase(), name = document.getElementById('gameName').value.trim(), img = document.getElementById('gameImage').value.trim();
-    const vegRaw = document.getElementById('gameVeg').value.trim(), meatRaw = document.getElementById('gameMeat').value.trim(), clockRaw = document.getElementById('gameClock').value.trim();
-    if (!key || !name) return alert('المفتاح والاسم مطلوبين');
-    if (!/^[a-z0-9_]+$/.test(key)) return alert('المفتاح: حروف إنجليزية وأرقام فقط');
-    const veg = vegRaw.split(/[,،\s]+/).filter(Boolean), meat = meatRaw.split(/[,،\s]+/).filter(Boolean);
-    if (veg.length < 2 || meat.length < 2) return alert('أدخل رمزين على الأقل لكل من الخضار واللحوم');
-    let clock = []; const clockLines = clockRaw.split('\n').filter(Boolean);
-    if (clockLines.length === 8) { clock = clockLines.map(line => { const parts = line.split(/[:：]\s*/); return parts[parts.length - 1].trim(); }); } else { clock = [...veg, ...meat].slice(0, 8); }
-    const a = [...veg, ...meat], gameData = { n: name, v: veg, m: meat, a, clock, img };
-    if (editKey && editKey !== key) delete G[editKey];
-    G[key] = gameData; saveGames(G); await buildGameCards(); cancelEdit();
-    alert('✅ تم حفظ ' + name);
-}
-async function deleteGame(key) { if (!confirm('حذف ' + (G[key]?.n || key) + '؟')) return; delete G[key]; saveGames(G); await buildGameCards(); refreshGameList(); alert('🗑 تم الحذف'); }
-
-async function sg(gk) {
-    if (on && db) { try { const snap = await db.ref('games').once('value'); const cg = snap.val(); if (cg && Object.keys(cg).length > 0) { G = cg; ss(GK, G); } } catch (e) {} } else { G = loadGames(); }
-    cg = gk; const g = G[gk]; if (!g) { alert('البرنامج غير موجود'); return; }
-    document.getElementById('currentUser').textContent = 'لاعب: ' + (cu?.id || '---');
-    cV = g.v; cM = g.m; cA = g.a; cClock = g.clock || [...g.a.slice(0, 8)]; cloudSynced = false;
-    lp = ls(PK + gk + '_p', {}); dp = ls(PK + gk + '_d', {});
-    if (on && db) { const cloudData = await downloadLearning(gk); if (cloudData && (Object.keys(cloudData.patterns||{}).length > 0 || Object.keys(cloudData.discovered||{}).length > 0)) { const merged = mergeLearning(lp, dp, cloudData); lp = merged.lp; dp = merged.dp; ss(PK + gk + '_p', lp); ss(PK + gk + '_d', dp); cloudSynced = true; alog('☁️ تم تحميل التعلم المشترك'); } }
-    fh = ls(PK + gk + '_h', []); cc = parseInt(localStorage.getItem(PK + gk + '_c') || '0'); wc = parseInt(localStorage.getItem(PK + gk + '_w') || '0');
-    predCount = parseInt(localStorage.getItem(PK + gk + '_pc') || '5'); document.getElementById('predCountDisplay').textContent = predCount;
-    gs = []; las = null; al = []; const s = cV[Math.floor(Math.random() * cV.length)]; gs.push(s); las = s;
-    showScreen('gameScreen'); ra(); alog('🟢 ' + g.n);
-}
-function changePredCount(delta) { predCount = Math.max(4, Math.min(6, predCount + delta)); document.getElementById('predCountDisplay').textContent = predCount; localStorage.setItem(PK + cg + '_pc', predCount); ra(); }
-function gfr(sym) { return (BR[sym] || []).filter(s => cA.includes(s)); }
-function gfrp(sym, cnt) { return RR[sym]?.[cnt]?.filter(s => cA.includes(s)) || []; }
-function uc_() { document.getElementById('correctCount').textContent = cc; document.getElementById('wrongCount').textContent = wc; document.getElementById('percentDisplay').textContent = (cc + wc > 0 ? Math.round((cc / (cc + wc)) * 100) : 0) + '%'; }
-
-async function lrn(f, t) {
-    const k = f + '>' + t; lp[k] = (lp[k] || 0) + 1; ss(PK + cg + '_p', lp);
-    if (!gfr(f).includes(t) && lp[k] >= 2 && !dp[k]) { dp[k] = { count: lp[k], confidence: Math.min(lp[k] * 15, 90) }; ss(PK + cg + '_d', dp); document.getElementById('learnAlert').textContent = '🧠 اكتشاف: ' + f + ' → ' + t; document.getElementById('learnAlert').classList.add('show'); setTimeout(() => document.getElementById('learnAlert').classList.remove('show'), 3000); alog('🆕 ' + f + '→' + t + '(' + dp[k].confidence + '%)'); }
-    if (dp[k]) { dp[k].count = lp[k]; dp[k].confidence = Math.min(lp[k] * 15, 95); ss(PK + cg + '_d', dp); }
-    if (on && db && lp[k] % 5 === 0) { const uploaded = await uploadLearning(cg, lp, dp); if (uploaded) { document.getElementById('cloudAlert').style.display = 'block'; setTimeout(() => document.getElementById('cloudAlert').style.display = 'none', 2000); alog('☁️ رفع للسحابة'); } }
-}
-function gco(strip, sym) { if (!sym || !strip.length) return 0; let c = 0; for (let i = strip.length - 1; i >= 0; i--) { if (strip[i] === sym) c++; else break; } return c; }
-function ans(strip) {
-    if (strip.length < 1) return { pred: null, conf: 0, forced: [], src: [] };
-    const last = strip[strip.length - 1], cons = gco(strip, last), res = { last, cons, pred: null, conf: 0, forced: [], src: [] };
-    if (cons >= 2) { const rp = gfrp(last, Math.min(cons, 4)); if (rp.length > 0) { res.forced = [...rp]; res.pred = rp[0]; res.conf = 70 + cons * 5; res.src.push('تكرار'); } }
-    const lr = []; for (const [k, c] of Object.entries(lp)) { if (k.startsWith(last + '>') && c >= 2) lr.push({ sym: k.split('>')[1], count: c }); }
-    lr.sort((a, b) => b.count - a.count);
-    if (!res.pred && lr[0]?.count >= 3) { res.pred = lr[0].sym; res.conf = 40 + lr[0].count * 3; res.src.push('متعلم'); res.forced = [...new Set([...res.forced, ...lr.slice(0, 3).map(l => l.sym)])]; }
-    if (!res.pred) { const disc = []; for (const [k, d] of Object.entries(dp)) { if (k.startsWith(last + '>') && d.confidence >= 40) disc.push({ sym: k.split('>')[1], conf: d.confidence }); } disc.sort((a, b) => b.conf - a.conf); if (disc[0]?.conf >= 50) { res.pred = disc[0].sym; res.conf = disc[0].conf; res.src.push('مكتشف'); if (!res.forced.includes(disc[0].sym)) res.forced.push(disc[0].sym); } }
-    if (!res.pred && TR[last]) { const t = TR[last]; if (cA.includes(t.d)) { if (!res.forced.includes(t.d)) res.forced.push(t.d); res.pred = t.d; res.conf = 45; res.src.push('محفز'); } }
-    if (!res.pred) { const bn = gfr(last); if (bn.length > 0) { res.pred = bn[0]; res.conf = 30; res.src.push('طبيعي'); if (!res.forced.length) res.forced = bn; } }
-    return res;
-}
-function addSymbol(sym) {
-    if (cu && gex(cu).ex) { alert('⏰ منتهي'); lo(); return; }
-    if (gs.length > 0) { const a = ans(gs), preds = gpr(), ps = preds.map(p => p.emoji); ps.includes(sym) ? cc++ : wc++; localStorage.setItem(PK + cg + '_c', cc); localStorage.setItem(PK + cg + '_w', wc); uc_(); lrn(gs[gs.length - 1], sym); }
-    fh.push(sym); if (fh.length > 500) fh = fh.slice(-250); ss(PK + cg + '_h', fh);
-    gs.push(sym); if (gs.length > MS) gs.shift(); las = sym;
-    if (fh.length % 50 === 0) alog('📈 50 | ✅' + cc + ' ❌' + wc);
-    alog('➕ ' + sym); ra();
-}
-function rg() { gs = []; las = null; cc = 0; wc = 0; localStorage.setItem(PK + cg + '_c', '0'); localStorage.setItem(PK + cg + '_w', '0'); uc_(); gs.push(cV[Math.floor(Math.random() * cV.length)]); las = gs[0]; alog('🔄'); ra(); }
-function lo() { cu = null; cg = null; showScreen('loginScreen'); }
-function gtl() { showScreen('loginScreen'); }
-async function btg() { await showScreen('gameSelectScreen'); }
-
-function gpr() {
-    const halfVeg = Math.ceil(predCount / 2), halfMeat = predCount - halfVeg;
-    if (gs.length === 0) {
-        const def = [];
-        for (let i = 0; i < halfVeg; i++) def.push({ emoji: cV[i] || cA[0] || '🥕', prob: 35, type: 'veg', forced: false, learned: false, last: false });
-        for (let i = 0; i < halfMeat; i++) def.push({ emoji: cM[i] || cA[cV.length] || '🍤', prob: 25, type: 'meat', forced: false, learned: false, last: false });
-        return def;
+    async function cpw() {
+        document.getElementById('loginError').textContent = ''; const inp = document.getElementById('passInput').value.trim();
+        if (!inp) { document.getElementById('loginError').textContent = '❌ أدخل كلمة المرور'; return; }
+        const lb = document.getElementById('loginBtn'); lb.disabled = true; lb.textContent = '⏳ جاري التحقق...';
+        try {
+            if (inp === AD || inp === MK) { document.getElementById('passInput').value = ''; lb.disabled = false; lb.textContent = '🔓 دخول'; await showScreen('adminScreen'); await lap(); return; }
+            let ap2 = {}; if (on && db) { const cp2 = await cgp(); if (cp2 && Object.keys(cp2).length > 0) { ap2 = cp2; slp(cp2); } else ap2 = glp(); } else ap2 = glp();
+            let fd = null; for (const p of Object.values(ap2)) { if ([p.key + '_master', p.key + '_static', gtp(p.key, p.mode), p.key].includes(inp)) { fd = p; break; } }
+            if (!fd) { document.getElementById('loginError').textContent = '❌ باسورد غير صحيح'; lb.disabled = false; lb.textContent = '🔓 دخول'; return; }
+            const ei = gex(fd); if (ei.ex) { document.getElementById('loginError').textContent = '⏰ منتهي الصلاحية'; lb.disabled = false; lb.textContent = '🔓 دخول'; return; }
+            if (fd.lockedDevice && fd.lockedDevice !== CD) { document.getElementById('loginError').textContent = '🚫 هذا الحساب مقفل على جهاز آخر'; lb.disabled = false; lb.textContent = '🔓 دخول'; return; }
+            if (!fd.lockedDevice) { fd.lockedDevice = CD; fd.createdAt = fd.createdAt || new Date().toISOString(); if (on && db) await csp(fd.id, fd); ap2[fd.id] = fd; slp(ap2); }
+            cu = fd; document.getElementById('selectUser').textContent = '👤 ' + fd.id; document.getElementById('passInput').value = ''; lb.disabled = false; lb.textContent = '🔓 دخول'; await showScreen('gameSelectScreen');
+        } catch (e) { document.getElementById('loginError').textContent = '❌ حدث خطأ'; lb.disabled = false; lb.textContent = '🔓 دخول'; }
     }
-    const a = ans(gs), preds = [], used = new Set(); let vc = 0, mc = 0;
-    const maxVeg = halfVeg, maxMeat = halfMeat;
-    const add = (sym, prob, forced, learned) => {
-        if (used.has(sym) || !cA.includes(sym)) return;
-        const t = cV.includes(sym) ? 'veg' : 'meat';
-        if (t === 'veg' && vc >= maxVeg) return;
-        if (t === 'meat' && mc >= maxMeat) return;
-        preds.push({ emoji: sym, prob: Math.round(Math.min(prob, 95)), type: t, forced, learned, last: sym === las });
-        used.add(sym); if (t === 'veg') vc++; else mc++;
-    };
-    for (const s of a.forced) add(s, a.conf + 20, true, a.src.includes('متعلم'));
-    if (!used.has(las)) add(las, 35, false, false);
-    const bn = gfr(a.last); for (const s of bn) { if (!used.has(s)) add(s, 25, false, false); }
-    for (const s of cA) { if (!used.has(s)) add(s, 15, false, false); }
-    preds.sort((a2, b2) => { if (a2.last !== b2.last) return a2.last ? -1 : 1; if (a2.forced !== b2.forced) return a2.forced ? -1 : 1; return b2.prob - a2.prob; });
-    return preds.slice(0, predCount);
-}
 
-function buildWheel(preds) {
-    const container = document.getElementById('wheelContainer'); container.querySelectorAll('.wheel-slot').forEach(el => el.remove());
-    const radius = 115, centerX = 160, centerY = 160;
-    const topPredEmojis = preds.slice(0, predCount).map(p => p.emoji);
-    const topPredMap = {}; preds.slice(0, predCount).forEach((p, i) => { topPredMap[p.emoji] = { prob: p.prob, rank: i }; });
-    const allItems = cClock.map((emoji, i) => { const isPred = topPredEmojis.includes(emoji); const predInfo = topPredMap[emoji]; return { emoji, type: cV.includes(emoji) ? 'veg' : 'meat', isPred, rank: predInfo ? predInfo.rank : -1, prob: predInfo ? predInfo.prob : 0 }; });
-    const angleStep = 360 / allItems.length;
-    allItems.forEach((item, i) => {
-        const angleDeg = -90 + (i * angleStep); const angleRad = (angleDeg * Math.PI) / 180;
-        const x = centerX + radius * Math.cos(angleRad); const y = centerY + radius * Math.sin(angleRad);
-        const slot = document.createElement('div'); slot.className = 'wheel-slot ' + item.type;
-        if (item.isPred) {
-            if (item.rank < 2) { slot.classList.add('pred-top'); slot.innerHTML = `<span style="font-size:46px;">${item.emoji}</span><span class="slot-badge">👹</span><span class="slot-prob">${item.prob}%</span>`; }
-            else { slot.classList.add('pred-mid'); slot.innerHTML = `<span style="font-size:46px;">${item.emoji}</span><span class="slot-badge">😈</span><span class="slot-prob">${item.prob}%</span>`; }
-        } else { slot.classList.add('pred-none'); slot.innerHTML = `<span style="font-size:46px;">${item.emoji}</span>`; }
-        slot.style.left = x + 'px'; slot.style.top = y + 'px';
-        slot.title = item.isPred ? (item.rank < 2 ? '👹 ' : '😈 ') + item.prob + '%' : item.emoji;
-        slot.onclick = () => addSymbol(item.emoji); container.appendChild(slot);
-    });
-    const centerEl = document.getElementById('wheelCenter'); const g = G[cg];
-    if (g && g.img && g.img.startsWith('http')) { centerEl.innerHTML = `<img src="${g.img}" alt="${g.n}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`; }
-    else if (g && g.img) { centerEl.textContent = g.img; }
-    else { centerEl.textContent = las || '🎯'; }
-}
+    async function lap() { let pl = {}; if (on && db) { const cp2 = await cgp(); if (cp2) { pl = cp2; slp(cp2); } else pl = glp(); } else pl = glp(); rpl(pl); }
+    async function ap() { const id = document.getElementById('newId').value.trim(), key = document.getElementById('newKey').value.trim(), mode = document.getElementById('newMode').value, hrs = parseInt(document.getElementById('newHours').value) || 0, dys = parseInt(document.getElementById('newDays').value) || 0; if (!id || !key) { alert('املأ الحقول'); return; } const ab = document.getElementById('addPlayerBtn'); ab.disabled = true; ab.textContent = '⏳...'; try { const all = on && db ? (await cgp()) || glp() : glp(); if (Object.keys(all).length >= 200) { alert('200 كحد أقصى'); ab.disabled = false; ab.textContent = '✅ إضافة للسحابة'; return; } if (all[id]) { alert('موجود'); ab.disabled = false; ab.textContent = '✅ إضافة للسحابة'; return; } const pd = { id, key, mode, maxHours: hrs, maxDays: dys, lockedDevice: null, createdAt: null }; if (on && db) await csp(id, pd); const lc = glp(); lc[id] = pd; slp(lc); ['newId','newKey'].forEach(d => document.getElementById(d).value = ''); document.getElementById('newHours').value = '0'; document.getElementById('newDays').value = '0'; await lap(); alert('✅ ' + id); } catch (e) { alert('❌ فشل'); } finally { ab.disabled = false; ab.textContent = '✅ إضافة للسحابة'; } }
+    async function dp_(id) { if (!confirm('حذف ' + id + '؟')) return; if (on && db) await cdp(id); const l = glp(); delete l[id]; slp(l); await lap(); }
+    async function da_() { if (!confirm('⚠️ حذف الكل؟')) return; if (on && db) await cda(); slp({}); await lap(); alert('🗑 تم'); }
+    async function rad_() { if (!confirm('🔓 فك الكل؟')) return; const all = on && db ? (await cgp()) || glp() : glp(); for (const [id, p] of Object.entries(all)) { p.lockedDevice = null; p.createdAt = null; if (on && db) await csp(id, p); } slp(all); await lap(); alert('✅ تم'); }
+    function rpl(players) { const arr = Object.values(players || {}); document.getElementById('passCount').textContent = arr.length; const c = document.getElementById('passList'); if (!c) return; if (!arr.length) { c.innerHTML = '<p style="color:#888;">لا يوجد لاعبين</p>'; return; } c.innerHTML = arr.map(p => `<div class="pass-item"><strong>${p.id}</strong><span>${gtp(p.key, p.mode)}</span><small>[${p.mode}]</small>${p.lockedDevice ? '<span style="color:#4e9f3d;">📱 مقفل</span>' : '<span style="color:#888;">📱 مفتوح</span>'}${gex(p).ex ? '<span style="color:#e94560;">منتهي</span>' : '<span style="color:#4e9f3d;">' + gex(p).rm + '</span>'}<button onclick="dp_('${p.id}')">🗑</button></div>`).join(''); }
 
-function ra() { const preds = gpr(); buildWheel(preds); document.getElementById('gearStrip').innerHTML = Array.from({ length: MS }, (_, i) => { const s = gs[i] || ''; return `<div class="gear-slot${i === gs.length - 1 && s ? ' newest' : ''}">${s}</div>`; }).join(''); uc_(); }
-function ex() { const data = { game: cg, user: cu?.id, strip: [...gs], analysis: ans(gs), correct: cc, wrong: wc, percent: (cc + wc) > 0 ? Math.round((cc / (cc + wc)) * 100) : 0, learned: lp, discovered: dp, history: fh.slice(-50), predCount, cloudSynced }; const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'khal_' + cg + '.json'; a.click(); alog('📦'); }
+    async function buildGameCards() {
+        if (on && db) { try { const snap = await Promise.race([db.ref('games').once('value'), new Promise((_, rj) => setTimeout(() => rj(new Error('t')), 5000))]); const cg2 = snap.val(); if (cg2 && Object.keys(cg2).length > 0) { G = vg(cg2); ss(GK, G); } } catch (e) { G = lg(); } } else { G = lg(); }
+        const container = document.getElementById('gameCardsContainer'); if (!container) return;
+        const ga = Object.entries(G); if (ga.length === 0) { container.innerHTML = '<p style="text-align:center;color:var(--muted);">لا توجد ألعاب</p>'; return; }
+        container.innerHTML = ga.map(([key, g]) => { let ih; if (g.img && g.img.startsWith('http')) { ih = `<img class="game-icon-large" src="${g.img}" alt="${g.n}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';"><span class="game-emoji-icon" style="display:none;">🎯</span>`; } else { ih = `<span class="game-emoji-icon">${g.img || '🎯'}</span>`; } return `<div class="game-card" data-game-key="${key}">${ih}<h3>${g.n}</h3></div>`; }).join('');
+        container.querySelectorAll('.game-card').forEach(card => { const gk = card.getAttribute('data-game-key'); let sy = 0, mv = false; card.addEventListener('touchstart', function(e) { sy = e.touches[0].clientY; mv = false; }, { passive: true }); card.addEventListener('touchmove', function(e) { if (Math.abs(e.touches[0].clientY - sy) > 10) mv = true; }, { passive: true }); card.addEventListener('touchend', function(e) { if (!mv) { e.preventDefault(); sg(gk); } }); card.addEventListener('click', function(e) { e.preventDefault(); sg(gk); }); });
+    }
 
-async function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    const sc = document.getElementById(id);
-    if (sc) { sc.classList.add('active'); if (id === 'adminScreen') { lap(); refreshGameList(); } if (id === 'gameSelectScreen') await buildGameCards(); }
-}
+    async function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        const sc = document.getElementById(id); if (!sc) return;
+        sc.classList.add('active'); stopAllAds();
+        if (id === 'loginScreen') { startAdRotation('login_ad', 'loginAdContainer'); }
+        if (id === 'gameSelectScreen') { startAdRotation('games_ad', 'gamesAdContainer'); await buildGameCards(); }
+        if (id === 'adminScreen') { await lap(); refreshGameList(); refreshAdsList(); loadBgInputs(); }
+    }
 
-async function init() {
-    ifb(); G = loadGames();
-    if (on && db) { try { const snap = await db.ref('games').once('value'); const cg = snap.val(); if (cg && Object.keys(cg).length > 0) { G = cg; ss(GK, G); } } catch (e) {} }
-    await buildGameCards();
-    let pl = {}; if (on && db) { const cl = await cgp(); if (cl) pl = cl; } if (!Object.keys(pl).length) pl = glp();
-    if (!Object.keys(pl).length) { pl['player01'] = { id: 'player01', key: 'Khali2024', mode: 'fixed', maxHours: 0, maxDays: 0, lockedDevice: null, createdAt: null }; slp(pl); if (on && db) csp('player01', pl['player01']); }
-    document.getElementById('passInput').addEventListener('keydown', e => { if (e.key === 'Enter') cpw(); });
-}
-document.addEventListener('DOMContentLoaded', init);
-</script>
+    function switchAdminTab(tab) {
+        const tabs = document.querySelectorAll('.admin-tab'); tabs.forEach(t => t.classList.remove('active'));
+        document.getElementById('adminPlayersTab').style.display = 'none';
+        document.getElementById('adminGamesTab').style.display = 'none';
+        document.getElementById('adminAdsTab').style.display = 'none';
+        document.getElementById('adminBgTab').style.display = 'none';
+        if (tab === 'players') { tabs[0].classList.add('active'); document.getElementById('adminPlayersTab').style.display = 'block'; }
+        else if (tab === 'games') { tabs[1].classList.add('active'); document.getElementById('adminGamesTab').style.display = 'block'; refreshGameList(); }
+        else if (tab === 'ads') { tabs[2].classList.add('active'); document.getElementById('adminAdsTab').style.display = 'block'; refreshAdsList(); }
+        else if (tab === 'bg') { tabs[3].classList.add('active'); document.getElementById('adminBgTab').style.display = 'block'; loadBgInputs(); }
+    }
+
+    function switchSettingsTab(tab) {
+        const tabs = document.querySelectorAll('#settingsTabs .tab'); tabs.forEach(t => t.classList.remove('active'));
+        if (tab === 'list') { tabs[0].classList.add('active'); document.getElementById('settingsList').style.display = 'block'; document.getElementById('settingsForm').style.display = 'none'; refreshGameList(); }
+        else { tabs[1].classList.add('active'); document.getElementById('settingsList').style.display = 'none'; document.getElementById('settingsForm').style.display = 'block'; document.getElementById('settingsFormTitle').textContent = '➕ إضافة برنامج جديد'; clearGameForm(); }
+    }
+
+    function refreshGameList() { const c = document.getElementById('gameListContainer'); if (!c) return; const ga = Object.entries(G); if (ga.length === 0) { c.innerHTML = '<p style="color:#888;">لا توجد برامج</p>'; return; } c.innerHTML = ga.map(([key, g]) => `<div class="game-list-item"><div>${g.img ? `<img class="game-list-icon" src="${g.img}" alt="${g.n}" onerror="this.style.display='none';">` : (g.n.split(' ')[0] || '🎯')}</div><div class="game-list-info"><div class="game-list-name">${g.n}</div><div style="font-size:8px;color:var(--muted);">${key}</div></div><button class="edit" onclick="editGame('${key}')">✏️</button><button onclick="deleteGame('${key}')">🗑</button></div>`).join(''); }
+    function clearGameForm() { ['editGameKey','gameKey','gameName','gameImage','gameVeg','gameMeat','gameClock','gameBgInput'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; }); }
+    function editGame(key) { const g = G[key]; if (!g) return; document.getElementById('editGameKey').value = key; document.getElementById('gameKey').value = key; document.getElementById('gameName').value = g.n || ''; document.getElementById('gameImage').value = g.img || ''; document.getElementById('gameVeg').value = (g.v || []).join(','); document.getElementById('gameMeat').value = (g.m || []).join(','); document.getElementById('gameClock').value = (g.clock || []).map((s, i) => { const times = ['12:00','1:30','3:00','4:30','6:00','7:30','9:00','10:30']; return `الساعة ${times[i] || (i+1)}: ${s}`; }).join('\n'); document.getElementById('gameBgInput').value = g.bg || ''; document.getElementById('settingsFormTitle').textContent = '✏️ تعديل: ' + g.n; document.getElementById('settingsList').style.display = 'none'; document.getElementById('settingsForm').style.display = 'block'; }
+    function cancelEdit() { document.getElementById('settingsList').style.display = 'block'; document.getElementById('settingsForm').style.display = 'none'; clearGameForm(); refreshGameList(); }
+    async function saveGame() { const ek = document.getElementById('editGameKey').value, key = document.getElementById('gameKey').value.trim().toLowerCase(), name = document.getElementById('gameName').value.trim(), img = document.getElementById('gameImage').value.trim(), vr = document.getElementById('gameVeg').value.trim(), mr = document.getElementById('gameMeat').value.trim(), cr = document.getElementById('gameClock').value.trim(), bg = document.getElementById('gameBgInput').value.trim(); if (!key || !name) { alert('المفتاح والاسم مطلوبين'); return; } if (!/^[a-z0-9_]+$/.test(key)) { alert('المفتاح: حروف إنجليزية صغيرة وأرقام فقط'); return; } const veg = vr.split(/[,،\s]+/).filter(Boolean), meat = mr.split(/[,،\s]+/).filter(Boolean); if (veg.length < 2 || meat.length < 2) { alert('أدخل رمزين على الأقل'); return; } let clock = []; const cl = cr.split('\n').filter(Boolean); if (cl.length === 8) { clock = cl.map(line => { const parts = line.split(/[:：]\s*/); return parts[parts.length - 1].trim(); }); } else { clock = [...veg, ...meat].slice(0, 8); } const gd = { n: name, v: veg, m: meat, a: [...veg, ...meat], clock, img, bg }; if (ek && ek !== key) delete G[ek]; G[key] = gd; saveGames(G); await buildGameCards(); cancelEdit(); alert('✅ تم حفظ ' + name); }
+    async function deleteGame(key) { if (!G[key]) return; if (!confirm('⚠️ حذف "' + G[key].n + '"؟')) return; delete G[key]; saveGames(G); await buildGameCards(); refreshGameList(); alert('🗑 تم الحذف'); }
+
+    async function init() {
+        try {
+            ifb(); G = lg(); loadAds(); loadBg(); applyAllBackgrounds();
+            if (on !== false && db) { try { const snap = await Promise.race([db.ref('games').once('value'), new Promise((_, rj) => setTimeout(() => rj(new Error('t')), 5000))]); const cg2 = snap.val(); if (cg2 && Object.keys(cg2).length > 0) { G = vg(cg2); ss(GK, G); } } catch (e) {} }
+            await buildGameCards();
+            let players = {}; if (on !== false && db) { const cp2 = await cgp(); if (cp2 && Object.keys(cp2).length > 0) players = cp2; else players = glp(); } else players = glp();
+            if (!Object.keys(players).length) { players['player01'] = { id: 'player01', key: 'Khali2024', mode: 'fixed', maxHours: 0, maxDays: 0, lockedDevice: null, createdAt: null }; slp(players); if (on && db) await csp('player01', players['player01']); }
+            document.getElementById('passInput')?.addEventListener('keydown', e => { if (e.key === 'Enter' && !document.getElementById('loginBtn')?.disabled) cpw(); });
+            startAdRotation('login_ad', 'loginAdContainer');
+            console.log('✅ تم التهيئة');
+        } catch (e) { console.error('❌ فشل:', e); enableLoginUI(); }
+    }
+    document.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
 </html>

@@ -16,7 +16,6 @@
     <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
     
     <style>
-        /* ========== الأنماط الأساسية ========== */
         :root {
             --bg: #06060e;
             --surface: #0f0f23;
@@ -225,6 +224,35 @@
         .ad-item .ad-images { color: var(--muted); font-size: 9px; }
         .ad-item button { background: #b91c1c; color: #fff; border: none; padding: 3px 6px; border-radius: 4px; font-size: 8px; cursor: pointer; margin: 1px; }
         .ad-item button.edit { background: var(--purple); }
+        
+        /* أنماط صفحة الأنماط */
+        .pattern-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 10px;
+            background: rgba(10, 10, 40, 0.7);
+            border-radius: 8px;
+            margin-bottom: 4px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .pattern-item .pattern-key {
+            color: var(--gold);
+            font-weight: bold;
+            font-size: 11px;
+        }
+        .pattern-item .pattern-count {
+            color: var(--cyan);
+            font-size: 10px;
+        }
+        .pattern-item .pattern-conf {
+            color: var(--green);
+            font-size: 10px;
+        }
+        .pattern-item.high-conf {
+            border-color: var(--gold);
+            background: rgba(40, 30, 10, 0.7);
+        }
     </style>
 </head>
 <body>
@@ -265,7 +293,7 @@
             </div>
         </div>
 
-        <!-- ===== شاشة اللعبة (بدون أزرار التصدير) ===== -->
+        <!-- ===== شاشة اللعبة ===== -->
         <div class="screen" id="gameScreen">
             <div class="screen-bg" id="gameBg"></div>
             <div class="game-header-mini" id="currentUser">لاعب: ---</div>
@@ -284,6 +312,7 @@
             <div class="gear-strip" id="gearStrip"></div>
             <div class="counter-box" id="counterBox">
                 <div><span class="counter-value correct" id="correctCount">0</span><span class="counter-label"> ✅</span></div>
+                <div><span class="counter-value target" id="targetCount" style="color:var(--gold);">0</span><span class="counter-label"> 🎯</span></div>
                 <div><span class="counter-percent" id="percentDisplay">0%</span></div>
                 <div><span class="counter-value wrong" id="wrongCount">0</span><span class="counter-label"> ❌</span></div>
             </div>
@@ -305,6 +334,7 @@
                 <div class="admin-tab" onclick="switchAdminTab('games')">🎮 البرامج</div>
                 <div class="admin-tab" onclick="switchAdminTab('ads')">📢 الإعلانات</div>
                 <div class="admin-tab" onclick="switchAdminTab('bg')">🖼 الخلفيات</div>
+                <div class="admin-tab" onclick="switchAdminTab('patterns')">📊 الأنماط</div>
             </div>
             
             <!-- تبويب اللاعبين -->
@@ -400,6 +430,17 @@
                         <div class="row"><label>رابط الصورة:</label><input type="text" id="bgAdmin" placeholder="https://example.com/bg-admin.jpg"></div>
                         <button class="btn sm purple" onclick="saveBg('admin')">💾 حفظ</button>
                     </div>
+                </div>
+            </div>
+
+            <!-- تبويب الأنماط -->
+            <div id="adminPatternsTab" style="display:none;">
+                <div class="section" style="flex:1;">
+                    <h3>📊 الأنماط المكتشفة</h3>
+                    <div style="font-size:10px;color:var(--muted);margin-bottom:8px;">
+                        عرض الأنماط التي تم تعلمها (الرمز → الرمز التالي) مع عدد مرات التكرار ونسبة الثقة
+                    </div>
+                    <div id="patternsList" style="max-height:300px;overflow-y:auto;"></div>
                 </div>
             </div>
             
@@ -860,7 +901,7 @@
     };
 
     // ============================================================
-    // 8. نظام التوقعات المتقدم (الإضافات الجديدة)
+    // 8. نظام التوقعات المتقدم (مع تحليل الأنماط)
     // ============================================================
 
     // 8.1 أوزان مصادر التوقع
@@ -870,7 +911,7 @@
         'متعلم': 0.25,
         'مكتشف': 0.20,
         'محفز': 0.15,
-        'نمط متكرر': 0.25,
+        'نمط فوري': 0.30,
         'طبيعي': 0.10,
         'احتياطي': 0.05
     };
@@ -921,7 +962,7 @@
         return staticTR[sym] || null;
     }
 
-    // 8.4 التعلم من الأخطاء المحسن
+    // 8.4 التعلم من الأخطاء المحسن (مع تسجيل 4 رموز)
     function learnFromMistake(predicted, actual) {
         if (!predicted || !actual || !gs || gs.length === 0) return;
         const last = gs[gs.length - 1];
@@ -941,7 +982,36 @@
             dp[correctKey] = { count: 1, confidence: 30 };
         }
 
-        // 3. تسجيل "معادلة التعلم"
+        // 3. تسجيل النمط المكون من 4 رموز قبل الخطأ (فوري)
+        if (gs.length >= 4) {
+            const pattern4 = gs.slice(-4).join('>');
+            const errorPattern = pattern4 + '>' + predicted;
+            const correctPattern = pattern4 + '>' + actual;
+            
+            // تسجيل النمط الخاطئ
+            lp[errorPattern] = (lp[errorPattern] || 0) + 1;
+            // تسجيل النمط الصحيح (فوري)
+            lp[correctPattern] = (lp[correctPattern] || 0) + 1;
+            
+            // إذا كان النمط الصحيح موجوداً، زيادة الثقة
+            if (dp[correctPattern]) {
+                dp[correctPattern].confidence = Math.min(95, dp[correctPattern].confidence + 10);
+            } else {
+                dp[correctPattern] = { 
+                    count: lp[correctPattern], 
+                    confidence: Math.min(90, 15 + lp[correctPattern] * 10) 
+                };
+            }
+            
+            // إذا كان النمط الخاطئ موجوداً، خفض الثقة
+            if (dp[errorPattern]) {
+                dp[errorPattern].confidence = Math.max(5, dp[errorPattern].confidence - 20);
+            }
+            
+            alog('🎯 نمط فوري: ' + pattern4 + ' → ' + actual + ' (ثقة: ' + dp[correctPattern].confidence + '%)');
+        }
+
+        // 4. تسجيل "معادلة التعلم"
         const correctionKey = predicted + '>' + actual;
         lp[correctionKey] = (lp[correctionKey] || 0) + 1;
         if (lp[correctionKey] >= 3) {
@@ -971,11 +1041,13 @@
         return null;
     }
 
-    // 8.6 النمط الأكثر تكراراً
-    function findMostFrequentPattern() {
-        if (fh.length < 20 || gs.length < 4) return null;
+    // 8.6 تحليل الأنماط المتكررة (فوري)
+    function analyzePatterns() {
+        if (fh.length < 4 || gs.length < 4) return null;
+        
+        // البحث عن أنماط مكونة من 4 رموز (فوري)
         const patternCounts = {};
-        for (let i = 0; i < fh.length - 5; i++) {
+        for (let i = 0; i < fh.length - 4; i++) {
             const pattern = fh.slice(i, i + 4).join('>');
             const next = fh[i + 4];
             if (cA.includes(next)) {
@@ -983,40 +1055,47 @@
                 patternCounts[key] = (patternCounts[key] || 0) + 1;
             }
         }
-        const currentPattern = gs.slice(-4).join('>');
-        const matches = {};
+        
+        // تحليل الأنماط (فوري)
+        const reliablePatterns = {};
         for (const [key, count] of Object.entries(patternCounts)) {
-            if (key.startsWith(currentPattern) && count >= 3) {
-                const next = key.split('>').pop();
-                matches[next] = (matches[next] || 0) + count;
+            // حتى لو مرة واحدة فقط (فوري)
+            const parts = key.split('>');
+            const pattern = parts.slice(0, -1).join('>');
+            const next = parts[parts.length - 1];
+            if (!reliablePatterns[pattern]) {
+                reliablePatterns[pattern] = [];
             }
+            reliablePatterns[pattern].push({ next, count });
         }
-        const sorted = Object.entries(matches).sort((a, b) => b[1] - a[1]);
-        if (sorted.length > 0 && sorted[0][1] >= 5) {
-            return { pred: sorted[0][0], count: sorted[0][1] };
+        
+        // ترتيب الأنماط حسب الموثوقية
+        const result = {};
+        for (const [pattern, options] of Object.entries(reliablePatterns)) {
+            options.sort((a, b) => b.count - a.count);
+            result[pattern] = {
+                best: options[0],
+                all: options
+            };
         }
-        return null;
+        
+        return result;
     }
 
-    // 8.7 تحليل الاتجاهات طويلة المدى
-    function analyzeLongTermTrend() {
-        if (fh.length < 50) return null;
-        const last50 = fh.slice(-50);
-        const counts = {};
-        for (const sym of last50) {
-            counts[sym] = (counts[sym] || 0) + 1;
-        }
-        const avg = {};
-        for (const [sym, count] of Object.entries(counts)) {
-            avg[sym] = count / 50;
-        }
-        const trend = [];
-        for (const [sym, rate] of Object.entries(avg)) {
-            if (rate > 0.15) {
-                trend.push(sym);
-            }
-        }
-        return trend.length > 0 ? trend : null;
+    // 8.7 اختيار النمط الأكثر موثوقية (فوري)
+    function getBestPatternPrediction() {
+        if (gs.length < 4) return null;
+        
+        const currentPattern = gs.slice(-4).join('>');
+        const patterns = analyzePatterns();
+        
+        if (!patterns || !patterns[currentPattern]) return null;
+        
+        const options = patterns[currentPattern].all;
+        if (options.length === 0) return null;
+        
+        // اختيار الأكثر تكراراً
+        return options[0];
     }
 
     // 8.8 التحليل الرئيسي (نسخة محسنة)
@@ -1077,7 +1156,20 @@
             }
         }
 
-        // 3. التعلم من التاريخ
+        // 3. النمط الأكثر موثوقية (فوري)
+        if (!res.pred) {
+            const bestPattern = getBestPatternPrediction();
+            if (bestPattern) {
+                res.pred = bestPattern.next;
+                const confidence = dp[gs.slice(-4).join('>') + '>' + bestPattern.next]?.confidence || 15 + bestPattern.count * 10;
+                res.conf = Math.min(90, confidence);
+                res.src.push('نمط فوري');
+                if (!res.forced.includes(bestPattern.next)) res.forced.push(bestPattern.next);
+                alog('🔍 نمط فوري: ' + gs.slice(-4).join('>') + ' → ' + bestPattern.next + ' (ثقة: ' + res.conf + '%)');
+            }
+        }
+
+        // 4. التعلم من التاريخ
         if (!res.pred) {
             const lr = [];
             for (const [k, c] of Object.entries(lp)) {
@@ -1094,7 +1186,7 @@
             }
         }
 
-        // 4. الاكتشافات المخزنة
+        // 5. الاكتشافات المخزنة
         if (!res.pred) {
             const disc = [];
             for (const [k, d] of Object.entries(dp)) {
@@ -1111,7 +1203,7 @@
             }
         }
 
-        // 5. المحفزات الذكية
+        // 6. المحفزات الذكية
         if (!res.pred) {
             const trigger = getSmartTrigger(last);
             if (trigger && cA.includes(trigger)) {
@@ -1119,17 +1211,6 @@
                 res.pred = trigger;
                 res.conf = 40;
                 res.src.push('محفز');
-            }
-        }
-
-        // 6. النمط الأكثر تكراراً
-        if (!res.pred) {
-            const pattern = findMostFrequentPattern();
-            if (pattern) {
-                res.pred = pattern.pred;
-                res.conf = 50 + pattern.count * 3;
-                res.src.push('نمط متكرر');
-                if (!res.forced.includes(pattern.pred)) res.forced.push(pattern.pred);
             }
         }
 
@@ -1234,17 +1315,7 @@
             if (!used.has(s)) ap2(s, 22, false, false, 'طبيعي');
         }
 
-        // 4. الاتجاهات طويلة المدى
-        const trend = analyzeLongTermTrend();
-        if (trend) {
-            for (const s of trend) {
-                if (!used.has(s) && cA.includes(s)) {
-                    ap2(s, 30, false, false, 'اتجاه');
-                }
-            }
-        }
-
-        // 5. الرموز المتبقية
+        // 4. الرموز المتبقية
         const remaining = [...cA].sort(() => Math.random() - 0.5);
         for (const s of remaining) {
             if (!used.has(s)) ap2(s, 10, false, false, 'احتياط');
@@ -1279,6 +1350,7 @@
     let fh = [];
     let cc = 0;
     let wc = 0;
+    let targetHits = 0; // عداد الاستهداف الجديد
     let al = [];
     let predCount = 5;
     let cloudSynced = false;
@@ -1306,6 +1378,7 @@
         const total = cc + wc;
         document.getElementById('correctCount').textContent = cc;
         document.getElementById('wrongCount').textContent = wc;
+        document.getElementById('targetCount').textContent = targetHits;
         document.getElementById('percentDisplay').textContent = cp(cc, total) + '%';
     }
 
@@ -1314,6 +1387,8 @@
         autoSaveTimeout = setTimeout(() => {
             ss(PK + cg + '_p', lp);
             ss(PK + cg + '_d', dp);
+            ss(PK + cg + '_strip', gs); // حفظ الشريط
+            ss(PK + cg + '_target', targetHits); // حفظ عداد الاستهداف
         }, 2000);
     }
 
@@ -1376,8 +1451,18 @@
                 learnFromMistake(a.pred, sym);
             }
 
+            // حساب عداد الاستهداف (المركز 1 + 2)
+            if (pr.length >= 2) {
+                const first = pr[0].emoji;
+                const second = pr[1].emoji;
+                if (sym === first || sym === second) {
+                    targetHits++;
+                }
+            }
+
             localStorage.setItem(PK + cg + '_c', cc);
             localStorage.setItem(PK + cg + '_w', wc);
+            localStorage.setItem(PK + cg + '_target', targetHits);
             uc_();
 
             lrn(gs[gs.length - 1], sym);
@@ -1402,8 +1487,11 @@
         las = null;
         cc = 0;
         wc = 0;
+        targetHits = 0;
         localStorage.setItem(PK + cg + '_c', '0');
         localStorage.setItem(PK + cg + '_w', '0');
+        localStorage.setItem(PK + cg + '_target', '0');
+        ss(PK + cg + '_strip', gs);
         uc_();
         const ss3 = cV[Math.floor(Math.random() * cV.length)];
         gs.push(ss3);
@@ -1527,10 +1615,11 @@
         buildWheel(preds);
         const se = document.getElementById('gearStrip');
         if (se) {
-            se.innerHTML = Array.from({ length: MS }, (_, i) => {
-                const s = gs[i] || '';
-                return `<div class="gear-slot${i === gs.length - 1 && s ? ' newest' : ''}">${s}</div>`;
-            }).join('');
+            // عكس الشريط بحيث الجديد يظهر على اليسار
+            const reversed = [...gs].reverse();
+            se.innerHTML = reversed.map((s, i) => 
+                `<div class="gear-slot${i === 0 && s ? ' newest' : ''}">${s}</div>`
+            ).join('');
         }
         uc_();
     }
@@ -1738,14 +1827,22 @@
         fh = ls(PK + gk + '_h', []);
         cc = parseInt(localStorage.getItem(PK + gk + '_c') || '0') || 0;
         wc = parseInt(localStorage.getItem(PK + gk + '_w') || '0') || 0;
+        targetHits = parseInt(localStorage.getItem(PK + gk + '_target') || '0') || 0;
         predCount = parseInt(localStorage.getItem(PK + gk + '_pc') || '5') || 5;
         document.getElementById('predCountDisplay').textContent = predCount;
-        gs = [];
-        las = null;
+        
+        // استعادة الشريط من التخزين المحلي
+        gs = ls(PK + gk + '_strip', []);
+        if (!gs || gs.length === 0) {
+            gs = [];
+            const ss3 = cV[Math.floor(Math.random() * cV.length)];
+            gs.push(ss3);
+            las = ss3;
+        } else {
+            las = gs[gs.length - 1];
+        }
+        
         al = [];
-        const ss3 = cV[Math.floor(Math.random() * cV.length)];
-        gs.push(ss3);
-        las = ss3;
         await showScreen('gameScreen');
         applyGameBackground(gk);
         ra();
@@ -2017,6 +2114,7 @@
             refreshGameList();
             refreshAdsList();
             loadBgInputs();
+            refreshPatterns();
         }
     }
 
@@ -2031,6 +2129,7 @@
         document.getElementById('adminGamesTab').style.display = 'none';
         document.getElementById('adminAdsTab').style.display = 'none';
         document.getElementById('adminBgTab').style.display = 'none';
+        document.getElementById('adminPatternsTab').style.display = 'none';
         if (tab === 'players') {
             tabs[0].classList.add('active');
             document.getElementById('adminPlayersTab').style.display = 'block';
@@ -2046,7 +2145,48 @@
             tabs[3].classList.add('active');
             document.getElementById('adminBgTab').style.display = 'block';
             loadBgInputs();
+        } else if (tab === 'patterns') {
+            tabs[4].classList.add('active');
+            document.getElementById('adminPatternsTab').style.display = 'block';
+            refreshPatterns();
         }
+    }
+
+    // دالة عرض الأنماط
+    function refreshPatterns() {
+        const c = document.getElementById('patternsList');
+        if (!c) return;
+        
+        // جمع الأنماط من lp و dp
+        let patterns = [];
+        for (const [key, count] of Object.entries(lp)) {
+            if (key.includes('>')) {
+                const parts = key.split('>');
+                const from = parts.slice(0, -1).join('>');
+                const to = parts[parts.length - 1];
+                const confidence = dp[key]?.confidence || 0;
+                patterns.push({ from, to, count, confidence });
+            }
+        }
+        
+        // ترتيب حسب الأكثر تكراراً
+        patterns.sort((a, b) => b.count - a.count);
+        
+        if (patterns.length === 0) {
+            c.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px;">لا توجد أنماط مسجلة بعد. ابدأ اللعب لتعلم الأنماط.</p>';
+            return;
+        }
+        
+        c.innerHTML = patterns.map(p => {
+            const isHighConf = p.confidence >= 50;
+            return `<div class="pattern-item ${isHighConf ? 'high-conf' : ''}">
+                <span class="pattern-key">${p.from} → ${p.to}</span>
+                <div>
+                    <span class="pattern-count">${p.count} مرة</span>
+                    ${p.confidence > 0 ? ` | <span class="pattern-conf">${p.confidence}% ثقة</span>` : ''}
+                </div>
+            </div>`;
+        }).join('');
     }
 
     function switchSettingsTab(tab) {

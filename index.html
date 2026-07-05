@@ -433,14 +433,27 @@
                 </div>
             </div>
 
-            <!-- تبويب الأنماط -->
+            <!-- تبويب الأنماط (مع قائمة البرامج) -->
             <div id="adminPatternsTab" style="display:none;">
                 <div class="section" style="flex:1;">
-                    <h3>📊 الأنماط المكتشفة</h3>
+                    <h3>📊 الأنماط (الأخطاء فقط)</h3>
                     <div style="font-size:10px;color:var(--muted);margin-bottom:8px;">
-                        عرض الأنماط التي تم تعلمها (الرمز → الرمز التالي) مع عدد مرات التكرار ونسبة الثقة
+                        عرض الأخطاء بالشكل: (النمط + مسافة + الرمز الخطأ)
                     </div>
+                    
+                    <!-- قائمة البرامج -->
+                    <div style="margin-bottom:10px;">
+                        <label style="font-size:11px;color:var(--gold);">اختر البرنامج:</label>
+                        <select id="patternGameSelector" onchange="loadPatternsForGame()" style="width:100%;padding:8px;margin-top:4px;">
+                            <option value="">-- اختر برنامجاً --</option>
+                        </select>
+                    </div>
+                    
                     <div id="patternsList" style="max-height:300px;overflow-y:auto;"></div>
+                    
+                    <div class="btn-row" style="margin-top:10px;">
+                        <button class="btn sm danger" onclick="clearCloudPatterns()">🗑 مسح أنماط هذا البرنامج</button>
+                    </div>
                 </div>
             </div>
             
@@ -901,151 +914,54 @@
     };
 
     // ============================================================
-    // 8. نظام التوقعات المتقدم (مع تحليل الأنماط)
+    // 8. نظام التوقعات (فقط: النمط + مسافة + الرمز الخطأ)
     // ============================================================
 
     // 8.1 أوزان مصادر التوقع
     const WEIGHTS = {
-        'تكرار': 0.35,
-        'تسلسل مركب': 0.30,
+        'نمط فوري': 0.30,
         'متعلم': 0.25,
         'مكتشف': 0.20,
-        'محفز': 0.15,
-        'نمط فوري': 0.30,
-        'طبيعي': 0.10,
+        'تكرار': 0.15,
+        'طبيعي': 0.05,
         'احتياطي': 0.05
     };
 
-    // 8.2 قواعد التكرار الديناميكية
-    function gfrp(sym, cnt) {
-        if (!sym || cnt < 2 || !fh || fh.length < cnt + 1) return [];
-        const patterns = {};
-        for (let i = 0; i <= fh.length - cnt - 1; i++) {
-            let match = true;
-            for (let j = 0; j < cnt; j++) {
-                if (fh[i + j] !== sym) { match = false; break; }
-            }
-            if (match && fh[i + cnt]) {
-                const next = fh[i + cnt];
-                if (cA.includes(next)) {
-                    patterns[next] = (patterns[next] || 0) + 1;
-                }
-            }
-        }
-        return Object.entries(patterns)
-            .sort((a, b) => b[1] - a[1])
-            .map(e => e[0])
-            .slice(0, 3);
-    }
-
-    // 8.3 المحفزات الذكية
-    function getSmartTrigger(sym) {
-        if (!sym || !fh || !Array.isArray(fh) || fh.length < 2) return null;
-        const followers = {};
-        for (let i = 0; i < fh.length - 1; i++) {
-            if (fh[i] === sym) {
-                const next = fh[i + 1];
-                if (cA.includes(next)) {
-                    followers[next] = (followers[next] || 0) + 1;
-                }
-            }
-        }
-        const sorted = Object.entries(followers).sort((a, b) => b[1] - a[1]);
-        if (sorted.length > 0 && sorted[0][1] >= 3) {
-            return sorted[0][0];
-        }
-        const staticTR = {
-            '🍤': '🌽', '🐮': '🍅', '🐟': '🍅', '🐤': '🍅',
-            '🍗': '🍅', '🥩': '🥦', '🐙': '🍤', '🦐': '🥩',
-            '🐠': '🍅', '🐔': '🥬'
-        };
-        return staticTR[sym] || null;
-    }
-
-    // 8.4 التعلم من الأخطاء المحسن (مع تسجيل 4 رموز)
+    // 8.2 التعلم من الأخطاء (تسجيل: النمط + مسافة + الرمز الخطأ)
     function learnFromMistake(predicted, actual) {
         if (!predicted || !actual || !gs || gs.length === 0) return;
-        const last = gs[gs.length - 1];
 
-        // 1. خفض ثقة التوقع الخاطئ
-        const wrongKey = last + '>' + predicted;
-        if (dp[wrongKey]) {
-            dp[wrongKey].confidence = Math.max(5, dp[wrongKey].confidence - 15);
-            alog('📉 خفض ثقة: ' + wrongKey + ' → ' + dp[wrongKey].confidence + '%');
-        }
-
-        // 2. زيادة ثقة التوقع الصحيح
-        const correctKey = last + '>' + actual;
-        if (dp[correctKey]) {
-            dp[correctKey].confidence = Math.min(95, dp[correctKey].confidence + 5);
-        } else {
-            dp[correctKey] = { count: 1, confidence: 30 };
-        }
-
-        // 3. تسجيل النمط المكون من 4 رموز قبل الخطأ (فوري)
+        // شرط أساسي: لازم يكون فيه 4 رموز عشان نسجل
         if (gs.length >= 4) {
-            const pattern4 = gs.slice(-4).join('>');
-            const errorPattern = pattern4 + '>' + predicted;
-            const correctPattern = pattern4 + '>' + actual;
+            // النمط = آخر 4 رموز في الشريط
+            const pattern4 = gs.slice(-4).join('');
             
-            // تسجيل النمط الخاطئ
-            lp[errorPattern] = (lp[errorPattern] || 0) + 1;
-            // تسجيل النمط الصحيح (فوري)
-            lp[correctPattern] = (lp[correctPattern] || 0) + 1;
+            // الرمز الخطأ = اللي أنت ضغطت عليه (actual) وليس المتوقع
+            const errorSymbol = actual;
             
-            // إذا كان النمط الصحيح موجوداً، زيادة الثقة
-            if (dp[correctPattern]) {
-                dp[correctPattern].confidence = Math.min(95, dp[correctPattern].confidence + 10);
-            } else {
-                dp[correctPattern] = { 
-                    count: lp[correctPattern], 
-                    confidence: Math.min(90, 15 + lp[correctPattern] * 10) 
-                };
-            }
-            
-            // إذا كان النمط الخاطئ موجوداً، خفض الثقة
-            if (dp[errorPattern]) {
-                dp[errorPattern].confidence = Math.max(5, dp[errorPattern].confidence - 20);
-            }
-            
-            alog('🎯 نمط فوري: ' + pattern4 + ' → ' + actual + ' (ثقة: ' + dp[correctPattern].confidence + '%)');
-        }
+            // التسجيل: النمط + مسافة + الرمز الخطأ
+            const errorKey = pattern4 + ' ' + errorSymbol;
 
-        // 4. تسجيل "معادلة التعلم"
-        const correctionKey = predicted + '>' + actual;
-        lp[correctionKey] = (lp[correctionKey] || 0) + 1;
-        if (lp[correctionKey] >= 3) {
-            alog('🔄 تعلمت: ' + predicted + ' → ' + actual + ' (تصحيح)');
+            lp[errorKey] = (lp[errorKey] || 0) + 1;
+
+            if (dp[errorKey]) {
+                dp[errorKey].confidence = Math.max(5, dp[errorKey].confidence - 15);
+            } else {
+                dp[errorKey] = { count: lp[errorKey], confidence: 15 };
+            }
+
+            // تم إزالة السطر الذي يظهر الكلام تحت
+            // alog('📝 خطأ مسجل: ' + pattern4 + ' ' + errorSymbol);
         }
 
         ssv();
     }
 
-    // 8.5 تحليل التسلسلات المركبة (Bi-grams)
-    function analyzeBiGram() {
-        if (gs.length < 3) return null;
-        const lastTwo = gs.slice(-2).join('>');
-        const combos = {};
-        for (let i = 0; i < fh.length - 3; i++) {
-            if (fh[i] + '>' + fh[i + 1] === lastTwo) {
-                const next = fh[i + 2];
-                if (cA.includes(next)) {
-                    combos[next] = (combos[next] || 0) + 1;
-                }
-            }
-        }
-        const sorted = Object.entries(combos).sort((a, b) => b[1] - a[1]);
-        if (sorted.length > 0 && sorted[0][1] >= 3) {
-            return { pred: sorted[0][0], count: sorted[0][1] };
-        }
-        return null;
-    }
-
-    // 8.6 تحليل الأنماط المتكررة (فوري)
+    // 8.3 تحليل الأنماط (فقط 4 رموز)
     function analyzePatterns() {
         if (fh.length < 4 || gs.length < 4) return null;
         
-        // البحث عن أنماط مكونة من 4 رموز (فوري)
+        // البحث عن أنماط مكونة من 4 رموز فقط
         const patternCounts = {};
         for (let i = 0; i < fh.length - 4; i++) {
             const pattern = fh.slice(i, i + 4).join('>');
@@ -1056,10 +972,9 @@
             }
         }
         
-        // تحليل الأنماط (فوري)
+        // تحليل الأنماط
         const reliablePatterns = {};
         for (const [key, count] of Object.entries(patternCounts)) {
-            // حتى لو مرة واحدة فقط (فوري)
             const parts = key.split('>');
             const pattern = parts.slice(0, -1).join('>');
             const next = parts[parts.length - 1];
@@ -1082,7 +997,7 @@
         return result;
     }
 
-    // 8.7 اختيار النمط الأكثر موثوقية (فوري)
+    // 8.4 اختيار النمط الأكثر موثوقية (فوري)
     function getBestPatternPrediction() {
         if (gs.length < 4) return null;
         
@@ -1098,7 +1013,7 @@
         return options[0];
     }
 
-    // 8.8 التحليل الرئيسي (نسخة محسنة)
+    // 8.5 التحليل الرئيسي (فقط 4 رموز → رمز واحد)
     function ans(strip) {
         if (!strip || strip.length === 0) {
             const rp = cV.length > 0 ? cV[Math.floor(Math.random() * cV.length)] : '🥕';
@@ -1134,29 +1049,7 @@
         const cons = gco(strip, last);
         const res = { last, cons, pred: null, conf: 0, forced: [], src: [] };
 
-        // 1. تحليل التكرار (ديناميكي)
-        if (cons >= 2) {
-            const rp = gfrp(last, Math.min(cons, 4));
-            if (rp.length > 0) {
-                res.forced = [...rp];
-                res.pred = rp[0];
-                res.conf = 60 + cons * 8;
-                res.src.push('تكرار');
-            }
-        }
-
-        // 2. التسلسل المركب (Bi-gram)
-        if (!res.pred) {
-            const bi = analyzeBiGram();
-            if (bi) {
-                res.pred = bi.pred;
-                res.conf = 55 + bi.count * 5;
-                res.src.push('تسلسل مركب');
-                if (!res.forced.includes(bi.pred)) res.forced.push(bi.pred);
-            }
-        }
-
-        // 3. النمط الأكثر موثوقية (فوري)
+        // 1. النمط الأكثر موثوقية (فوري - 4 رموز فقط)
         if (!res.pred) {
             const bestPattern = getBestPatternPrediction();
             if (bestPattern) {
@@ -1165,11 +1058,11 @@
                 res.conf = Math.min(90, confidence);
                 res.src.push('نمط فوري');
                 if (!res.forced.includes(bestPattern.next)) res.forced.push(bestPattern.next);
-                alog('🔍 نمط فوري: ' + gs.slice(-4).join('>') + ' → ' + bestPattern.next + ' (ثقة: ' + res.conf + '%)');
+                alog('🔍 نمط فوري (4 رموز): ' + gs.slice(-4).join('>') + ' → ' + bestPattern.next + ' (ثقة: ' + res.conf + '%)');
             }
         }
 
-        // 4. التعلم من التاريخ
+        // 2. التعلم من التاريخ
         if (!res.pred) {
             const lr = [];
             for (const [k, c] of Object.entries(lp)) {
@@ -1186,7 +1079,7 @@
             }
         }
 
-        // 5. الاكتشافات المخزنة
+        // 3. الاكتشافات المخزنة
         if (!res.pred) {
             const disc = [];
             for (const [k, d] of Object.entries(dp)) {
@@ -1203,18 +1096,7 @@
             }
         }
 
-        // 6. المحفزات الذكية
-        if (!res.pred) {
-            const trigger = getSmartTrigger(last);
-            if (trigger && cA.includes(trigger)) {
-                if (!res.forced.includes(trigger)) res.forced.push(trigger);
-                res.pred = trigger;
-                res.conf = 40;
-                res.src.push('محفز');
-            }
-        }
-
-        // 7. البدائل الطبيعية
+        // 4. البدائل الطبيعية
         if (!res.pred) {
             const bn = gfr(last);
             if (bn.length > 0) {
@@ -1225,7 +1107,7 @@
             }
         }
 
-        // 8. احتياط
+        // 5. احتياط
         if (!res.pred || !cA.includes(res.pred)) {
             res.pred = cA[Math.floor(Math.random() * cA.length)] || '🥕';
             res.conf = 12;
@@ -1251,7 +1133,7 @@
     }
 
     // ============================================================
-    // 9. التوقعات النهائية (Enhanced Predictions)
+    // 9. التوقعات النهائية
     // ============================================================
     function gpr() {
         if (!cV || cV.length === 0 || !cM || cM.length === 0) {
@@ -1350,7 +1232,7 @@
     let fh = [];
     let cc = 0;
     let wc = 0;
-    let targetHits = 0; // عداد الاستهداف الجديد
+    let targetHits = 0;
     let al = [];
     let predCount = 5;
     let cloudSynced = false;
@@ -1387,8 +1269,8 @@
         autoSaveTimeout = setTimeout(() => {
             ss(PK + cg + '_p', lp);
             ss(PK + cg + '_d', dp);
-            ss(PK + cg + '_strip', gs); // حفظ الشريط
-            ss(PK + cg + '_target', targetHits); // حفظ عداد الاستهداف
+            ss(PK + cg + '_strip', gs);
+            ss(PK + cg + '_target', targetHits);
         }, 2000);
     }
 
@@ -1615,10 +1497,9 @@
         buildWheel(preds);
         const se = document.getElementById('gearStrip');
         if (se) {
-            // عكس الشريط بحيث الجديد يظهر على اليسار
-            const reversed = [...gs].reverse();
-            se.innerHTML = reversed.map((s, i) => 
-                `<div class="gear-slot${i === 0 && s ? ' newest' : ''}">${s}</div>`
+            // الشريط من الشمال لليمين (الجديد على اليمين)
+            se.innerHTML = gs.map((s, i) => 
+                `<div class="gear-slot${i === gs.length - 1 && s ? ' newest' : ''}">${s}</div>`
             ).join('');
         }
         uc_();
@@ -2036,92 +1917,120 @@
     }
 
     // ============================================================
-    // 13. بناء واجهة الألعاب
+    // 13. دوال صفحة الأنماط الجديدة
     // ============================================================
 
-    async function buildGameCards() {
-        if (on && db) {
-            try {
-                const snap = await Promise.race([
-                    db.ref('games').once('value'),
-                    new Promise((_, rj) => setTimeout(() => rj(new Error('t')), 5000))
-                ]);
-                const cg2 = snap.val();
-                if (cg2 && Object.keys(cg2).length > 0) {
-                    G = vg(cg2);
-                    ss(GK, G);
-                }
-            } catch (e) {
-                G = lg();
-            }
-        } else {
-            G = lg();
+    // تعبئة قائمة البرامج في صفحة الأنماط
+    function populatePatternGames() {
+        const selector = document.getElementById('patternGameSelector');
+        if (!selector) return;
+        
+        // الاحتفاظ بالقيمة المختارة
+        const currentVal = selector.value;
+        
+        // تنظيف القائمة
+        selector.innerHTML = '<option value="">-- اختر برنامجاً --</option>';
+        
+        // إضافة البرامج
+        for (const [key, g] of Object.entries(G)) {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = g.n || key;
+            selector.appendChild(option);
         }
-        const container = document.getElementById('gameCardsContainer');
-        if (!container) return;
-        const ga = Object.entries(G);
-        if (ga.length === 0) {
-            container.innerHTML = '<p style="text-align:center;color:var(--muted);">لا توجد ألعاب</p>';
+        
+        // استعادة القيمة المختارة
+        if (currentVal && G[currentVal]) {
+            selector.value = currentVal;
+        }
+    }
+
+    // تحميل أنماط البرنامج المختار
+    async function loadPatternsForGame() {
+        const selector = document.getElementById('patternGameSelector');
+        const gameKey = selector.value;
+        const list = document.getElementById('patternsList');
+        
+        if (!gameKey || !G[gameKey]) {
+            list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px;">اختر برنامجاً لعرض أنماطه.</p>';
             return;
         }
-        container.innerHTML = ga.map(([key, g]) => {
-            let ih;
-            if (g.img && g.img.startsWith('http')) {
-                ih =
-                    `<img class="game-icon-large" src="${g.img}" alt="${g.n}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';"><span class="game-emoji-icon" style="display:none;">🎯</span>`;
-            } else {
-                ih = `<span class="game-emoji-icon">${g.img || '🎯'}</span>`;
+        
+        // تحديث cg مؤقتاً للبرنامج المختار
+        const tempCg = cg;
+        cg = gameKey;
+        
+        // تحميل الأنماط من التخزين المحلي
+        lp = ls(PK + gameKey + '_p', {});
+        dp = ls(PK + gameKey + '_d', {});
+        
+        // محاولة تحميل من السحابة
+        if (on && db) {
+            try {
+                const cd = await dl(gameKey);
+                if (cd && (Object.keys(cd.patterns || {}).length > 0 || Object.keys(cd.discovered || {}).length > 0)) {
+                    const m = ml(lp, dp, cd);
+                    lp = m.lp;
+                    dp = m.dp;
+                    ss(PK + gameKey + '_p', lp);
+                    ss(PK + gameKey + '_d', dp);
+                }
+            } catch (e) {}
+        }
+        
+        // عرض الأنماط
+        refreshPatterns();
+        
+        // استعادة cg الأصلي
+        cg = tempCg;
+    }
+
+    // تحديث دالة عرض الأنماط (تعتمد على lp و dp الحاليين)
+    function refreshPatterns() {
+        const list = document.getElementById('patternsList');
+        if (!list) return;
+        
+        const selector = document.getElementById('patternGameSelector');
+        const gameKey = selector?.value;
+        
+        if (!gameKey || !G[gameKey]) {
+            list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px;">اختر برنامجاً لعرض أنماطه.</p>';
+            return;
+        }
+        
+        // جمع الأنماط من lp و dp
+        let patterns = [];
+        for (const [key, count] of Object.entries(lp)) {
+            if (key.includes(' ')) {
+                const parts = key.split(' ');
+                const pattern = parts[0]; // النمط
+                const error = parts[1]; // الرمز الخطأ
+                const confidence = dp[key]?.confidence || 0;
+                patterns.push({ pattern, error, count, confidence });
             }
-            return `<div class="game-card" data-game-key="${key}">${ih}<h3>${g.n}</h3></div>`;
+        }
+        
+        // ترتيب حسب الأكثر تكراراً
+        patterns.sort((a, b) => b.count - a.count);
+        
+        if (patterns.length === 0) {
+            list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px;">لا توجد أخطاء مسجلة لهذا البرنامج.</p>';
+            return;
+        }
+        
+        list.innerHTML = patterns.map(p => {
+            const isHighConf = p.confidence >= 50;
+            return `<div class="pattern-item ${isHighConf ? 'high-conf' : ''}">
+                <span class="pattern-key">${p.pattern} ${p.error}</span>
+                <div>
+                    <span class="pattern-count">${p.count} مرة</span>
+                    ${p.confidence > 0 ? ` | <span class="pattern-conf">${p.confidence}% ثقة</span>` : ''}
+                </div>
+            </div>`;
         }).join('');
-        container.querySelectorAll('.game-card').forEach(card => {
-            const gk = card.getAttribute('data-game-key');
-            let sy = 0,
-                mv = false;
-            card.addEventListener('touchstart', function(e) {
-                sy = e.touches[0].clientY;
-                mv = false;
-            }, { passive: true });
-            card.addEventListener('touchmove', function(e) {
-                if (Math.abs(e.touches[0].clientY - sy) > 10) mv = true;
-            }, { passive: true });
-            card.addEventListener('touchend', function(e) {
-                if (!mv) { e.preventDefault();
-                    sg(gk); }
-            });
-            card.addEventListener('click', function(e) {
-                e.preventDefault();
-                sg(gk);
-            });
-        });
     }
 
-    async function showScreen(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        const sc = document.getElementById(id);
-        if (!sc) return;
-        sc.classList.add('active');
-        stopAllAds();
-        if (id === 'loginScreen') {
-            startAdRotation('login_ad', 'loginAdContainer');
-        }
-        if (id === 'gameSelectScreen') {
-            startAdRotation('games_ad', 'gamesAdContainer');
-            await buildGameCards();
-        }
-        if (id === 'adminScreen') {
-            await lap();
-            refreshGameList();
-            refreshAdsList();
-            loadBgInputs();
-            refreshPatterns();
-        }
-    }
-
-    // ============================================================
-    // 14. دوال لوحة التحكم
-    // ============================================================
-
+    // تحديث دالة switchAdminTab لتعبئة القائمة عند فتح تبويب الأنماط
     function switchAdminTab(tab) {
         const tabs = document.querySelectorAll('.admin-tab');
         tabs.forEach(t => t.classList.remove('active'));
@@ -2148,46 +2057,52 @@
         } else if (tab === 'patterns') {
             tabs[4].classList.add('active');
             document.getElementById('adminPatternsTab').style.display = 'block';
-            refreshPatterns();
+            populatePatternGames(); // تعبئة القائمة
+            // محاولة تحميل أول برنامج
+            const selector = document.getElementById('patternGameSelector');
+            if (selector && selector.options.length > 1) {
+                selector.value = selector.options[1].value;
+                loadPatternsForGame();
+            }
         }
     }
 
-    // دالة عرض الأنماط
-    function refreshPatterns() {
-        const c = document.getElementById('patternsList');
-        if (!c) return;
+    // تحديث دالة مسح الأنماط (تعتمد على البرنامج المختار في القائمة)
+    async function clearCloudPatterns() {
+        const selector = document.getElementById('patternGameSelector');
+        const gameKey = selector?.value;
         
-        // جمع الأنماط من lp و dp
-        let patterns = [];
-        for (const [key, count] of Object.entries(lp)) {
-            if (key.includes('>')) {
-                const parts = key.split('>');
-                const from = parts.slice(0, -1).join('>');
-                const to = parts[parts.length - 1];
-                const confidence = dp[key]?.confidence || 0;
-                patterns.push({ from, to, count, confidence });
-            }
-        }
-        
-        // ترتيب حسب الأكثر تكراراً
-        patterns.sort((a, b) => b.count - a.count);
-        
-        if (patterns.length === 0) {
-            c.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px;">لا توجد أنماط مسجلة بعد. ابدأ اللعب لتعلم الأنماط.</p>';
+        if (!gameKey || !G[gameKey]) {
+            alert('❌ اختر برنامجاً أولاً.');
             return;
         }
         
-        c.innerHTML = patterns.map(p => {
-            const isHighConf = p.confidence >= 50;
-            return `<div class="pattern-item ${isHighConf ? 'high-conf' : ''}">
-                <span class="pattern-key">${p.from} → ${p.to}</span>
-                <div>
-                    <span class="pattern-count">${p.count} مرة</span>
-                    ${p.confidence > 0 ? ` | <span class="pattern-conf">${p.confidence}% ثقة</span>` : ''}
-                </div>
-            </div>`;
-        }).join('');
+        if (!confirm('⚠️ هل أنت متأكد من مسح جميع أنماط برنامج "' + G[gameKey].n + '" من السحابة؟ هذا الإجراء لا يمكن التراجع عنه.')) return;
+        
+        if (!on || !db) {
+            alert('❌ لا يوجد اتصال بقاعدة البيانات.');
+            return;
+        }
+        
+        try {
+            // مسح من Firebase للبرنامج المختار
+            await db.ref('learning/' + gameKey).remove();
+            // مسح من التخزين المحلي للبرنامج المختار
+            lp = {};
+            dp = {};
+            ss(PK + gameKey + '_p', lp);
+            ss(PK + gameKey + '_d', dp);
+            // تحديث صفحة الأنماط
+            refreshPatterns();
+            alert('✅ تم مسح جميع أنماط برنامج "' + G[gameKey].n + '" من السحابة ومن التخزين المحلي.');
+        } catch (e) {
+            alert('❌ فشل في مسح الأنماط: ' + e.message);
+        }
     }
+
+    // ============================================================
+    // 14. دوال لوحة التحكم (باقي الدوال)
+    // ============================================================
 
     function switchSettingsTab(tab) {
         const tabs = document.querySelectorAll('#settingsTabs .tab');
@@ -2305,7 +2220,96 @@
     }
 
     // ============================================================
-    // 15. التهيئة النهائية
+    // 15. بناء واجهة الألعاب
+    // ============================================================
+
+    async function buildGameCards() {
+        if (on && db) {
+            try {
+                const snap = await Promise.race([
+                    db.ref('games').once('value'),
+                    new Promise((_, rj) => setTimeout(() => rj(new Error('t')), 5000))
+                ]);
+                const cg2 = snap.val();
+                if (cg2 && Object.keys(cg2).length > 0) {
+                    G = vg(cg2);
+                    ss(GK, G);
+                }
+            } catch (e) {
+                G = lg();
+            }
+        } else {
+            G = lg();
+        }
+        const container = document.getElementById('gameCardsContainer');
+        if (!container) return;
+        const ga = Object.entries(G);
+        if (ga.length === 0) {
+            container.innerHTML = '<p style="text-align:center;color:var(--muted);">لا توجد ألعاب</p>';
+            return;
+        }
+        container.innerHTML = ga.map(([key, g]) => {
+            let ih;
+            if (g.img && g.img.startsWith('http')) {
+                ih =
+                    `<img class="game-icon-large" src="${g.img}" alt="${g.n}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';"><span class="game-emoji-icon" style="display:none;">🎯</span>`;
+            } else {
+                ih = `<span class="game-emoji-icon">${g.img || '🎯'}</span>`;
+            }
+            return `<div class="game-card" data-game-key="${key}">${ih}<h3>${g.n}</h3></div>`;
+        }).join('');
+        container.querySelectorAll('.game-card').forEach(card => {
+            const gk = card.getAttribute('data-game-key');
+            let sy = 0,
+                mv = false;
+            card.addEventListener('touchstart', function(e) {
+                sy = e.touches[0].clientY;
+                mv = false;
+            }, { passive: true });
+            card.addEventListener('touchmove', function(e) {
+                if (Math.abs(e.touches[0].clientY - sy) > 10) mv = true;
+            }, { passive: true });
+            card.addEventListener('touchend', function(e) {
+                if (!mv) { e.preventDefault();
+                    sg(gk); }
+            });
+            card.addEventListener('click', function(e) {
+                e.preventDefault();
+                sg(gk);
+            });
+        });
+    }
+
+    async function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        const sc = document.getElementById(id);
+        if (!sc) return;
+        sc.classList.add('active');
+        stopAllAds();
+        if (id === 'loginScreen') {
+            startAdRotation('login_ad', 'loginAdContainer');
+        }
+        if (id === 'gameSelectScreen') {
+            startAdRotation('games_ad', 'gamesAdContainer');
+            await buildGameCards();
+        }
+        if (id === 'adminScreen') {
+            await lap();
+            refreshGameList();
+            refreshAdsList();
+            loadBgInputs();
+            // تعبئة قائمة الأنماط عند فتح الأدمن
+            populatePatternGames();
+            const selector = document.getElementById('patternGameSelector');
+            if (selector && selector.options.length > 1) {
+                selector.value = selector.options[1].value;
+                loadPatternsForGame();
+            }
+        }
+    }
+
+    // ============================================================
+    // 16. التهيئة النهائية
     // ============================================================
 
     async function init() {

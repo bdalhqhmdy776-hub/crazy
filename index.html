@@ -72,7 +72,8 @@
         .screen-bg-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-size: cover; background-position: center; background-repeat: no-repeat;
-            z-index: 0; opacity: 0.15; transition: background-image 1s ease-in-out; pointer-events: none;
+            z-index: 0; opacity: 0.3; transition: background-image 1s ease-in-out; pointer-events: none;
+            display: none;
         }
 
         .header {
@@ -121,6 +122,10 @@
         }
         .ad-banner.image-ad { height: 200px; }
         .ad-banner.text-ad { height: 25px; min-height: 25px; }
+        .ad-banner.video-ad { height: 200px; background: #000; }
+        .ad-banner.video-ad video {
+            width: 100%; height: 100%; object-fit: cover; border-radius: 8px;
+        }
 
         .ad-slide-image {
             width: 100%; height: 100%; display: flex; align-items: center;
@@ -275,7 +280,6 @@
         .game-list-item button, .ad-list-item button { background: #b91c1c; color: #fff; border: none; padding: 3px 6px; border-radius: 4px; font-size: 8px; cursor: pointer; margin: 1px; }
         .game-list-item button.edit { background: var(--purple); }
 
-        /* Pattern Table */
         .pattern-table {
             width: 100%; border-collapse: collapse; font-size: 10px; margin-top: 6px;
         }
@@ -289,26 +293,6 @@
             font-size: 10px;
         }
         .pattern-table tr:hover { background: rgba(240,165,0,0.1); }
-        .pattern-table .sequence-cell {
-            display: flex; align-items: center; justify-content: center; gap: 1px;
-            flex-wrap: wrap; font-size: 14px;
-        }
-        .pattern-table .arrow-cell { color: var(--gold); font-weight: bold; font-size: 12px; }
-
-        .confidence-badge {
-            padding: 2px 6px; border-radius: 10px; font-weight: bold; font-size: 9px;
-            display: inline-block; white-space: nowrap;
-        }
-        .confidence-badge.high { background: rgba(78,159,61,0.3); color: #4e9f3d; }
-        .confidence-badge.medium { background: rgba(240,165,0,0.3); color: #f0a500; }
-        .confidence-badge.low { background: rgba(233,69,96,0.3); color: #e94560; }
-
-        .pattern-header-row {
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(10,10,40,0.8); border-radius: 8px; padding: 8px 10px; margin-bottom: 6px;
-        }
-        .pattern-stats { display: flex; gap: 12px; font-size: 10px; }
-        .pattern-stats span { color: var(--gold); font-weight: bold; }
 
         .learn-log {
             font-size: 8px; color: var(--muted); font-family: monospace; background: rgba(2,2,8,0.7);
@@ -324,8 +308,6 @@
             font-weight: bold; flex-shrink: 0; position: relative; z-index: 1;
         }
         .alert.show { display: block; }
-        .alert-info { background: rgba(5,26,26,0.7); border: 2px solid var(--cyan); color: var(--cyan); }
-        .alert-cloud { background: rgba(5,5,30,0.8); border: 2px solid #f0a500; color: #f0a500; }
 
         .tabs { display: flex; gap: 3px; flex-shrink: 0; position: relative; z-index: 1; }
         .tabs .tab {
@@ -348,6 +330,18 @@
         ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
 
         #gameScreen { gap: 2px; padding: 2px; }
+        
+        .ad-list-item {
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 8px; background: rgba(10,10,40,0.7); border-radius: 8px; 
+            margin-bottom: 5px; gap: 6px; font-size: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn-delete-ad {
+            background: #dc2626 !important; color: white !important; border: none !important;
+            padding: 6px 10px !important; border-radius: 6px !important; cursor: pointer !important;
+            font-size: 10px !important; font-weight: bold !important;
+        }
     </style>
 </head>
 <body>
@@ -356,10 +350,10 @@
         <!-- Login Screen -->
         <div class="screen active" id="loginScreen">
             <div class="screen-bg-overlay" id="loginScreenBg"></div>
-            <div class="ad-banner image-ad" id="loginAd" style="display:none;"><div class="ad-slide-image" id="loginAdSlide"></div></div>
+            <div class="ad-banner image-ad" id="loginAd" style="display:none;"></div>
             <div class="spacer"></div>
             <div class="header"><h1>👑 CRAZY 👑</h1></div>
-            <div class="status-msg online" id="connectionStatus">🟡</div>
+            <div class="status-msg online" id="connectionStatus">🟡 جاري الاتصال...</div>
             <div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0;">
                 <input type="password" id="passInput" placeholder="🔐 كلمة المرور" maxlength="30" autocomplete="off">
                 <button class="btn" id="loginBtn" onclick="cpw()">🔓 دخول</button>
@@ -371,7 +365,7 @@
         <!-- Game Select Screen -->
         <div class="screen" id="gameSelectScreen">
             <div class="screen-bg-overlay" id="gamesScreenBg"></div>
-            <div class="ad-banner image-ad" id="gamesAd" style="display:none;"><div class="ad-slide-image" id="gamesAdSlide"></div></div>
+            <div class="ad-banner image-ad" id="gamesAd" style="display:none;"></div>
             <div class="header"><h1>🎮 اختر اللعبة</h1><div style="font-size:9px;color:var(--muted);" id="selectUser"></div></div>
             <div class="game-cards" style="margin-top:8px;" id="gameCardsContainer"></div>
             <div class="btn-row" style="margin-top:8px;"><button class="btn sm outline" onclick="lo()">🚪 خروج</button></div>
@@ -381,8 +375,8 @@
         <div class="screen" id="gameScreen">
             <div class="screen-bg-overlay" id="predictScreenBg"></div>
             <div class="ad-banner text-ad" id="predictAd" style="display:none;"><div class="ad-slide-text" id="predictAdSlide"></div></div>
-            <div class="alert alert-info" id="learnAlert">🧠</div>
-            <div class="alert alert-cloud" id="cloudAlert" style="display:none;">☁️ تم رفع التعلم للسحابة</div>
+            <div class="alert alert-info" id="learnAlert" style="background: rgba(5,26,26,0.7); border: 2px solid var(--cyan); color: var(--cyan);">🧠</div>
+            <div class="alert alert-cloud" id="cloudAlert" style="display:none; background: rgba(5,5,30,0.8); border: 2px solid #f0a500; color: #f0a500;">☁️</div>
             <div class="wheel-container" id="wheelContainer"><div class="wheel-center" id="wheelCenter">🎯</div></div>
             <div class="gear-strip" id="gearStrip"></div>
             <div class="counter-box">
@@ -392,16 +386,16 @@
             </div>
             <div class="learn-log" id="learnLog"><div>🟢 جاهز</div></div>
             <div class="btn-row">
-                <button class="btn sm danger" onclick="rg()">🔄</button>
-                <button class="btn sm cyan" onclick="ex()">📊</button>
-                <button class="btn sm outline" onclick="btg()">🔙</button>
+                <button class="btn sm danger" onclick="resetGame()">🔄</button>
+                <button class="btn sm cyan" onclick="exportData()">📊</button>
+                <button class="btn sm outline" onclick="backToGames()">🔙</button>
             </div>
         </div>
 
         <!-- Admin Screen -->
         <div class="screen" id="adminScreen">
             <div class="header admin-h"><h1>👑 لوحة التحكم</h1></div>
-            <div class="status-msg online" id="adminConnStatus">🟡</div>
+            <div class="status-msg online" id="adminConnStatus">🟡 جاري الاتصال...</div>
             <div class="admin-tabs">
                 <div class="admin-tab active" onclick="switchAdminTab('players')">👥 اللاعبين</div>
                 <div class="admin-tab" onclick="switchAdminTab('games')">🎮 البرامج</div>
@@ -417,70 +411,47 @@
                     <div class="row"><label>النمط:</label><select id="newMode"><option value="fixed">ثابت</option><option value="day">يومي</option><option value="hour">ساعي</option><option value="month">شهري</option></select></div>
                     <div class="row"><label>ساعات:</label><input type="number" id="newHours" value="0" min="0"></div>
                     <div class="row"><label>أيام:</label><input type="number" id="newDays" value="0" min="0"></div>
-                    <button class="btn sm" style="background:#f97316;" onclick="ap()">✅ إضافة للسحابة</button>
+                    <button class="btn sm" style="background:#f97316;" onclick="addPlayer()">✅ إضافة للسحابة</button>
                 </div>
                 <div class="section" style="flex:1;display:flex;flex-direction:column;min-height:120px;">
                     <h3>📋 اللاعبين (<span id="passCount">0</span>/200)</h3>
                     <div class="pass-list" id="passList" style="flex:1;"></div>
-                    <div class="btn-row" style="margin-top:6px;">
-                        <button class="btn sm danger" onclick="da_()">🗑 حذف الكل</button>
-                        <button class="btn sm" style="background:#f97316;" onclick="rad_()">🔓 فك الكل</button>
-                    </div>
                 </div>
             </div>
 
             <div id="adminGamesTab" style="display:none;">
-                <div class="tabs" id="settingsTabs">
-                    <div class="tab active" onclick="switchSettingsTab('list')">📋 البرامج</div>
-                    <div class="tab" onclick="switchSettingsTab('add')">➕ إضافة</div>
-                </div>
-                <div class="section" id="settingsList" style="flex:1;"><h3>🎮 البرامج الحالية</h3><div id="gameListContainer" style="max-height:300px;overflow-y:auto;"></div></div>
-                <div class="section" id="settingsForm" style="display:none;flex:1;">
-                    <h3 id="settingsFormTitle">➕ إضافة برنامج جديد</h3>
-                    <input type="hidden" id="editGameKey" value="">
-                    <div class="row"><label>المفتاح:</label><input type="text" id="gameKey" placeholder="مثلاً: zena"></div>
-                    <div class="row"><label>الاسم:</label><input type="text" id="gameName" placeholder="مثلاً: 🎯 زينا لايف"></div>
-                    <div class="row"><label>صورة:</label><input type="text" id="gameImage" placeholder="رابط صورة (URL) أو إيموجي"></div>
-                    <div class="row"><label>الخضار:</label><input type="text" id="gameVeg" placeholder="🥕,🌽,🍅,🌶"></div>
-                    <div class="row"><label>اللحوم:</label><input type="text" id="gameMeat" placeholder="🍤,🐮,🐟,🐤"></div>
-                    <div class="row"><label>الساعة:</label><textarea id="gameClock" placeholder="الساعة 12: 🥕&#10;الساعة 1:30: 🍤&#10;الساعة 3: 🍅&#10;الساعة 4:30: 🍗&#10;الساعة 6: 🌽&#10;الساعة 7:30: 🥩&#10;الساعة 9: 🥦&#10;الساعة 10:30: 🐟"></textarea></div>
-                    <div class="btn-row"><button class="btn sm purple" onclick="saveGame()">💾 حفظ</button><button class="btn sm danger" onclick="cancelEdit()">❌ إلغاء</button></div>
-                </div>
+                <div class="section" style="flex:1;"><h3>🎮 البرامج الحالية</h3><div id="gameListContainer" style="max-height:300px;overflow-y:auto;"></div></div>
             </div>
 
             <div id="adminAdsTab" style="display:none;">
                 <div class="section">
                     <h3>➕ إضافة إعلان جديد</h3>
-                    <div class="row"><label>النوع:</label><select id="adType"><option value="image">🖼️ صورة</option><option value="text">📝 نص</option><option value="bg">🖼️ خلفية</option></select></div>
+                    <div class="row"><label>النوع:</label><select id="adType"><option value="image">🖼️ صورة</option><option value="text">📝 نص</option><option value="video">🎬 فيديو</option><option value="background">🎨 خلفية</option></select></div>
                     <div class="row"><label>المكان:</label><select id="adPlace"><option value="login">🔐 تسجيل الدخول</option><option value="games">🎮 البرامج</option><option value="predict">🎯 التوقعات</option></select></div>
-                    <div class="row"><label>المحتوى:</label><input type="text" id="adContent" placeholder="رابط صورة أو نص الإعلان"></div>
+                    <div class="row"><label>المحتوى:</label><input type="text" id="adContent" placeholder="رابط صورة/فيديو/نص الإعلان"></div>
                     <button class="btn sm" style="background:#f97316;" onclick="addAd()">✅ إضافة</button>
                 </div>
-                <div class="section" style="flex:1;min-height:120px;"><h3>📋 الإعلانات الحالية</h3><div id="adListContainer" style="max-height:300px;overflow-y:auto;"></div></div>
+                <div class="section" style="flex:1;min-height:120px;">
+                    <h3>📋 الإعلانات الحالية (<span id="adCountDisplay">0</span>)</h3>
+                    <div id="adListContainer" style="max-height:300px;overflow-y:auto;"></div>
+                    <div class="btn-row" style="margin-top:10px;">
+                        <button class="btn sm danger" onclick="deleteAllAds()">🗑 مسح الكل</button>
+                        <button class="btn sm cyan" onclick="syncAdsFromCloud()">☁️ مزامنة</button>
+                    </div>
+                </div>
             </div>
 
             <div id="adminPatternsTab" style="display:none;">
                 <div class="section">
-                    <h3>📊 أنماط البرامج</h3>
+                    <h3>📊 أنماط البرامج (مشتركة تلقائياً)</h3>
                     <div class="row"><label>البرنامج:</label><select id="patternGameSelect" onchange="loadPatternsForGame()"><option value="">اختر برنامج</option></select></div>
                 </div>
                 <div class="section" style="flex:1;min-height:120px;">
-                    <div id="patternHeaderRow" class="pattern-header-row" style="display:none;">
-                        <h3 style="margin:0;font-size:12px;">📋 الأنماط المسجلة</h3>
-                        <div class="pattern-stats">
-                            <span>الأنماط: <b id="patternTotalCount">0</b></span>
-                            <span>أعلى ثقة: <b id="patternMaxConf">0%</b></span>
-                        </div>
-                    </div>
                     <div id="patternListContainer" style="max-height:350px;overflow-y:auto;"></div>
-                    <div class="btn-row" style="margin-top:6px;">
-                        <button class="btn sm danger" onclick="clearPatterns()">🗑 مسح الأنماط</button>
-                        <button class="btn sm purple" onclick="exportPatterns()">📦 تصدير</button>
-                    </div>
                 </div>
             </div>
 
-            <button class="btn outline" onclick="gtl()" style="margin-top:8px;">🚪 خروج</button>
+            <button class="btn outline" onclick="goToLogin()" style="margin-top:8px;">🚪 خروج</button>
         </div>
     </div>
 
@@ -494,460 +465,974 @@
             </div>
             <button class="btn sm outline" onclick="document.getElementById('gearPopupOverlay').classList.remove('show')">إغلاق</button>
         </div>
-        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-<script>
-// ==================== STARS ====================
-(function() {
-    const bg = document.getElementById('starsBg');
-    for (let i = 0; i < 100; i++) {
-        const s = document.createElement('div'); s.className = 'star';
-        const sz = Math.random() * 2 + 1;
-        s.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${Math.random()*3+2}s;--delay:${Math.random()*5}s`;
-        bg.appendChild(s);
-    }
-    for (let i = 0; i < 3; i++) {
-        const sh = document.createElement('div'); sh.className = 'shooting-star';
-        sh.style.cssText = `left:${Math.random()*80}%;top:${Math.random()*40}%;--sdelay:${Math.random()*8+i*4}s`;
-        bg.appendChild(sh);
-    }
-})();
-
-// ==================== FIREBASE ====================
-const fc = {
-    apiKey: "AIzaSyB9rN0N-0YlO5lW5l5l5l5l5l5l5l5l5l5",
-    authDomain: "hamdi-791e5.firebaseapp.com",
-    databaseURL: "https://hamdi-791e5-default-rtdb.firebaseio.com",
-    projectId: "hamdi-791e5",
-    storageBucket: "hamdi-791e5.appspot.com",
-    messagingSenderId: "123456789012",
-    appId: "1:123456789012:web:abcdef1234567890"
-};
-
-let db = null, on = false;
-
-function ifb() {
-    try {
-        if (!firebase.apps.length) firebase.initializeApp(fc);
-        db = firebase.database(); on = true; uc(true);
-        firebase.database().ref('.info/connected').on('value', s => { on = s.val() === true; uc(on); });
-    } catch (e) { on = false; uc(false); }
-}
-
-function uc(o) {
-    const s1 = document.getElementById('connectionStatus'), s2 = document.getElementById('adminConnStatus');
-    [s1, s2].forEach(el => { if (el) { el.textContent = o ? '🟢' : '🔴'; el.className = o ? 'status-msg online' : 'status-msg offline'; } });
-}
-
-// ==================== STORAGE ====================
-const ls = (k, f = null) => { try { return JSON.parse(localStorage.getItem(k)) || f; } catch (e) { return f; } };
-const ss = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
-const GK = 'kf_games', PK = 'kf_', AK = 'kf_ads', PTK = 'kf_patterns';
-
-const DEFAULT_GAMES = {
-    zena: { n: '🎯 زينا لايف', v: ['🥕','🌽','🍅','🌶'], m: ['🍤','🐮','🐟','🐤'], a: ['🥕','🌽','🌶','🍅','🍤','🐮','🐟','🐤'], clock: ['🐤','🍅','🐮','🌶','🐟','🌽','🍤','🥕'], img: '' },
-    yoho: { n: '🎯 يوهو لايف', v: ['🥕','🌽','🍅','🌶'], m: ['🍤','🐮','🐟','🐤'], a: ['🥕','🌽','🍅','🌶','🍤','🐮','🐟','🐤'], clock: ['🐤','🍅','🐮','🌶','🐟','🌽','🍤','🥕'], img: '' },
-    berti: { n: '🎯 برتي ستار', v: ['🥕','🌽','🍅','🥦'], m: ['🍤','🍗','🥩','🐟'], a: ['🥕','🌽','🍅','🥦','🍤','🍗','🥩','🐟'], clock: ['🥕','🍤','🍅','🍗','🌽','🥩','🥦','🐟'], img: '' },
-    majles: { n: '🎯 المجلس', v: ['🥕','🌽','🍅','🥦'], m: ['🍤','🍗','🥩','🐟'], a: ['🥕','🌽','🍅','🥦','🍤','🍗','🥩','🐟'], clock: ['🥕','🍤','🍅','🍗','🌽','🥩','🥦','🐟'], img: '' }
-};
-
-function loadGames() {
-    let g = ls(GK, null);
-    if (!g || !Object.keys(g).length) { g = JSON.parse(JSON.stringify(DEFAULT_GAMES)); ss(GK, g); }
-    for (const [k, v] of Object.entries(g)) {
-        if (!v.a) v.a = [...(v.v||[]), ...(v.m||[])];
-        if (!v.img) v.img = '';
-        if (!v.clock || v.clock.length < 8) v.clock = [...v.a.slice(0,8)];
-    }
-    return g;
-}
-
-function saveGames(g) { ss(GK, g); if (on && db) db.ref('games').set(g).catch(()=>{}); }
-function loadAds() { return ls(AK, {}); }
-function saveAds(a) { ss(AK, a); if (on && db) db.ref('ads').set(a).catch(()=>{}); }
-function getPatterns(gk) { return (ls(PTK, {})[gk] || {}); }
-function savePatterns(gk, p) { const ap = ls(PTK, {}); ap[gk] = p; ss(PTK, ap); if (on && db) db.ref('patterns/'+gk).set(p).catch(()=>{}); }
-
-let G = loadGames(), ADS = loadAds();
-
-// ==================== AD ROTATORS ====================
-let imgAdInt = {}, bgInt = {};
-
-function startImgAdRot(bid, sid, place) {
-    if (imgAdInt[place]) clearInterval(imgAdInt[place]);
-    const banner = document.getElementById(bid), slide = document.getElementById(sid);
-    if (!banner || !slide) return;
-    const ads = Object.values(ADS).filter(a => a.place === place && a.type === 'image');
-    if (!ads.length) { banner.style.display = 'none'; return; }
-    banner.style.display = 'flex'; slide.innerHTML = '';
-    ads.forEach((a, i) => { const img = document.createElement('img'); img.src = a.content; img.alt = 'إعلان'; img.onerror = function(){this.style.display='none';}; if(i===0) img.classList.add('active'); slide.appendChild(img); });
-    if (ads.length === 1) { slide.querySelector('img').classList.add('active'); return; }
-    let ci = 0;
-    imgAdInt[place] = setInterval(() => { const imgs = slide.querySelectorAll('img'); if(!imgs.length) return; imgs[ci].classList.remove('active'); ci = (ci+1) % imgs.length; imgs[ci].classList.add('active'); }, 3000);
-}
-
-function startBgRot(sid, bid, place) {
-    if (bgInt[place]) clearInterval(bgInt[place]);
-    const bgEl = document.getElementById(bid);
-    if (!bgEl) return;
-    const ads = Object.values(ADS).filter(a => a.place === place && a.type === 'bg');
-    if (!ads.length) { bgEl.style.backgroundImage = ''; bgEl.style.display = 'none'; return; }
-    bgEl.style.display = 'block';
-    if (ads.length === 1) { bgEl.style.backgroundImage = `url(${ads[0].content})`; return; }
-    let ci = 0;
-    bgEl.style.backgroundImage = `url(${ads[ci].content})`;
-    bgInt[place] = setInterval(() => { ci = (ci+1) % ads.length; bgEl.style.backgroundImage = `url(${ads[ci].content})`; }, 3000);
-}
-
-function refreshAllAds() {
-    ADS = loadAds();
-    startImgAdRot('loginAd', 'loginAdSlide', 'login');
-    startImgAdRot('gamesAd', 'gamesAdSlide', 'games');
-    startBgRot('loginScreen', 'loginScreenBg', 'login');
-    startBgRot('gameSelectScreen', 'gamesScreenBg', 'games');
-    startBgRot('gameScreen', 'predictScreenBg', 'predict');
-    const tb = document.getElementById('predictAd'), ts = document.getElementById('predictAdSlide');
-    if (tb && ts) {
-        const ta = Object.values(ADS).filter(a => a.place === 'predict' && a.type === 'text');
-        if (!ta.length) { tb.style.display = 'none'; return; }
-        tb.style.display = 'flex'; ts.textContent = ta.map(a => a.content).join('   ★★★   ');
-    }
-}
-
-// ==================== RULES ====================
-const BR = {'🥕':['🍅','🌽'],'🌽':['🥕','🥦'],'🥦':['🍅','🌽'],'🍅':['🥕','🥦'],'🌶':['🥕','🌽','🍅'],'🍤':['🌽','🥕'],'🐮':['🌽','🍅'],'🐟':['🍅','🥦'],'🐤':['🍅','🥦'],'🍗':['🌽','🍅'],'🥩':['🍅','🥦'],'🍇':['🍓','🥬'],'🥬':['🍇','🌽'],'🍓':['🍇','🥕'],'🐙':['🐟','🍤'],'🦐':['🐟','🥩'],'🐠':['🐟','🍅'],'🐔':['🐤','🥬']};
-const RR = {'🌽':{2:['🍅','🥕'],3:['🍅','🥕'],4:['🍅','🥕']},'🥦':{2:['🥕','🍅'],3:['🥕','🍅'],4:['🥕','🍅']},'🍅':{2:['🌽','🥦'],3:['🌽','🥦'],4:['🌽','🥦']},'🥕':{2:['🍅','🌽'],3:['🍅','🌽'],4:['🍅','🌽']}};
-const TR = {'🍤':{d:'🌽'},'🐮':{d:'🍅'},'🐟':{d:'🍅'},'🐤':{d:'🍅'},'🍗':{d:'🍅'},'🥩':{d:'🥦'},'🐙':{d:'🍤'},'🦐':{d:'🥩'},'🐠':{d:'🍅'},'🐔':{d:'🥬'}};
-const AD = 'Admin@Khal2024', MK = 'AdminMasterKey2024';
-
-function gtp(b, m) { const n = new Date(), p = v => (''+v).padStart(2,'0'); if(m==='hour') return `${b}_${n.getFullYear()}${p(n.getMonth()+1)}${p(n.getDate())}${p(n.getHours())}`; if(m==='day') return `${b}_${n.getFullYear()}${p(n.getMonth()+1)}${p(n.getDate())}`; if(m==='month') return `${b}_${n.getFullYear()}${p(n.getMonth()+1)}`; return `${b}_static`; }
-function gex(pe) { if(!pe.createdAt) return {ex:false,rm:'غير محدود'}; const cr = new Date(pe.createdAt), nw = new Date(); let mh = Infinity; if(pe.maxHours>0) mh = pe.maxHours; if(pe.maxDays>0) mh = Math.min(mh, pe.maxDays*24); if(mh===Infinity) return {ex:false,rm:'غير محدود'}; const rm = new Date(cr.getTime()+mh*3600000)-nw; if(rm<=0) return {ex:true,rm:'منتهي'}; const rh = Math.floor(rm/3600000); return {ex:false,rm:rh>23?Math.floor(rh/24)+' يوم':rh+' ساعة'}; }
-const dfp = () => { const c = [navigator.userAgent||'', screen.width+'', new Date().getTimezoneOffset()+''].join('|'); let h=0; for(let i=0;i<c.length;i++) h=((h<<5)-h)+c.charCodeAt(i); return 'D'+Math.abs(h).toString(36).toUpperCase(); };
-const CD = dfp();
-
-async function cgp() { if(!db||!on) return null; try { return (await db.ref('players').once('value')).val()||{}; } catch(e) { return null; } }
-async function csp(id,d) { if(!db||!on) return false; try { await db.ref('players/'+id).set(d); return true; } catch(e) { return false; } }
-async function cdp(id) { if(!db||!on) return false; try { await db.ref('players/'+id).remove(); return true; } catch(e) { return false; } }
-async function cda() { if(!db||!on) return false; try { await db.ref('players').remove(); return true; } catch(e) { return false; } }
-async function uploadLearning(gk,lpD,dpD) { if(!db||!on) return false; try { await db.ref('learning/'+gk+'/patterns').set(lpD); await db.ref('learning/'+gk+'/discovered').set(dpD); return true; } catch(e) { return false; } }
-async function downloadLearning(gk) { if(!db||!on) return null; try { const s = await db.ref('learning/'+gk).once('value'); return s.val()||{patterns:{},discovered:{}}; } catch(e) { return null; } }
-function mergeLearning(lLp,lDp,cD) { if(!cD) return {lp:lLp,dp:lDp}; const mLp={...lLp}, mDp={...lDp}; if(cD.patterns) { for(const[k,v] of Object.entries(cD.patterns)) mLp[k]=Math.max(mLp[k]||0,v); } if(cD.discovered) { for(const[k,v] of Object.entries(cD.discovered)) { if(!mDp[k]||v.confidence>mDp[k].confidence) mDp[k]=v; } } return {lp:mLp,dp:mDp}; }
-const glp = () => ls(PK+'p',{}); const slp = pl => ss(PK+'p',pl);
-
-let cu=null, cg=null, gs=[], las=null, cV=[], cM=[], cA=[], cClock=[];
-let lp={}, dp={}, fh=[], cc=0, wc=0, al=[], predCount=5, cloudSynced=false;
-const MS=10;
-
-function alog(msg) { al.unshift({t:new Date().toLocaleTimeString('ar-EG'),m:msg}); if(al.length>20) al=al.slice(0,20); const el=document.getElementById('learnLog'); if(el) el.innerHTML=al.map(l=>`<div>${l.t} ${l.m}</div>`).join(''); }
-
-function toggleGearPopup() { document.getElementById('gearPopupOverlay').classList.add('show'); document.querySelectorAll('.gear-popup-option').forEach(o=>{ o.classList.remove('active'); if(parseInt(o.dataset.count)===predCount) o.classList.add('active'); }); }
-function closeGearPopup(e) { if(e.target===document.getElementById('gearPopupOverlay')) document.getElementById('gearPopupOverlay').classList.remove('show'); }
-function setPredCount(c) { predCount=c; if(cg) localStorage.setItem(PK+cg+'_pc',predCount); document.getElementById('gearPopupOverlay').classList.remove('show'); ra(); }
-
-function lo() { cu=null; cg=null; showScreen('loginScreen'); }
-function gtl() { showScreen('loginScreen'); }
-async function btg() { await showScreen('gameSelectScreen'); }
-
-async function showScreen(id) {
-    Object.keys(imgAdInt).forEach(k=>{ clearInterval(imgAdInt[k]); delete imgAdInt[k]; });
-    Object.keys(bgInt).forEach(k=>{ clearInterval(bgInt[k]); delete bgInt[k]; });
-    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-    const sc = document.getElementById(id);
-    if(sc) { sc.classList.add('active'); if(id==='adminScreen') { await lap(); refreshGameList(); refreshAdList(); } if(id==='gameSelectScreen') await buildGameCards(); }
-    refreshAllAds();
-}
-</script>
-<script>
-// ==================== AUTH ====================
-async function cpw() {
-    document.getElementById('loginError').textContent = '';
-    const inp = document.getElementById('passInput').value.trim(); if(!inp) return;
-    if(inp===AD||inp===MK) { document.getElementById('passInput').value=''; showScreen('adminScreen'); await lap(); return; }
-    document.getElementById('loginBtn').textContent = '⏳';
-    let fd=null, ap={}; if(on&&db) { const cl=await cgp(); if(cl) { ap=cl; slp(cl); } }
-    if(!Object.keys(ap).length) ap=glp();
-    for(const p of Object.values(ap)) { if([p.key+'_master',p.key+'_static',gtp(p.key,p.mode),p.key].includes(inp)) { fd=p; break; } }
-    document.getElementById('loginBtn').textContent = '🔓 دخول';
-    if(!fd) { document.getElementById('loginError').textContent='❌ غير صحيح'; return; }
-    if(gex(fd).ex) { document.getElementById('loginError').textContent='⏰ منتهي'; return; }
-    if(fd.lockedDevice&&fd.lockedDevice!==CD) { document.getElementById('loginError').textContent='🚫 جهاز آخر'; return; }
-    if(!fd.lockedDevice) { fd.lockedDevice=CD; fd.createdAt=fd.createdAt||new Date().toISOString(); if(on&&db) csp(fd.id,fd); ap[fd.id]=fd; slp(ap); }
-    cu=fd; document.getElementById('selectUser').textContent='👤 '+fd.id;
-    document.getElementById('passInput').value=''; showScreen('gameSelectScreen');
-}
-
-async function lap() { let pl={}; if(on&&db) { const cl=await cgp(); if(cl) { pl=cl; slp(cl); } else pl=glp(); } else pl=glp(); rpl(pl); }
-
-// ==================== ADMIN PLAYERS ====================
-async function ap() { const id=document.getElementById('newId').value.trim(), key=document.getElementById('newKey').value.trim(); const mode=document.getElementById('newMode').value, hrs=parseInt(document.getElementById('newHours').value)||0, dys=parseInt(document.getElementById('newDays').value)||0; if(!id||!key) return alert('املأ'); const all=on&&db?(await cgp())||glp():glp(); if(Object.keys(all).length>=200) return alert('200 كحد أقصى'); if(all[id]) return alert('مكرر'); const pd={id,key,mode,maxHours:hrs,maxDays:dys,lockedDevice:null,createdAt:null}; if(on&&db) await csp(id,pd); const lc=glp(); lc[id]=pd; slp(lc); ['newId','newKey'].forEach(d=>document.getElementById(d).value=''); document.getElementById('newHours').value='0'; document.getElementById('newDays').value='0'; await lap(); alert('✅ '+id); }
-async function dp_(id) { if(!confirm('حذف '+id+'؟')) return; if(on&&db) await cdp(id); const l=glp(); delete l[id]; slp(l); await lap(); }
-async function da_() { if(!confirm('حذف الكل؟')) return; if(on&&db) await cda(); slp({}); await lap(); }
-async function rad_() { if(!confirm('فك الكل؟')) return; const all=on&&db?(await cgp())||glp():glp(); for(const[id,p] of Object.entries(all)) { p.lockedDevice=null; p.createdAt=null; if(on&&db) await csp(id,p); } slp(all); await lap(); alert('✅'); }
-function rpl(players) { const arr=Object.values(players||{}); document.getElementById('passCount').textContent=arr.length; const c=document.getElementById('passList'); if(!c) return; c.innerHTML=arr.length?arr.map(p=>{ const v=gtp(p.key,p.mode), ei=gex(p); const di=p.lockedDevice?'<span style="color:#4e9f3d;">📱</span>':'<span style="color:#888;">-</span>'; const ex=ei.ex?'<span style="color:#e94560;">منتهي</span>':'<span style="color:#4e9f3d;">'+ei.rm+'</span>'; return `<div class="pass-item"><strong>${p.id}</strong><span>${v}</span><small>[${p.mode}]</small>${di}${ex}<button onclick="dp_('${p.id}')">🗑</button></div>`; }).join(''):'<p style="color:#888;text-align:center;">لا يوجد</p>'; }
-
-// ==================== GAME CARDS ====================
-async function buildGameCards() { if(on&&db) { try { const s=await db.ref('games').once('value'); const cg=s.val(); if(cg&&Object.keys(cg).length>0) { G=cg; ss(GK,G); } } catch(e){} } else G=loadGames(); const c=document.getElementById('gameCardsContainer'); if(!c) return; c.innerHTML=Object.entries(G).map(([k,g])=>{ const icon=g.img?`<img class="game-icon" src="${g.img}" alt="${g.n}" onerror="this.style.display='none';this.parentElement.textContent='${g.n.split(' ')[0]||'🎯'}';" style="width:55px;height:55px;border-radius:50%;object-fit:cover;">`:`<span class="game-icon">${g.n.split(' ')[0]||'🎯'}</span>`; return `<div class="game-card" onclick="sg('${k}')">${icon}<h3>${g.n}</h3></div>`; }).join(''); }
-
-// ==================== ADMIN TABS ====================
-function switchAdminTab(tab) { document.querySelectorAll('.admin-tab').forEach((t,i)=>{ t.classList.remove('active'); if((tab==='players'&&i===0)||(tab==='games'&&i===1)||(tab==='ads'&&i===2)||(tab==='patterns'&&i===3)) t.classList.add('active'); }); ['adminPlayersTab','adminGamesTab','adminAdsTab','adminPatternsTab'].forEach(id=>document.getElementById(id).style.display='none'); document.getElementById('admin'+tab.charAt(0).toUpperCase()+tab.slice(1)+'Tab').style.display='block'; if(tab==='games') refreshGameList(); if(tab==='ads') refreshAdList(); if(tab==='patterns') { loadPatternGamesList(); loadPatternsForGame(); } }
-function switchSettingsTab(tab) { document.querySelectorAll('#settingsTabs .tab').forEach((t,i)=>{ t.classList.remove('active'); if((tab==='list'&&i===0)||(tab==='add'&&i===1)) t.classList.add('active'); }); document.getElementById('settingsList').style.display=tab==='list'?'block':'none'; document.getElementById('settingsForm').style.display=tab==='add'?'block':'none'; if(tab==='list') refreshGameList(); if(tab==='add') { document.getElementById('settingsFormTitle').textContent='➕ إضافة برنامج جديد'; clearGameForm(); } }
-
-// ==================== GAME MANAGEMENT ====================
-function refreshGameList() { const c=document.getElementById('gameListContainer'); if(!c) return; c.innerHTML=Object.entries(G).map(([k,g])=>{ const icon=g.img?`<img class="game-list-icon" src="${g.img}" alt="${g.n}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`:`<span class="game-list-icon">${g.n.split(' ')[0]||'🎯'}</span>`; return `<div class="game-list-item"><div>${icon}</div><div class="game-list-info"><div class="game-list-name">${g.n}</div><div style="font-size:8px;color:var(--muted);">${k} | 🟢${g.v.length} 🥩${g.m.length}</div></div><button class="edit" onclick="editGame('${k}')">✏️</button><button onclick="deleteGame('${k}')">🗑</button></div>`; }).join(''); }
-function clearGameForm() { ['editGameKey','gameKey','gameName','gameImage','gameVeg','gameMeat','gameClock'].forEach(id=>document.getElementById(id).value=''); }
-function editGame(key) { const g=G[key]; if(!g) return; document.getElementById('editGameKey').value=key; document.getElementById('gameKey').value=key; document.getElementById('gameName').value=g.n; document.getElementById('gameImage').value=g.img||''; document.getElementById('gameVeg').value=(g.v||[]).join(','); document.getElementById('gameMeat').value=(g.m||[]).join(','); const times=['12:00','1:30','3:00','4:30','6:00','7:30','9:00','10:30']; document.getElementById('gameClock').value=(g.clock||[]).map((s,i)=>`الساعة ${times[i]||(i+1)}: ${s}`).join('\n'); document.getElementById('settingsFormTitle').textContent='✏️ تعديل: '+g.n; document.getElementById('settingsList').style.display='none'; document.getElementById('settingsForm').style.display='block'; }
-function cancelEdit() { document.getElementById('settingsList').style.display='block'; document.getElementById('settingsForm').style.display='none'; clearGameForm(); refreshGameList(); }
-async function saveGame() { const ek=document.getElementById('editGameKey').value, key=document.getElementById('gameKey').value.trim().toLowerCase(); const name=document.getElementById('gameName').value.trim(), img=document.getElementById('gameImage').value.trim(); const veg=document.getElementById('gameVeg').value.trim().split(/[,،\s]+/).filter(Boolean); const meat=document.getElementById('gameMeat').value.trim().split(/[,،\s]+/).filter(Boolean); if(!key||!name) return alert('مطلوب'); if(!/^[a-z0-9_]+$/.test(key)) return alert('مفتاح خطأ'); if(veg.length<2||meat.length<2) return alert('رمزين على الأقل'); let clock=[]; const cl=document.getElementById('gameClock').value.trim().split('\n').filter(Boolean); if(cl.length===8) clock=cl.map(l=>{ const p=l.split(/[:：]\s*/); return p[p.length-1].trim(); }); else clock=[...veg,...meat].slice(0,8); const gd={n:name,v:veg,m:meat,a:[...veg,...meat],clock,img}; if(ek&&ek!==key) delete G[ek]; G[key]=gd; saveGames(G); await buildGameCards(); cancelEdit(); alert('✅ '+name); }
-async function deleteGame(key) { if(!confirm('حذف '+(G[key]?.n||key)+'؟')) return; delete G[key]; saveGames(G); await buildGameCards(); refreshGameList(); }
-
-// ==================== AD MANAGEMENT ====================
-function addAd() { const type=document.getElementById('adType').value, place=document.getElementById('adPlace').value; const content=document.getElementById('adContent').value.trim(); if(!content) return alert('محتوى'); ADS['ad_'+Date.now()]={id:'ad_'+Date.now(),type,place,content,createdAt:new Date().toISOString()}; saveAds(ADS); document.getElementById('adContent').value=''; refreshAdList(); refreshAllAds(); alert('✅'); }
-function deleteAd(id) { if(!confirm('حذف؟')) return; delete ADS[id]; saveAds(ADS); refreshAdList(); refreshAllAds(); }
-function refreshAdList() { const c=document.getElementById('adListContainer'); if(!c) return; const pn={login:'🔐 تسجيل',games:'🎮 برامج',predict:'🎯 توقعات'}; const tn={image:'🖼️',text:'📝',bg:'🖼️ خلفية'}; c.innerHTML=Object.values(ADS).length?Object.values(ADS).map(a=>`<div class="ad-list-item"><div class="ad-list-info">${tn[a.type]} [${pn[a.place]}] ${a.content.substring(0,40)}</div><button onclick="deleteAd('${a.id}')">🗑</button></div>`).join(''):'<p style="color:#888;text-align:center;">لا يوجد</p>'; }
-
-// ==================== PATTERNS SYSTEM ====================
-let currentPatternGame = null;
-
-async function recordWrongPattern(wrongSymbol) {
-    if (!cg || gs.length < 4) return;
-    
-    const last4 = gs.slice(-4);
-    const pk = last4.join(',');
-    const patterns = getPatterns(cg);
-    
-    if (!patterns[pk]) {
-        patterns[pk] = { sequence: last4, results: {}, totalCount: 0 };
-    }
-    
-    patterns[pk].results[wrongSymbol] = (patterns[pk].results[wrongSymbol] || 0) + 1;
-    patterns[pk].totalCount++;
-    
-    savePatterns(cg, patterns);
-    applyPatternImmediately(last4, wrongSymbol, patterns[pk]);
-}
-
-function applyPatternImmediately(last4, wrongSymbol, pd) {
-    const confidence = Math.round((pd.results[wrongSymbol] / pd.totalCount) * 100);
-    const lastSymbol = last4[last4.length - 1];
-    const learnKey = lastSymbol + '>' + wrongSymbol;
-    
-    if (!lp[learnKey]) lp[learnKey] = 0;
-    lp[learnKey] = Math.max(lp[learnKey], Math.max(confidence, 30));
-    ss(PK + cg + '_p', lp);
-    
-    const discKey = lastSymbol + '>' + wrongSymbol;
-    if (!dp[discKey] || dp[discKey].confidence < confidence) {
-        dp[discKey] = { count: pd.totalCount, confidence: Math.max(confidence, 30) };
-        ss(PK + cg + '_d', dp);
-    }
-    
-    alog('📊 ' + last4.join('') + ' → ' + wrongSymbol + ' (' + confidence + '%)');
-    
-    const pt = document.getElementById('adminPatternsTab');
-    if (pt && pt.style.display === 'block') {
-        const cg2 = document.getElementById('patternGameSelect');
-        if (cg2 && cg2.value === cg) loadPatternsForGame();
-    }
-    
-    ra();
-}
-
-function loadPatternGamesList() {
-    const s = document.getElementById('patternGameSelect'); if (!s) return;
-    s.innerHTML = '<option value="">اختر برنامج</option>' + Object.entries(G).map(([k, g]) => `<option value="${k}">${g.n}</option>`).join('');
-}
-
-function loadPatternsForGame() {
-    const gk = document.getElementById('patternGameSelect').value;
-    const header = document.getElementById('patternHeaderRow');
-    if (!gk) {
-        document.getElementById('patternListContainer').innerHTML = '<p style="color:#888;text-align:center;">اختر برنامج</p>';
-        if (header) header.style.display = 'none';
-        return;
-    }
-    currentPatternGame = gk;
-    const patterns = getPatterns(gk);
-    displayPatterns(patterns);
-}
-
-function displayPatterns(patterns) {
-    const c = document.getElementById('patternListContainer');
-    const header = document.getElementById('patternHeaderRow');
-    if (!c) return;
-    
-    const entries = Object.entries(patterns);
-    
-    if (!entries.length) {
-        c.innerHTML = '<p style="color:#888;text-align:center;">لا توجد أنماط مسجلة</p>';
-        if (header) header.style.display = 'none';
-        return;
-    }
-    
-    entries.sort((a, b) => a[0].localeCompare(b[0], 'ar'));
-    
-    let maxConf = 0;
-    entries.forEach(([k, p]) => {
-        let best = null, bc = 0;
-        for (const [s, ct] of Object.entries(p.results)) { if (ct > bc) { bc = ct; best = s; } }
-        const conf = best ? Math.round((bc / p.totalCount) * 100) : 0;
-        if (conf > maxConf) maxConf = conf;
-    });
-    
-    if (header) {
-        header.style.display = 'flex';
-        document.getElementById('patternTotalCount').textContent = entries.length;
-        document.getElementById('patternMaxConf').textContent = maxConf + '%';
-    }
-    
-    c.innerHTML = `
-        <div style="overflow-x:auto;">
-            <table class="pattern-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>التسلسل</th>
-                        <th>النتيجة</th>
-                        <th>التكرار</th>
-                        <th>الثقة</th>
-                        <th>الحالة</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${entries.map(([k, p], index) => {
-                        const seq = p.sequence.map(s => `<span style="font-size:14px;">${s}</span>`).join('<span style="color:#666;margin:0 2px;font-size:10px;">→</span>');
-                        let best = null, bc = 0;
-                        for (const [s, ct] of Object.entries(p.results)) { if (ct > bc) { bc = ct; best = s; } }
-                        const conf = best ? Math.round((bc / p.totalCount) * 100) : 0;
-                        const cls = conf >= 70 ? 'high' : conf >= 50 ? 'medium' : 'low';
-                        return `
-                            <tr>
-                                <td>${index + 1}</td>
-                                <td><div class="sequence-cell">${seq}</div></td>
-                                <td style="font-size:14px;">${best || '?'}</td>
-                                <td>${p.totalCount}</td>
-                                <td><span class="confidence-badge ${cls}">${conf}%</span></td>
-                                <td><span class="confidence-badge ${cls}">✓ مطبق</span></td>
-                            </tr>
-                        `;
-                    }).join('')}
-                </tbody>
-            </table>
-        </div>
-    `;
-}
-
-function clearPatterns() {
-    if (!currentPatternGame) return alert('اختر برنامج');
-    if (!confirm('مسح أنماط ' + (G[currentPatternGame]?.n || currentPatternGame) + '؟')) return;
-    savePatterns(currentPatternGame, {});
-    loadPatternsForGame();
-    alert('✅');
-}
-
-function exportPatterns() {
-    if (!currentPatternGame) return alert('اختر برنامج');
-    const d = { game: currentPatternGame, gameName: G[currentPatternGame]?.n, patterns: getPatterns(currentPatternGame), exportedAt: new Date().toISOString() };
-    const b = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(b);
-    a.download = 'patterns_' + currentPatternGame + '_' + new Date().toISOString().split('T')[0] + '.json'; a.click();
-}
-
-// ==================== GAME PLAY ====================
-async function sg(gk) {
-    if (on && db) { try { const s = await db.ref('games').once('value'); const cg = s.val(); if (cg && Object.keys(cg).length > 0) { G = cg; ss(GK, G); } } catch (e) {} } else G = loadGames();
-    cg = gk; const g = G[gk]; if (!g) { alert('غير موجود'); return; }
-    cV = g.v; cM = g.m; cA = g.a; cClock = g.clock || [...g.a.slice(0, 8)]; cloudSynced = false;
-    lp = ls(PK + gk + '_p', {}); dp = ls(PK + gk + '_d', {});
-    if (on && db) { const cd = await downloadLearning(gk); if (cd && (Object.keys(cd.patterns || {}).length > 0 || Object.keys(cd.discovered || {}).length > 0)) { const m = mergeLearning(lp, dp, cd); lp = m.lp; dp = m.dp; ss(PK + gk + '_p', lp); ss(PK + gk + '_d', dp); cloudSynced = true; alog('☁️ تعلم مشترك'); } }
-    fh = ls(PK + gk + '_h', []); cc = parseInt(localStorage.getItem(PK + gk + '_c') || '0'); wc = parseInt(localStorage.getItem(PK + gk + '_w') || '0'); predCount = parseInt(localStorage.getItem(PK + gk + '_pc') || '5');
-    gs = []; las = null; al = [];
-    const s = cV[Math.floor(Math.random() * cV.length)]; gs.push(s); las = s;
-    showScreen('gameScreen'); ra(); alog('🟢 ' + g.n);
-}
-
-function gfr(sym) { return (BR[sym] || []).filter(s => cA.includes(s)); }
-function gfrp(sym, cnt) { return RR[sym]?.[cnt]?.filter(s => cA.includes(s)) || []; }
-function uc_() { document.getElementById('correctCount').textContent = cc; document.getElementById('wrongCount').textContent = wc; document.getElementById('percentDisplay').textContent = (cc + wc > 0 ? Math.round((cc / (cc + wc)) * 100) : 0) + '%'; }
-
-async function lrn(f, t) {
-    const k = f + '>' + t; lp[k] = (lp[k] || 0) + 1; ss(PK + cg + '_p', lp);
-    if (!gfr(f).includes(t) && lp[k] >= 2 && !dp[k]) { dp[k] = { count: lp[k], confidence: Math.min(lp[k] * 15, 90) }; ss(PK + cg + '_d', dp); document.getElementById('learnAlert').textContent = '🧠 ' + f + ' → ' + t; document.getElementById('learnAlert').classList.add('show'); setTimeout(() => document.getElementById('learnAlert').classList.remove('show'), 3000); alog('🆕 ' + f + '→' + t + '(' + dp[k].confidence + '%)'); }
-    if (dp[k]) { dp[k].count = lp[k]; dp[k].confidence = Math.min(lp[k] * 15, 95); ss(PK + cg + '_d', dp); }
-    if (on && db && lp[k] % 5 === 0) { const up = await uploadLearning(cg, lp, dp); if (up) { document.getElementById('cloudAlert').style.display = 'block'; setTimeout(() => document.getElementById('cloudAlert').style.display = 'none', 2000); alog('☁️ رفع'); } }
-}
-
-function gco(strip, sym) { if (!sym || !strip.length) return 0; let c = 0; for (let i = strip.length - 1; i >= 0; i--) { if (strip[i] === sym) c++; else break; } return c; }
-
-function ans(strip) {
-    if (strip.length < 1) return { pred: null, conf: 0, forced: [], src: [] };
-    const last = strip[strip.length - 1], cons = gco(strip, last), res = { last, cons, pred: null, conf: 0, forced: [], src: [] };
-    if (cons >= 2) { const rp = gfrp(last, Math.min(cons, 4)); if (rp.length > 0) { res.forced = [...rp]; res.pred = rp[0]; res.conf = 70 + cons * 5; res.src.push('تكرار'); } }
-    const lr = []; for (const [k, c] of Object.entries(lp)) { if (k.startsWith(last + '>') && c >= 2) lr.push({ sym: k.split('>')[1], count: c }); } lr.sort((a, b) => b.count - a.count);
-    if (!res.pred && lr[0]?.count >= 3) { res.pred = lr[0].sym; res.conf = 40 + lr[0].count * 3; res.src.push('متعلم'); res.forced = [...new Set([...res.forced, ...lr.slice(0, 3).map(l => l.sym)])]; }
-    if (!res.pred) { const disc = []; for (const [k, d] of Object.entries(dp)) { if (k.startsWith(last + '>') && d.confidence >= 40) disc.push({ sym: k.split('>')[1], conf: d.confidence }); } disc.sort((a, b) => b.conf - a.conf); if (disc[0]?.conf >= 50) { res.pred = disc[0].sym; res.conf = disc[0].conf; res.src.push('مكتشف'); if (!res.forced.includes(disc[0].sym)) res.forced.push(disc[0].sym); } }
-    if (!res.pred && TR[last]) { const t = TR[last]; if (cA.includes(t.d)) { if (!res.forced.includes(t.d)) res.forced.push(t.d); res.pred = t.d; res.conf = 45; res.src.push('محفز'); } }
-    if (!res.pred) { const bn = gfr(last); if (bn.length > 0) { res.pred = bn[0]; res.conf = 30; res.src.push('طبيعي'); if (!res.forced.length) res.forced = bn; } }
-    return res;
-}
-
-function addSymbol(sym) {
-    if (cu && gex(cu).ex) { alert('⏰ منتهي'); lo(); return; }
-    if (gs.length > 0) {
-        const pr = gpr(), ps = pr.map(p => p.emoji);
-        if (ps.includes(sym)) { cc++; }
-        else { wc++; if (gs.length >= 4) { recordWrongPattern(sym); } }
-        localStorage.setItem(PK + cg + '_c', cc); localStorage.setItem(PK + cg + '_w', wc); uc_(); lrn(gs[gs.length - 1], sym);
-    }
-    fh.push(sym); if (fh.length > 500) fh = fh.slice(-250); ss(PK + cg + '_h', fh);
-    gs.push(sym); if (gs.length > MS) gs.shift(); las = sym;
-    if (fh.length % 50 === 0) alog('📈 50 | ✅' + cc + ' ❌' + wc);
-    alog('➕ ' + sym); ra();
-}
-
-function rg() { gs = []; las = null; cc = 0; wc = 0; localStorage.setItem(PK + cg + '_c', '0'); localStorage.setItem(PK + cg + '_w', '0'); uc_(); gs.push(cV[Math.floor(Math.random() * cV.length)]); las = gs[0]; alog('🔄'); ra(); }
-
-function gpr() {
-    const hv = Math.ceil(predCount / 2), hm = predCount - hv;
-    if (gs.length === 0) { const d = []; for (let i = 0; i < hv; i++) d.push({ emoji: cV[i] || cA[0] || '🥕', prob: 35, type: 'veg', forced: false, learned: false, last: false }); for (let i = 0; i < hm; i++) d.push({ emoji: cM[i] || cA[cV.length] || '🍤', prob: 25, type: 'meat', forced: false, learned: false, last: false }); return d; }
-    const a = ans(gs), preds = [], used = new Set(); let vc = 0, mc = 0;
-    const add = (sym, prob, forced, learned) => { if (used.has(sym) || !cA.includes(sym)) return; const t = cV.includes(sym) ? 'veg' : 'meat'; if (t === 'veg' && vc >= hv) return; if (t === 'meat' && mc >= hm) return; preds.push({ emoji: sym, prob: Math.round(Math.min(prob, 95)), type: t, forced, learned, last: sym === las }); used.add(sym); if (t === 'veg') vc++; else mc++; };
-    for (const s of a.forced) add(s, a.conf + 20, true, a.src.includes('متعلم'));
-    if (!used.has(las)) add(las, 35, false, false);
-    const bn = gfr(a.last); for (const s of bn) { if (!used.has(s)) add(s, 25, false, false); }
-    for (const s of cA) { if (!used.has(s)) add(s, 15, false, false); }
-    preds.sort((a2, b2) => { if (a2.last !== b2.last) return a2.last ? -1 : 1; if (a2.forced !== b2.forced) return a2.forced ? -1 : 1; return b2.prob - a2.prob; });
-    return preds.slice(0, predCount);
-}
-
-function buildWheel(preds) {
-    const c = document.getElementById('wheelContainer'); c.querySelectorAll('.wheel-slot').forEach(e => e.remove());
-    const ob = c.querySelector('.gear-icon-btn'); if (ob) ob.remove();
-    const w = c.offsetWidth, h = c.offsetHeight; const radius = Math.min(w, h) * 0.37, cx = w / 2, cy = h / 2;
-    const tpe = preds.slice(0, predCount).map(p => p.emoji); const tpm = {}; preds.slice(0, predCount).forEach((p, i) => { tpm[p.emoji] = { prob: p.prob, rank: i }; });
-    const items = cClock.map((emoji, i) => { const ip = tpe.includes(emoji), pi = tpm[emoji]; return { emoji, type: cV.includes(emoji) ? 'veg' : 'meat', isPred: ip, rank: pi ? pi.rank : -1, prob: pi ? pi.prob : 0 }; });
-    const as = 360 / items.length;
-    items.forEach((item, i) => { const ad = -90 + (i * as), ar = (ad * Math.PI) / 180; const x = cx + radius * Math.cos(ar), y = cy + radius * Math.sin(ar); const slot = document.createElement('div'); slot.className = 'wheel-slot ' + item.type; const fs = Math.min(w * 0.097, 38); if (item.isPred) { if (item.rank < 2) { slot.classList.add('pred-top'); slot.innerHTML = `<span style="font-size:${fs}px;">${item.emoji}</span><span class="slot-badge">👹</span><span class="slot-prob">${item.prob}%</span>`; } else { slot.classList.add('pred-mid'); slot.innerHTML = `<span style="font-size:${fs}px;">${item.emoji}</span><span class="slot-badge">😈</span><span class="slot-prob">${item.prob}%</span>`; } } else { slot.classList.add('pred-none'); slot.innerHTML = `<span style="font-size:${fs}px;">${item.emoji}</span>`; } slot.style.left = x + 'px'; slot.style.top = y + 'px'; slot.title = item.isPred ? (item.rank < 2 ? '👹 ' : '😈 ') + item.prob + '%' : item.emoji; slot.onclick = () => addSymbol(item.emoji); c.appendChild(slot); });
-    const ce = document.getElementById('wheelCenter'); const g = G[cg]; if (g && g.img && g.img.startsWith('http')) ce.innerHTML = `<img src="${g.img}" alt="${g.n}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`; else if (g && g.img) ce.textContent = g.img; else ce.textContent = las || '🎯';
-    const gb = document.createElement('button'); gb.className = 'gear-icon-btn'; gb.textContent = '⚙️'; gb.onclick = toggleGearPopup; c.appendChild(gb);
-}
-
-function ra() { const p = gpr(); buildWheel(p); document.getElementById('gearStrip').innerHTML = Array.from({ length: MS }, (_, i) => { const s = gs[i] || ''; return `<div class="gear-slot${i === gs.length - 1 && s ? ' newest' : ''}">${s}</div>`; }).join(''); uc_(); }
-function ex() { const d = { game: cg, user: cu?.id, strip: [...gs], analysis: ans(gs), correct: cc, wrong: wc, percent: (cc + wc > 0 ? Math.round((cc / (cc + wc)) * 100) : 0), learned: lp, discovered: dp, history: fh.slice(-50), predCount, cloudSynced }; const b = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'khal_' + cg + '_' + new Date().toISOString().split('T')[0] + '.json'; a.click(); alog('📦'); }
-
-// ==================== INIT ====================
-async function init() {
-    ifb(); G = loadGames(); ADS = loadAds();
-    if (on && db) {
-        try { const s = await db.ref('games').once('value'); const cg = s.val(); if (cg && Object.keys(cg).length > 0) { G = cg; ss(GK, G); } } catch (e) {}
-        try { const s = await db.ref('ads').once('value'); const ca = s.val(); if (ca && Object.keys(ca).length > 0) { ADS = ca; ss(AK, ADS); } } catch (e) {}
-        db.ref('ads').on('value', s => { const na = s.val(); ADS = na && Object.keys(na).length > 0 ? na : {}; ss(AK, ADS); refreshAllAds(); });
-        db.ref('patterns').on('value', s => { const cp = s.val() || {}; const lp2 = ls(PTK, {}); for (const [gk, patterns] of Object.entries(cp)) { if (!lp2[gk]) lp2[gk] = {}; for (const [pk, pd] of Object.entries(patterns)) { if (!lp2[gk][pk]) lp2[gk][pk] = pd; else { for (const [sym, cnt] of Object.entries(pd.results)) { lp2[gk][pk].results[sym] = Math.max(lp2[gk][pk].results[sym] || 0, cnt); } lp2[gk][pk].totalCount = Math.max(lp2[gk][pk].totalCount, pd.totalCount); } } } ss(PTK, lp2); if (document.getElementById('adminPatternsTab').style.display === 'block') { const cg2 = document.getElementById('patternGameSelect').value; if (cg2) loadPatternsForGame(); } });
-    }
-    await buildGameCards(); refreshAllAds();
-    let pl = {}; if (on && db) { const cl = await cgp(); if (cl) pl = cl; } if (!Object.keys(pl).length) pl = glp();
-    if (!Object.keys(pl).length) { pl['player01'] = { id: 'player01', key: 'Khali2024', mode: 'fixed', maxHours: 0, maxDays: 0, lockedDevice: null, createdAt: null }; slp(pl); if (on && db) csp('player01', pl['player01']); }
-    document.getElementById('passInput').addEventListener('keydown', e => { if (e.key === 'Enter') cpw(); });
-}
-document.addEventListener('DOMContentLoaded', init);
-</script>
     </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script>
+    // ==================== STARS BACKGROUND ====================
+    (function() {
+        const bg = document.getElementById('starsBg');
+        for (let i = 0; i < 100; i++) {
+            const s = document.createElement('div'); s.className = 'star';
+            const sz = Math.random() * 2 + 1;
+            s.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${Math.random()*3+2}s;--delay:${Math.random()*5}s`;
+            bg.appendChild(s);
+        }
+        for (let i = 0; i < 3; i++) {
+            const sh = document.createElement('div'); sh.className = 'shooting-star';
+            sh.style.cssText = `left:${Math.random()*80}%;top:${Math.random()*40}%;--sdelay:${Math.random()*8+i*4}s`;
+            bg.appendChild(sh);
+        }
+    })();
+
+    // ==================== FIREBASE CONFIGURATION ====================
+    const firebaseConfig = {
+        apiKey: "AIzaSyB9rN0N-0YlO5lW5l5l5l5l5l5l5l5l5l5",
+        authDomain: "hamdi-791e5.firebaseapp.com",
+        databaseURL: "https://hamdi-791e5-default-rtdb.firebaseio.com",
+        projectId: "hamdi-791e5",
+        storageBucket: "hamdi-791e5.appspot.com",
+        messagingSenderId: "123456789012",
+        appId: "1:123456789012:web:abcdef1234567890"
+    };
+
+    let db = null;
+    let isOnline = false;
+
+    function initFirebase() {
+        try {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            db = firebase.database();
+            firebase.database().ref('.info/connected').on('value', snap => {
+                isOnline = snap.val() === true;
+                updateConnectionStatus(isOnline);
+            });
+            return true;
+        } catch (e) {
+            isOnline = false;
+            updateConnectionStatus(false);
+            return false;
+        }
+    }
+
+    function updateConnectionStatus(online) {
+        const status = online ? '🟢 متصل' : '🔴 غير متصل';
+        document.querySelectorAll('#connectionStatus, #adminConnStatus').forEach(el => {
+            if (el) { el.textContent = status; el.className = 'status-msg ' + (online ? 'online' : 'offline'); }
+        });
+    }
+
+    // ==================== STORAGE HELPERS ====================
+    const ls = (k, f = null) => { try { return JSON.parse(localStorage.getItem(k)) || f; } catch (e) { return f; } };
+    const ss = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+
+    // ==================== DEFAULT DATA ====================
+    const DEFAULT_GAMES = {
+        zena: { n: '🎯 زينا لايف', v: ['🥕','🌽','🍅','🌶'], m: ['🍤','🐮','🐟','🐤'], a: ['🥕','🌽','🌶','🍅','🍤','🐮','🐟','🐤'], clock: ['🐤','🍅','🐮','🌶','🐟','🌽','🍤','🥕'], img: '' },
+        yoho: { n: '🎯 يوهو لايف', v: ['🥕','🌽','🍅','🌶'], m: ['🍤','🐮','🐟','🐤'], a: ['🥕','🌽','🍅','🌶','🍤','🐮','🐟','🐤'], clock: ['🐤','🍅','🐮','🌶','🐟','🌽','🍤','🥕'], img: '' },
+        berti: { n: '🎯 برتي ستار', v: ['🥕','🌽','🍅','🥦'], m: ['🍤','🍗','🥩','🐟'], a: ['🥕','🌽','🍅','🥦','🍤','🍗','🥩','🐟'], clock: ['🥕','🍤','🍅','🍗','🌽','🥩','🥦','🐟'], img: '' },
+        majles: { n: '🎯 المجلس', v: ['🥕','🌽','🍅','🥦'], m: ['🍤','🍗','🥩','🐟'], a: ['🥕','🌽','🍅','🥦','🍤','🍗','🥩','🐟'], clock: ['🥕','🍤','🍅','🍗','🌽','🥩','🥦','🐟'], img: '' }
+    };
+
+    const ADMIN_PASS = 'Admin@Khal2024';
+    const MASTER_KEY = 'AdminMasterKey2024';
+
+    // ==================== GAME RULES ====================
+    const BASIC_RULES = {
+        '🥕': ['🍅', '🌽'], '🌽': ['🥕', '🥦'], '🥦': ['🍅', '🌽'],
+        '🍅': ['🥕', '🥦'], '🌶': ['🥕', '🌽', '🍅'],
+        '🍤': ['🌽', '🥕'], '🐮': ['🌽', '🍅'], '🐟': ['🍅', '🥦'],
+        '🐤': ['🍅', '🥦'], '🍗': ['🌽', '🍅'], '🥩': ['🍅', '🥦']
+    };
+
+    const REPEAT_RULES = {
+        '🌽': {2: ['🍅','🥕'], 3: ['🍅','🥕'], 4: ['🍅','🥕']},
+        '🥦': {2: ['🥕','🍅'], 3: ['🥕','🍅'], 4: ['🥕','🍅']},
+        '🍅': {2: ['🌽','🥦'], 3: ['🌽','🥦'], 4: ['🌽','🥦']},
+        '🥕': {2: ['🍅','🌽'], 3: ['🍅','🌽'], 4: ['🍅','🌽']}
+    };
+
+    const TRIGGER_RULES = {
+        '🍤': {d:'🌽'}, '🐮': {d:'🍅'}, '🐟': {d:'🍅'},
+        '🐤': {d:'🍅'}, '🍗': {d:'🍅'}, '🥩': {d:'🥦'}
+    };
+
+    // ==================== GLOBAL STATE ====================
+    let GAMES = ls('kf_games', DEFAULT_GAMES);
+    let ADS = ls('kf_ads', {});
+    let currentUser = null;
+    let currentGame = null;
+    let gs = { strip: [], last: null, veg: [], meat: [], all: [], clock: [], correct: 0, wrong: 0, history: [], predCount: 5, learned: {}, discovered: {} };
+    let learnLog = [];
+    let adIntervals = {};
+
+    function generateTimeKey(base, mode) {
+        const now = new Date();
+        const pad = v => ('' + v).padStart(2, '0');
+        if (mode === 'hour') return `${base}_${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}${pad(now.getHours())}`;
+        if (mode === 'day') return `${base}_${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}`;
+        if (mode === 'month') return `${base}_${now.getFullYear()}${pad(now.getMonth()+1)}`;
+        return `${base}_static`;
+    }
+
+    function checkExpiry(player) {
+        if (!player.createdAt) return { ex: false, rm: 'غير محدود' };
+        const created = new Date(player.createdAt);
+        const now = new Date();
+        let maxHours = Infinity;
+        if (player.maxHours > 0) maxHours = player.maxHours;
+        if (player.maxDays > 0) maxHours = Math.min(maxHours, player.maxDays * 24);
+        if (maxHours === Infinity) return { ex: false, rm: 'غير محدود' };
+        const remaining = new Date(created.getTime() + maxHours * 3600000) - now;
+        if (remaining <= 0) return { ex: true, rm: 'منتهي' };
+        const rh = Math.floor(remaining / 3600000);
+        return { ex: false, rm: rh > 23 ? Math.floor(rh / 24) + ' يوم' : rh + ' ساعة' };
+    }
+
+    function getDeviceFingerprint() {
+        const data = [navigator.userAgent || '', screen.width + '', new Date().getTimezoneOffset() + ''].join('|');
+        let hash = 0;
+        for (let i = 0; i < data.length; i++) hash = ((hash << 5) - hash) + data.charCodeAt(i);
+        return 'D' + Math.abs(hash).toString(36).toUpperCase();
+    }
+
+    const deviceId = getDeviceFingerprint();
+
+    // ==================== AUTH ====================
+    async function cpw() {
+        document.getElementById('loginError').textContent = '';
+        const input = document.getElementById('passInput').value.trim();
+        if (!input) return;
+        
+        if (input === ADMIN_PASS || input === MASTER_KEY) {
+            document.getElementById('passInput').value = '';
+            showScreen('adminScreen');
+            refreshAdList();
+            loadPatternGamesList();
+            return;
+        }
+        
+        document.getElementById('loginBtn').textContent = '⏳';
+        
+        let players = {};
+        if (isOnline && db) {
+            try { const snap = await db.ref('players').once('value'); players = snap.val() || {}; } catch (e) {}
+        }
+        if (!Object.keys(players).length) players = ls('kf_players', {});
+        
+        let foundPlayer = null;
+        for (const player of Object.values(players)) {
+            const validKeys = [player.key + '_master', player.key + '_static', generateTimeKey(player.key, player.mode), player.key];
+            if (validKeys.includes(input)) { foundPlayer = player; break; }
+        }
+        
+        document.getElementById('loginBtn').textContent = '🔓 دخول';
+        
+        if (!foundPlayer) { document.getElementById('loginError').textContent = '❌ كلمة مرور غير صحيحة'; return; }
+        if (checkExpiry(foundPlayer).ex) { document.getElementById('loginError').textContent = '⏰ منتهي الصلاحية'; return; }
+        if (foundPlayer.lockedDevice && foundPlayer.lockedDevice !== deviceId) { document.getElementById('loginError').textContent = '🚫 جهاز آخر'; return; }
+        
+        if (!foundPlayer.lockedDevice) {
+            foundPlayer.lockedDevice = deviceId;
+            foundPlayer.createdAt = foundPlayer.createdAt || new Date().toISOString();
+            if (isOnline && db) db.ref('players/' + foundPlayer.id).set(foundPlayer);
+            const ap = ls('kf_players', {});
+            ap[foundPlayer.id] = foundPlayer;
+            ss('kf_players', ap);
+        }
+        
+        currentUser = foundPlayer;
+        document.getElementById('selectUser').textContent = '👤 ' + foundPlayer.id;
+        document.getElementById('passInput').value = '';
+        showScreen('gameSelectScreen');
+    }
+
+    // ==================== SCREEN MANAGEMENT ====================
+    function showScreen(screenId) {
+        Object.keys(adIntervals).forEach(k => { clearInterval(adIntervals[k]); delete adIntervals[k]; });
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        const screen = document.getElementById(screenId);
+        if (screen) {
+            screen.classList.add('active');
+            if (screenId === 'gameSelectScreen') buildGameCards();
+            if (screenId === 'adminScreen') { refreshAdList(); loadPatternGamesList(); }
+        }
+        refreshAllAds();
+    }
+
+    function lo() { currentUser = null; currentGame = null; showScreen('loginScreen'); }
+    function goToLogin() { showScreen('loginScreen'); }
+    function backToGames() { showScreen('gameSelectScreen'); }
+
+    function switchAdminTab(tab) {
+        const tabs = ['players', 'games', 'ads', 'patterns'];
+        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.admin-tab')[tabs.indexOf(tab)].classList.add('active');
+        ['adminPlayersTab','adminGamesTab','adminAdsTab','adminPatternsTab'].forEach(id => document.getElementById(id).style.display = 'none');
+        document.getElementById('admin' + tab.charAt(0).toUpperCase() + tab.slice(1) + 'Tab').style.display = 'block';
+        if (tab === 'ads') refreshAdList();
+        if (tab === 'patterns') loadPatternsForGame();
+    }
+
+    // ==================== GAME CARDS ====================
+    async function buildGameCards() {
+        const container = document.getElementById('gameCardsContainer');
+        if (!container) return;
+        container.innerHTML = Object.entries(GAMES).map(([key, game]) => {
+            const icon = game.img ? `<img class="game-icon" src="${game.img}" alt="${game.n}" style="width:55px;height:55px;border-radius:50%;object-fit:cover;">` : `<span class="game-icon">${game.n.split(' ')[0] || '🎯'}</span>`;
+            return `<div class="game-card" onclick="startGame('${key}')">${icon}<h3>${game.n}</h3></div>`;
+        }).join('');
+    }
+
+    function startGame(gameKey) {
+        currentGame = gameKey;
+        const game = GAMES[gameKey];
+        if (!game) { alert('اللعبة غير موجودة'); return; }
+        
+        const gk = gameKey;
+        gs = {
+            strip: [], last: null,
+            veg: game.v, meat: game.m, all: game.a,
+            clock: game.clock || [...game.a.slice(0, 8)],
+            correct: parseInt(localStorage.getItem('kf_' + gk + '_c') || '0'),
+            wrong: parseInt(localStorage.getItem('kf_' + gk + '_w') || '0'),
+            history: ls('kf_' + gk + '_h', []),
+            predCount: parseInt(localStorage.getItem('kf_' + gk + '_pc') || '5'),
+            learned: ls('kf_' + gk + '_p', {}),
+            discovered: ls('kf_' + gk + '_d', {})
+        };
+        
+        learnLog = [];
+        const firstSymbol = gs.veg[Math.floor(Math.random() * gs.veg.length)];
+        gs.strip.push(firstSymbol);
+        gs.last = firstSymbol;
+        
+        showScreen('gameScreen');
+        renderWheel();
+        addLog('🟢 ' + game.n);
+    }
+
+    function addLog(msg) {
+        learnLog.unshift({ t: new Date().toLocaleTimeString('ar-EG'), m: msg });
+        if (learnLog.length > 20) learnLog = learnLog.slice(0, 20);
+        document.getElementById('learnLog').innerHTML = learnLog.map(l => `<div>${l.t} ${l.m}</div>`).join('');
+    }
+
+    function updateCounters() {
+        document.getElementById('correctCount').textContent = gs.correct;
+        document.getElementById('wrongCount').textContent = gs.wrong;
+        const total = gs.correct + gs.wrong;
+        document.getElementById('percentDisplay').textContent = total > 0 ? Math.round((gs.correct / total) * 100) + '%' : '0%';
+    }
+
+    // ==================== PREDICTION ENGINE ====================
+    function countConsecutive(strip, symbol) {
+        if (!symbol || !strip.length) return 0;
+        let count = 0;
+        for (let i = strip.length - 1; i >= 0; i--) {
+            if (strip[i] === symbol) count++;
+            else break;
+        }
+        return count;
+    }
+
+    function analyze(strip) {
+        if (strip.length < 1) return { pred: null, conf: 0, forced: [], src: [] };
+        const last = strip[strip.length - 1];
+        const cons = countConsecutive(strip, last);
+        const result = { last, cons, pred: null, conf: 0, forced: [], src: [] };
+        
+        if (cons >= 2) {
+            const rp = REPEAT_RULES[last]?.[Math.min(cons, 4)];
+            if (rp && rp.length > 0) {
+                result.forced = [...rp];
+                result.pred = rp[0];
+                result.conf = 70 + cons * 5;
+                result.src.push('تكرار');
+            }
+        }
+        
+        const learned = [];
+        for (const [key, count] of Object.entries(gs.learned)) {
+            if (key.startsWith(last + '>') && count >= 2) {
+                learned.push({ sym: key.split('>')[1], count });
+            }
+        }
+        learned.sort((a, b) => b.count - a.count);
+        
+        if (!result.pred && learned[0]?.count >= 3) {
+            result.pred = learned[0].sym;
+            result.conf = 40 + learned[0].count * 3;
+            result.src.push('متعلم');
+            result.forced = [...new Set([...result.forced, ...learned.slice(0, 3).map(l => l.sym)])];
+        }
+        
+        if (!result.pred) {
+            const discovered = [];
+            for (const [key, data] of Object.entries(gs.discovered)) {
+                if (key.startsWith(last + '>') && data.confidence >= 40) {
+                    discovered.push({ sym: key.split('>')[1], conf: data.confidence });
+                }
+            }
+            discovered.sort((a, b) => b.conf - a.conf);
+            
+            if (discovered[0]?.conf >= 50) {
+                result.pred = discovered[0].sym;
+                result.conf = discovered[0].conf;
+                result.src.push('مكتشف');
+                if (!result.forced.includes(discovered[0].sym)) result.forced.push(discovered[0].sym);
+            }
+        }
+        
+        if (!result.pred && TRIGGER_RULES[last]) {
+            const trigger = TRIGGER_RULES[last];
+            if (gs.all.includes(trigger.d)) {
+                if (!result.forced.includes(trigger.d)) result.forced.push(trigger.d);
+                result.pred = trigger.d;
+                result.conf = 45;
+                result.src.push('محفز');
+            }
+        }
+        
+        if (!result.pred) {
+            const basic = (BASIC_RULES[last] || []).filter(s => gs.all.includes(s));
+            if (basic.length > 0) {
+                result.pred = basic[0];
+                result.conf = 30;
+                result.src.push('طبيعي');
+                if (!result.forced.length) result.forced = basic;
+            }
+        }
+        
+        return result;
+    }
+
+    function getPredictions() {
+        const hv = Math.ceil(gs.predCount / 2);
+        const hm = gs.predCount - hv;
+        
+        if (gs.strip.length === 0) {
+            const d = [];
+            for (let i = 0; i < hv; i++) d.push({ emoji: gs.veg[i] || gs.all[0] || '🥕', prob: 35, type: 'veg', forced: false, learned: false, last: false });
+            for (let i = 0; i < hm; i++) d.push({ emoji: gs.meat[i] || gs.all[gs.veg.length] || '🍤', prob: 25, type: 'meat', forced: false, learned: false, last: false });
+            return d;
+        }
+        
+        const analysis = analyze(gs.strip);
+        const preds = [];
+        const used = new Set();
+        let vc = 0, mc = 0;
+        
+        const addPred = (sym, prob, forced, learned) => {
+            if (used.has(sym) || !gs.all.includes(sym)) return;
+            const type = gs.veg.includes(sym) ? 'veg' : 'meat';
+            if (type === 'veg' && vc >= hv) return;
+            if (type === 'meat' && mc >= hm) return;
+            preds.push({ emoji: sym, prob: Math.round(Math.min(prob, 95)), type, forced, learned, last: sym === gs.last });
+            used.add(sym);
+            if (type === 'veg') vc++; else mc++;
+        };
+        
+        for (const s of analysis.forced) addPred(s, analysis.conf + 20, true, analysis.src.includes('متعلم'));
+        if (!used.has(gs.last)) addPred(gs.last, 35, false, false);
+        
+        const basic = (BASIC_RULES[analysis.last] || []).filter(s => gs.all.includes(s));
+        for (const s of basic) { if (!used.has(s)) addPred(s, 25, false, false); }
+        for (const s of gs.all) { if (!used.has(s)) addPred(s, 15, false, false); }
+        
+        preds.sort((a, b) => {
+            if (a.last !== b.last) return a.last ? -1 : 1;
+            if (a.forced !== b.forced) return a.forced ? -1 : 1;
+            return b.prob - a.prob;
+        });
+        
+        return preds.slice(0, gs.predCount);
+    }
+
+    // ==================== WHEEL RENDERING ====================
+    function renderWheel() {
+        const container = document.getElementById('wheelContainer');
+        container.querySelectorAll('.wheel-slot').forEach(e => e.remove());
+        const gearBtn = container.querySelector('.gear-icon-btn');
+        if (gearBtn) gearBtn.remove();
+        
+        const predictions = getPredictions();
+        const predEmojis = predictions.slice(0, gs.predCount).map(p => p.emoji);
+        const predMap = {};
+        predictions.slice(0, gs.predCount).forEach((p, i) => { predMap[p.emoji] = { prob: p.prob, rank: i }; });
+        
+        const w = container.offsetWidth, h = container.offsetHeight;
+        const radius = Math.min(w, h) * 0.37;
+        const cx = w / 2, cy = h / 2;
+        
+        const items = gs.clock.map(emoji => {
+            const isPred = predEmojis.includes(emoji);
+            const info = predMap[emoji];
+            return {
+                emoji,
+                type: gs.veg.includes(emoji) ? 'veg' : 'meat',
+                isPred,
+                rank: info ? info.rank : -1,
+                prob: info ? info.prob : 0
+            };
+        });
+        
+        const angleStep = 360 / items.length;
+        
+        items.forEach((item, i) => {
+            const angle = -90 + (i * angleStep);
+            const rad = (angle * Math.PI) / 180;
+            const x = cx + radius * Math.cos(rad);
+            const y = cy + radius * Math.sin(rad);
+            
+            const slot = document.createElement('div');
+            slot.className = 'wheel-slot ' + item.type;
+            const fontSize = Math.min(w * 0.097, 38);
+            
+            if (item.isPred) {
+                if (item.rank < 2) {
+                    slot.classList.add('pred-top');
+                    slot.innerHTML = `<span style="font-size:${fontSize}px;">${item.emoji}</span><span class="slot-badge">👹</span><span class="slot-prob">${item.prob}%</span>`;
+                } else {
+                    slot.classList.add('pred-mid');
+                    slot.innerHTML = `<span style="font-size:${fontSize}px;">${item.emoji}</span><span class="slot-badge">😈</span><span class="slot-prob">${item.prob}%</span>`;
+                }
+            } else {
+                slot.classList.add('pred-none');
+                slot.innerHTML = `<span style="font-size:${fontSize}px;">${item.emoji}</span>`;
+            }
+            
+            slot.style.left = x + 'px';
+            slot.style.top = y + 'px';
+            slot.onclick = () => addSymbol(item.emoji);
+            container.appendChild(slot);
+        });
+        
+        const center = document.getElementById('wheelCenter');
+        const game = GAMES[currentGame];
+        if (game?.img?.startsWith('http')) {
+            center.innerHTML = `<img src="${game.img}" alt="${game.n}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+        } else if (game?.img) {
+            center.textContent = game.img;
+        } else {
+            center.textContent = gs.last || '🎯';
+        }
+        
+        const gb = document.createElement('button');
+        gb.className = 'gear-icon-btn';
+        gb.textContent = '⚙️';
+        gb.onclick = () => document.getElementById('gearPopupOverlay').classList.add('show');
+        container.appendChild(gb);
+        
+        document.getElementById('gearStrip').innerHTML = Array.from({ length: 10 }, (_, i) => {
+            const sym = gs.strip[i] || '';
+            return `<div class="gear-slot${i === gs.strip.length - 1 && sym ? ' newest' : ''}">${sym}</div>`;
+        }).join('');
+        
+        updateCounters();
+    }
+
+    function addSymbol(symbol) {
+        if (currentUser && checkExpiry(currentUser).ex) { alert('⏰ منتهي'); lo(); return; }
+        
+        if (gs.strip.length > 0) {
+            const predictions = getPredictions();
+            const predEmojis = predictions.map(p => p.emoji);
+            
+            if (predEmojis.includes(symbol)) {
+                gs.correct++;
+            } else {
+                gs.wrong++;
+                recordPattern(symbol);
+            }
+            
+            localStorage.setItem('kf_' + currentGame + '_c', gs.correct);
+            localStorage.setItem('kf_' + currentGame + '_w', gs.wrong);
+            
+            const lastSym = gs.strip[gs.strip.length - 1];
+            const learnKey = lastSym + '>' + symbol;
+            gs.learned[learnKey] = (gs.learned[learnKey] || 0) + 1;
+            localStorage.setItem('kf_' + currentGame + '_p', JSON.stringify(gs.learned));
+            
+            if (gs.learned[learnKey] >= 3 && !gs.discovered[learnKey]) {
+                gs.discovered[learnKey] = { count: gs.learned[learnKey], confidence: 50 };
+                localStorage.setItem('kf_' + currentGame + '_d', JSON.stringify(gs.discovered));
+                document.getElementById('learnAlert').textContent = '🧠 ' + lastSym + ' → ' + symbol;
+                document.getElementById('learnAlert').style.display = 'block';
+                setTimeout(() => document.getElementById('learnAlert').style.display = 'none', 3000);
+            }
+        }
+        
+        gs.history.push(symbol);
+        if (gs.history.length > 500) gs.history = gs.history.slice(-250);
+        localStorage.setItem('kf_' + currentGame + '_h', JSON.stringify(gs.history));
+        
+        gs.strip.push(symbol);
+        if (gs.strip.length > 10) gs.strip.shift();
+        gs.last = symbol;
+        
+        addLog('➕ ' + symbol);
+        renderWheel();
+    }
+
+    async function recordPattern(wrongSymbol) {
+        if (gs.strip.length < 4) return;
+        
+        const last4 = gs.strip.slice(-4);
+        const pk = last4.join(',');
+        
+        let allPatterns = JSON.parse(localStorage.getItem('kf_patterns') || '{}');
+        if (!allPatterns[currentGame]) allPatterns[currentGame] = {};
+        
+        if (!allPatterns[currentGame][pk]) {
+            allPatterns[currentGame][pk] = { sequence: last4, results: {}, totalCount: 0 };
+        }
+        
+        allPatterns[currentGame][pk].results[wrongSymbol] = (allPatterns[currentGame][pk].results[wrongSymbol] || 0) + 1;
+        allPatterns[currentGame][pk].totalCount++;
+        
+        localStorage.setItem('kf_patterns', JSON.stringify(allPatterns));
+        
+        if (isOnline && db) {
+            try { await db.ref('patterns/' + currentGame).set(allPatterns[currentGame]); } catch (e) {}
+        }
+        
+        const confidence = Math.round((allPatterns[currentGame][pk].results[wrongSymbol] / allPatterns[currentGame][pk].totalCount) * 100);
+        const lastSym = last4[last4.length - 1];
+        const learnKey = lastSym + '>' + wrongSymbol;
+        
+        gs.learned[learnKey] = Math.max(gs.learned[learnKey] || 0, Math.max(confidence, 30));
+        localStorage.setItem('kf_' + currentGame + '_p', JSON.stringify(gs.learned));
+        
+        if (!gs.discovered[learnKey] || gs.discovered[learnKey].confidence < confidence) {
+            gs.discovered[learnKey] = { count: allPatterns[currentGame][pk].totalCount, confidence: Math.max(confidence, 30) };
+            localStorage.setItem('kf_' + currentGame + '_d', JSON.stringify(gs.discovered));
+        }
+        
+        addLog('📊 ' + last4.join('') + ' → ' + wrongSymbol + ' (' + confidence + '%)');
+    }
+
+    function resetGame() {
+        gs.strip = [];
+        gs.last = null;
+        gs.correct = 0;
+        gs.wrong = 0;
+        localStorage.setItem('kf_' + currentGame + '_c', '0');
+        localStorage.setItem('kf_' + currentGame + '_w', '0');
+        
+        const firstSymbol = gs.veg[Math.floor(Math.random() * gs.veg.length)];
+        gs.strip.push(firstSymbol);
+        gs.last = firstSymbol;
+        
+        addLog('🔄 إعادة تعيين');
+        renderWheel();
+    }
+
+    function exportData() {
+        const data = {
+            game: currentGame,
+            gameName: GAMES[currentGame]?.n,
+            user: currentUser?.id,
+            strip: [...gs.strip],
+            correct: gs.correct,
+            wrong: gs.wrong,
+            percent: (gs.correct + gs.wrong > 0 ? Math.round((gs.correct / (gs.correct + gs.wrong)) * 100) : 0),
+            predictions: getPredictions().map(p => ({ emoji: p.emoji, prob: p.prob })),
+            patterns: JSON.parse(localStorage.getItem('kf_patterns') || '{}')[currentGame] || {},
+            exportedAt: new Date().toISOString()
+        };
+        
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'khal_' + currentGame + '_' + new Date().toISOString().split('T')[0] + '.json';
+        a.click();
+        addLog('📦 تم التصدير');
+    }
+
+    function setPredCount(count) {
+        gs.predCount = count;
+        localStorage.setItem('kf_' + currentGame + '_pc', count);
+        document.getElementById('gearPopupOverlay').classList.remove('show');
+        document.querySelectorAll('.gear-popup-option').forEach(o => {
+            o.classList.remove('active');
+            if (parseInt(o.dataset.count) === count) o.classList.add('active');
+        });
+        renderWheel();
+    }
+
+    function closeGearPopup(e) {
+        if (e.target === document.getElementById('gearPopupOverlay')) {
+            document.getElementById('gearPopupOverlay').classList.remove('show');
+        }
+    }
+
+    // ==================== ADVERTISEMENTS (WITH BACKGROUND SUPPORT) ====================
+    function refreshAllAds() {
+        Object.keys(adIntervals).forEach(k => { clearInterval(adIntervals[k]); delete adIntervals[k]; });
+        ADS = ls('kf_ads', {});
+        
+        // ========== الخلفيات ==========
+        // خلفية شاشة الدخول
+        const loginBg = Object.values(ADS).filter(a => a.place === 'login' && a.type === 'background');
+        const loginScreenBg = document.getElementById('loginScreenBg');
+        if (loginScreenBg) {
+            if (loginBg.length > 0) {
+                loginScreenBg.style.display = 'block';
+                loginScreenBg.style.backgroundImage = `url(${loginBg[loginBg.length - 1].content})`;
+            } else {
+                loginScreenBg.style.display = 'none';
+                loginScreenBg.style.backgroundImage = '';
+            }
+        }
+        
+        // خلفية شاشة الألعاب
+        const gamesBg = Object.values(ADS).filter(a => a.place === 'games' && a.type === 'background');
+        const gamesScreenBg = document.getElementById('gamesScreenBg');
+        if (gamesScreenBg) {
+            if (gamesBg.length > 0) {
+                gamesScreenBg.style.display = 'block';
+                gamesScreenBg.style.backgroundImage = `url(${gamesBg[gamesBg.length - 1].content})`;
+            } else {
+                gamesScreenBg.style.display = 'none';
+                gamesScreenBg.style.backgroundImage = '';
+            }
+        }
+        
+        // خلفية شاشة التوقعات
+        const predictBg = Object.values(ADS).filter(a => a.place === 'predict' && a.type === 'background');
+        const predictScreenBg = document.getElementById('predictScreenBg');
+        if (predictScreenBg) {
+            if (predictBg.length > 0) {
+                predictScreenBg.style.display = 'block';
+                predictScreenBg.style.backgroundImage = `url(${predictBg[predictBg.length - 1].content})`;
+            } else {
+                predictScreenBg.style.display = 'none';
+                predictScreenBg.style.backgroundImage = '';
+            }
+        }
+        
+        // ========== شاشة الدخول ==========
+        const loginContainer = document.getElementById('loginAd');
+        if (loginContainer) {
+            loginContainer.innerHTML = '';
+            const loginVideo = Object.values(ADS).filter(a => a.place === 'login' && a.type === 'video')[0];
+            
+            if (loginVideo) {
+                loginContainer.style.display = 'flex';
+                loginContainer.className = 'ad-banner video-ad';
+                const v = document.createElement('video');
+                v.src = loginVideo.content;
+                v.autoplay = true; v.loop = true; v.muted = true; v.playsInline = true;
+                v.setAttribute('playsinline', '');
+                v.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:8px;';
+                v.play().catch(() => {
+                    document.addEventListener('click', function p() { v.play(); document.removeEventListener('click', p); }, { once: true });
+                });
+                loginContainer.appendChild(v);
+            } else {
+                const loginImages = Object.values(ADS).filter(a => a.place === 'login' && a.type === 'image');
+                if (loginImages.length > 0) {
+                    loginContainer.style.display = 'flex';
+                    loginContainer.className = 'ad-banner image-ad';
+                    const sd = document.createElement('div'); sd.className = 'ad-slide-image'; sd.id = 'loginAdSlide';
+                    loginImages.forEach((a, i) => { const img = document.createElement('img'); img.src = a.content; if(i===0) img.classList.add('active'); sd.appendChild(img); });
+                    loginContainer.appendChild(sd);
+                    if (loginImages.length > 1) {
+                        let ci = 0;
+                        adIntervals['login'] = setInterval(() => {
+                            const imgs = sd.querySelectorAll('img'); if(!imgs.length) return;
+                            imgs[ci].classList.remove('active'); ci = (ci+1) % imgs.length; imgs[ci].classList.add('active');
+                        }, 3000);
+                    }
+                } else { loginContainer.style.display = 'none'; }
+            }
+        }
+        
+        // ========== شاشة الألعاب ==========
+        const gamesContainer = document.getElementById('gamesAd');
+        if (gamesContainer) {
+            gamesContainer.innerHTML = '';
+            const gamesVideo = Object.values(ADS).filter(a => a.place === 'games' && a.type === 'video')[0];
+            
+            if (gamesVideo) {
+                gamesContainer.style.display = 'flex';
+                gamesContainer.className = 'ad-banner video-ad';
+                const v = document.createElement('video');
+                v.src = gamesVideo.content;
+                v.autoplay = true; v.loop = true; v.muted = true; v.playsInline = true;
+                v.setAttribute('playsinline', '');
+                v.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:8px;';
+                v.play().catch(() => {
+                    document.addEventListener('click', function p() { v.play(); document.removeEventListener('click', p); }, { once: true });
+                });
+                gamesContainer.appendChild(v);
+            } else {
+                const gamesImages = Object.values(ADS).filter(a => a.place === 'games' && a.type === 'image');
+                if (gamesImages.length > 0) {
+                    gamesContainer.style.display = 'flex';
+                    gamesContainer.className = 'ad-banner image-ad';
+                    const sd = document.createElement('div'); sd.className = 'ad-slide-image'; sd.id = 'gamesAdSlide';
+                    gamesImages.forEach((a, i) => { const img = document.createElement('img'); img.src = a.content; if(i===0) img.classList.add('active'); sd.appendChild(img); });
+                    gamesContainer.appendChild(sd);
+                    if (gamesImages.length > 1) {
+                        let ci = 0;
+                        adIntervals['games'] = setInterval(() => {
+                            const imgs = sd.querySelectorAll('img'); if(!imgs.length) return;
+                            imgs[ci].classList.remove('active'); ci = (ci+1) % imgs.length; imgs[ci].classList.add('active');
+                        }, 3000);
+                    }
+                } else { gamesContainer.style.display = 'none'; }
+            }
+        }
+        
+        // ========== شاشة التوقعات (نصوص) ==========
+        const predictContainer = document.getElementById('predictAd');
+        const predictSlide = document.getElementById('predictAdSlide');
+        if (predictContainer && predictSlide) {
+            const predictText = Object.values(ADS).filter(a => a.place === 'predict' && a.type === 'text');
+            if (predictText.length > 0) {
+                predictContainer.style.display = 'flex';
+                predictSlide.textContent = predictText.map(a => a.content).join('   ★★★   ');
+            } else { predictContainer.style.display = 'none'; }
+        }
+    }
+
+    async function addAd() {
+        const type = document.getElementById('adType').value;
+        const place = document.getElementById('adPlace').value;
+        const content = document.getElementById('adContent').value.trim();
+        if (!content) return alert('أدخل محتوى الإعلان');
+        
+        const adId = 'ad_' + Date.now();
+        const newAd = { id: adId, type, place, content, createdAt: new Date().toISOString() };
+        ADS[adId] = newAd;
+        ss('kf_ads', ADS);
+        
+        if (isOnline && db) {
+            try { await db.ref('ads').set(ADS); } catch (e) {}
+        }
+        
+        document.getElementById('adContent').value = '';
+        refreshAdList();
+        refreshAllAds();
+        alert('✅ تم إضافة الإعلان وسيظهر عند الجميع');
+    }
+
+    async function deleteAd(id) {
+        if (!confirm('حذف هذا الإعلان؟')) return;
+        delete ADS[id];
+        ss('kf_ads', ADS);
+        if (isOnline && db) {
+            try { await db.ref('ads').set(ADS); } catch (e) {}
+        }
+        refreshAdList();
+        refreshAllAds();
+    }
+
+    async function deleteAllAds() {
+        if (!confirm('حذف جميع الإعلانات؟')) return;
+        ADS = {};
+        ss('kf_ads', ADS);
+        if (isOnline && db) {
+            try { await db.ref('ads').set({}); } catch (e) {}
+        }
+        refreshAdList();
+        refreshAllAds();
+    }
+
+    async function syncAdsFromCloud() {
+        if (!isOnline || !db) return alert('لا يوجد اتصال');
+        try {
+            const snap = await db.ref('ads').once('value');
+            ADS = snap.val() || {};
+            ss('kf_ads', ADS);
+            refreshAdList();
+            refreshAllAds();
+            alert('✅ تمت المزامنة: ' + Object.keys(ADS).length + ' إعلان');
+        } catch (e) { alert('فشلت المزامنة'); }
+    }
+
+    function refreshAdList() {
+        const container = document.getElementById('adListContainer');
+        const countDisplay = document.getElementById('adCountDisplay');
+        if (!container) return;
+        
+        ADS = ls('kf_ads', {});
+        const adArray = Object.values(ADS);
+        if (countDisplay) countDisplay.textContent = adArray.length;
+        
+        if (!adArray.length) {
+            container.innerHTML = '<p style="color:#888;text-align:center;padding:20px;">📭 لا توجد إعلانات</p>';
+            return;
+        }
+        
+        const placeNames = { login: '🔐 تسجيل الدخول', games: '🎮 البرامج', predict: '🎯 التوقعات' };
+        const typeNames = { image: '🖼️ صورة', text: '📝 نص', video: '🎬 فيديو', background: '🎨 خلفية' };
+        
+        container.innerHTML = adArray.map(ad => `
+            <div class="ad-list-item">
+                <div class="ad-list-info">
+                    <div style="color:var(--gold);font-weight:bold;">${typeNames[ad.type] || ad.type}</div>
+                    <div style="font-size:9px;color:var(--muted);">${placeNames[ad.place] || ad.place}</div>
+                    <div style="font-size:10px;">${ad.content.substring(0, 50)}</div>
+                </div>
+                <button onclick="deleteAd('${ad.id}')" class="btn-delete-ad">🗑️</button>
+            </div>
+        `).join('');
+    }
+
+    // ==================== PLAYERS ====================
+    async function addPlayer() {
+        const id = document.getElementById('newId').value.trim();
+        const key = document.getElementById('newKey').value.trim();
+        const mode = document.getElementById('newMode').value;
+        const hrs = parseInt(document.getElementById('newHours').value) || 0;
+        const dys = parseInt(document.getElementById('newDays').value) || 0;
+        
+        if (!id || !key) return alert('املأ البيانات');
+        
+        const players = isOnline && db ? (await db.ref('players').once('value')).val() || {} : ls('kf_players', {});
+        if (Object.keys(players).length >= 200) return alert('الحد الأقصى 200');
+        if (players[id]) return alert('اللاعب موجود مسبقاً');
+        
+        const player = { id, key, mode, maxHours: hrs, maxDays: dys, lockedDevice: null, createdAt: null };
+        
+        if (isOnline && db) await db.ref('players/' + id).set(player);
+        
+        const localPlayers = ls('kf_players', {});
+        localPlayers[id] = player;
+        ss('kf_players', localPlayers);
+        
+        ['newId', 'newKey'].forEach(d => document.getElementById(d).value = '');
+        document.getElementById('newHours').value = '0';
+        document.getElementById('newDays').value = '0';
+        
+        alert('✅ تم إضافة ' + id);
+    }
+
+    // ==================== PATTERNS ====================
+    function loadPatternGamesList() {
+        const select = document.getElementById('patternGameSelect');
+        if (!select) return;
+        select.innerHTML = '<option value="">اختر برنامج</option>' + 
+            Object.entries(GAMES).map(([k, g]) => `<option value="${k}">${g.n}</option>`).join('');
+    }
+
+    function loadPatternsForGame() {
+        const gameKey = document.getElementById('patternGameSelect').value;
+        const container = document.getElementById('patternListContainer');
+        
+        if (!gameKey) {
+            container.innerHTML = '<p style="color:#888;text-align:center;">اختر برنامج</p>';
+            return;
+        }
+        
+        const patterns = JSON.parse(localStorage.getItem('kf_patterns') || '{}')[gameKey] || {};
+        const entries = Object.entries(patterns);
+        
+        if (!entries.length) {
+            container.innerHTML = '<p style="color:#888;text-align:center;">لا توجد أنماط مسجلة</p>';
+            return;
+        }
+        
+        container.innerHTML = `
+            <div style="overflow-x:auto;">
+                <table class="pattern-table">
+                    <thead>
+                        <tr><th>#</th><th>التسلسل</th><th>النتيجة</th><th>التكرار</th><th>الثقة</th></tr>
+                    </thead>
+                    <tbody>
+                        ${entries.map(([k, p], index) => {
+                            const seq = p.sequence.map(s => `<span style="font-size:14px;">${s}</span>`).join('<span style="color:#666;margin:0 2px;">→</span>');
+                            let best = null, bc = 0;
+                            for (const [s, ct] of Object.entries(p.results)) { if (ct > bc) { bc = ct; best = s; } }
+                            const conf = best ? Math.round((bc / p.totalCount) * 100) : 0;
+                            return `
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>${seq}</td>
+                                    <td style="font-size:14px;">${best || '?'}</td>
+                                    <td>${p.totalCount}</td>
+                                    <td>${conf}%</td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+    }
+
+    // ==================== INITIALIZATION ====================
+    async function init() {
+        console.log('🚀 CRAZY starting...');
+        initFirebase();
+        
+        if (db) {
+            db.ref('ads').on('value', snap => {
+                const newAds = snap.val();
+                if (newAds) { ADS = newAds; ss('kf_ads', ADS); refreshAllAds(); }
+            });
+            
+            db.ref('games').on('value', snap => {
+                const newGames = snap.val();
+                if (newGames && Object.keys(newGames).length > 0) {
+                    GAMES = newGames; ss('kf_games', GAMES);
+                    buildGameCards();
+                }
+            });
+            
+            db.ref('patterns').on('value', snap => {
+                const cloudPatterns = snap.val();
+                if (cloudPatterns) {
+                    const localPatterns = JSON.parse(localStorage.getItem('kf_patterns') || '{}');
+                    for (const [gk, patterns] of Object.entries(cloudPatterns)) {
+                        if (!localPatterns[gk]) localPatterns[gk] = patterns;
+                        else {
+                            for (const [pk, pd] of Object.entries(patterns)) {
+                                if (!localPatterns[gk][pk] || pd.totalCount > localPatterns[gk][pk].totalCount) {
+                                    localPatterns[gk][pk] = pd;
+                                }
+                            }
+                        }
+                    }
+                    localStorage.setItem('kf_patterns', JSON.stringify(localPatterns));
+                    if (document.getElementById('adminPatternsTab')?.style.display !== 'none') loadPatternsForGame();
+                }
+            });
+            
+            try {
+                const gamesSnap = await db.ref('games').once('value');
+                if (gamesSnap.val()) { GAMES = gamesSnap.val(); ss('kf_games', GAMES); }
+                
+                const adsSnap = await db.ref('ads').once('value');
+                if (adsSnap.val()) { ADS = adsSnap.val(); ss('kf_ads', ADS); }
+            } catch (e) {}
+        }
+        
+        await buildGameCards();
+        refreshAllAds();
+        
+        const players = ls('kf_players', {});
+        if (!Object.keys(players).length) {
+            players['player01'] = {
+                id: 'player01', key: 'Khali2024', mode: 'fixed',
+                maxHours: 0, maxDays: 0, lockedDevice: null, createdAt: null
+            };
+            ss('kf_players', players);
+            if (isOnline && db) db.ref('players/player01').set(players['player01']);
+        }
+        
+        document.getElementById('passInput').addEventListener('keydown', e => {
+            if (e.key === 'Enter') cpw();
+        });
+        
+        console.log('✅ CRAZY ready!');
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

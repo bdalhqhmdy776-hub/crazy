@@ -20,931 +20,334 @@
             --muted: #888;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        html,
-        body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: #000;
-            font-family: 'Cairo', 'Arial', sans-serif;
-            touch-action: manipulation;
-            user-select: none;
-            -webkit-user-select: none;
-            -webkit-tap-highlight-color: transparent;
-            color: var(--text);
-            position: fixed;
-            top: 0;
-            left: 0;
+        html, body {
+            width: 100%; height: 100%; overflow: hidden; background: #000;
+            font-family: 'Cairo', 'Arial', sans-serif; touch-action: manipulation;
+            user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+            color: var(--text); position: fixed; top: 0; left: 0;
         }
 
         .app {
-            width: 100vw;
-            height: 100vh;
-            height: 100dvh;
-            max-width: 420px;
-            margin: 0 auto;
-            background: transparent;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
+            width: 100vw; height: 100vh; height: 100dvh; max-width: 420px; margin: 0 auto;
+            background: transparent; display: flex; flex-direction: column; position: relative; overflow: hidden;
         }
 
         .screen {
-            display: none;
-            flex-direction: column;
-            width: 100%;
-            height: 100%;
-            flex: 1;
-            overflow-y: auto;
-            padding: 4px;
-            gap: 4px;
-            -webkit-overflow-scrolling: touch;
-            position: relative;
-            z-index: 1;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            transition: background-image 1s ease-in-out;
+            display: none; flex-direction: column; width: 100%; height: 100%; flex: 1;
+            overflow-y: auto; padding: 4px; gap: 4px; -webkit-overflow-scrolling: touch;
+            position: relative; z-index: 1;
         }
+        .screen.active { display: flex; }
 
-        .screen.active {
-            display: flex;
-        }
-
-        /* Stars Background */
         .stars-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;
             background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
         }
 
         .star {
-            position: absolute;
-            background: #fff;
-            border-radius: 50%;
-            animation: twinkle var(--dur) ease-in-out infinite;
-            animation-delay: var(--delay);
-            opacity: 0;
+            position: absolute; background: #fff; border-radius: 50%;
+            animation: twinkle var(--dur) ease-in-out infinite; animation-delay: var(--delay); opacity: 0;
         }
 
         @keyframes twinkle {
-            0%,
-            100% {
-                opacity: 0.2;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.5);
-            }
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
         }
 
         .shooting-star {
-            position: absolute;
-            width: 2px;
-            height: 80px;
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #fff);
-            border-radius: 50%;
-            animation: shoot 3s linear infinite;
-            animation-delay: var(--sdelay);
-            opacity: 0;
+            position: absolute; width: 2px; height: 80px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), #fff); border-radius: 50%;
+            animation: shoot 3s linear infinite; animation-delay: var(--sdelay); opacity: 0;
         }
 
         @keyframes shoot {
-            0% {
-                opacity: 0;
-                transform: translate(0, 0) rotate(-45deg);
-            }
-            5% {
-                opacity: 1;
-            }
-            15% {
-                opacity: 0;
-                transform: translate(-300px, 300px) rotate(-45deg);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(-300px, 300px) rotate(-45deg);
-            }
+            0% { opacity: 0; transform: translate(0, 0) rotate(-45deg); }
+            5% { opacity: 1; }
+            15% { opacity: 0; transform: translate(-300px, 300px) rotate(-45deg); }
+            100% { opacity: 0; transform: translate(-300px, 300px) rotate(-45deg); }
         }
 
-        /* Screen Background Overlay */
         .screen-bg-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            z-index: 0;
-            opacity: 0.15;
-            transition: background-image 1s ease-in-out;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center; background-repeat: no-repeat;
+            z-index: 0; opacity: 0.15; transition: background-image 1s ease-in-out; pointer-events: none;
         }
 
-        /* Header */
         .header {
-            text-align: center;
-            padding: 12px 6px;
-            background: rgba(22, 22, 58, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            flex-shrink: 0;
-            position: relative;
-            z-index: 1;
+            text-align: center; padding: 10px 6px; background: rgba(22,22,58,0.7);
+            backdrop-filter: blur(10px); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0; position: relative; z-index: 1;
         }
+        .header h1 { font-size: 18px; color: var(--red); margin: 0; }
+        .header.admin-h { border-color: var(--gold); box-shadow: 0 0 20px rgba(240,165,0,0.3); }
+        .header.admin-h h1 { color: var(--gold); }
 
-        .header h1 {
-            font-size: 20px;
-            color: var(--red);
-            margin: 0;
-        }
-
-        .header.admin-h {
-            border-color: var(--gold);
-            box-shadow: 0 0 20px rgba(240, 165, 0, 0.3);
-        }
-
-        .header.admin-h h1 {
-            color: var(--gold);
-        }
-
-        /* Buttons */
         .btn {
-            background: var(--red);
-            color: #fff;
-            border: none;
-            padding: 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            font-family: inherit;
-            flex-shrink: 0;
-            transition: all 0.2s;
-            position: relative;
-            z-index: 1;
+            background: var(--red); color: #fff; border: none; padding: 10px; border-radius: 20px;
+            font-size: 13px; font-weight: bold; cursor: pointer; width: 100%; font-family: inherit;
+            flex-shrink: 0; transition: all 0.2s; position: relative; z-index: 1;
         }
+        .btn:active { transform: scale(0.96); opacity: 0.85; }
+        .btn.sm { padding: 7px 12px; font-size: 11px; width: auto; border-radius: 14px; }
+        .btn.gold { background: linear-gradient(135deg, #f0a500, #d49400); color: #000; }
+        .btn.outline { background: transparent; border: 2px solid var(--gold); color: var(--gold); }
+        .btn.cyan { background: var(--cyan); color: #000; }
+        .btn.danger { background: #b91c1c; }
+        .btn.purple { background: var(--purple); color: #fff; }
+        .btn-row { display: flex; gap: 5px; flex-shrink: 0; position: relative; z-index: 1; }
+        .btn-row .btn { flex: 1; }
 
-        .btn:active {
-            transform: scale(0.96);
-            opacity: 0.85;
+        input, select, textarea {
+            width: 100%; padding: 10px; font-size: 13px; background: rgba(22,22,58,0.7);
+            backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.1); color: #fff;
+            border-radius: 10px; text-align: center; outline: none; font-family: inherit;
+            flex-shrink: 0; position: relative; z-index: 1;
         }
-
-        .btn.sm {
-            padding: 8px 14px;
-            font-size: 11px;
-            width: auto;
-            border-radius: 14px;
-        }
-
-        .btn.gold {
-            background: linear-gradient(135deg, #f0a500, #d49400);
-            color: #000;
-        }
-
-        .btn.outline {
-            background: transparent;
-            border: 2px solid var(--gold);
-            color: var(--gold);
-        }
-
-        .btn.cyan {
-            background: var(--cyan);
-            color: #000;
-        }
-
-        .btn.danger {
-            background: #b91c1c;
-        }
-
-        .btn.purple {
-            background: var(--purple);
-            color: #fff;
-        }
-
-        .btn-row {
-            display: flex;
-            gap: 6px;
-            flex-shrink: 0;
-            position: relative;
-            z-index: 1;
-        }
-
-        .btn-row .btn {
-            flex: 1;
-        }
-
-        /* Inputs */
-        input,
-        select,
-        textarea {
-            width: 100%;
-            padding: 12px;
-            font-size: 14px;
-            background: rgba(22, 22, 58, 0.7);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            color: #fff;
-            border-radius: 10px;
-            text-align: center;
-            outline: none;
-            font-family: inherit;
-            flex-shrink: 0;
-            position: relative;
-            z-index: 1;
-        }
-
-        textarea {
-            text-align: right;
-            min-height: 60px;
-            resize: vertical;
-        }
+        textarea { text-align: right; min-height: 60px; resize: vertical; }
 
         .status-msg {
-            text-align: center;
-            font-size: 10px;
-            padding: 3px;
-            border-radius: 6px;
-            flex-shrink: 0;
-            position: relative;
-            z-index: 1;
+            text-align: center; font-size: 9px; padding: 3px; border-radius: 6px;
+            flex-shrink: 0; position: relative; z-index: 1;
         }
+        .status-msg.online { color: #4e9f3d; background: rgba(5,26,5,0.7); }
+        .status-msg.offline { color: #ff6b6b; background: rgba(26,5,5,0.7); }
 
-        .status-msg.online {
-            color: #4e9f3d;
-            background: rgba(5, 26, 5, 0.7);
-        }
-
-        .status-msg.offline {
-            color: #ff6b6b;
-            background: rgba(26, 5, 5, 0.7);
-        }
-
-        /* Ad Banners */
         .ad-banner {
-            width: 100%;
-            overflow: hidden;
-            flex-shrink: 0;
-            position: relative;
-            border-radius: 8px;
-            background: rgba(22, 22, 58, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1;
+            width: 100%; overflow: hidden; flex-shrink: 0; position: relative; border-radius: 8px;
+            background: rgba(22,22,58,0.4); border: 1px solid rgba(255,255,255,0.08);
+            display: flex; align-items: center; justify-content: center; z-index: 1;
         }
-
-        .ad-banner.image-ad {
-            height: 200px;
-        }
-
-        .ad-banner.text-ad {
-            height: 25px;
-            min-height: 25px;
-        }
+        .ad-banner.image-ad { height: 200px; }
+        .ad-banner.text-ad { height: 25px; min-height: 25px; }
 
         .ad-slide-image {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
+            width: 100%; height: 100%; display: flex; align-items: center;
+            justify-content: center; position: relative;
         }
-
         .ad-slide-image img {
-            height: 200px;
-            width: 400px;
-            object-fit: cover;
-            border-radius: 8px;
-            position: absolute;
-            opacity: 0;
-            transition: opacity 0.8s ease-in-out;
+            height: 200px; width: 400px; object-fit: cover; border-radius: 8px;
+            position: absolute; opacity: 0; transition: opacity 0.8s ease-in-out;
         }
-
-        .ad-slide-image img.active {
-            opacity: 1;
-        }
+        .ad-slide-image img.active { opacity: 1; }
 
         .ad-slide-text {
-            white-space: nowrap;
-            animation: marqueeRTL 14s linear infinite;
-            font-size: 12px;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 8px rgba(240, 165, 0, 0.8);
-            padding: 0 10px;
-            line-height: 25px;
+            white-space: nowrap; animation: marqueeRTL 14s linear infinite;
+            font-size: 12px; font-weight: bold; color: #fff;
+            text-shadow: 0 0 8px rgba(240,165,0,0.8); padding: 0 10px; line-height: 25px;
         }
 
         @keyframes marqueeRTL {
-            0% {
-                transform: translateX(-100%);
-            }
-            100% {
-                transform: translateX(100%);
-            }
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
 
-        /* Gear Icon Button */
         .gear-icon-btn {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--gold);
-            color: #000;
-            font-size: 22px;
-            border: none;
-            cursor: pointer;
-            z-index: 5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 12px rgba(240, 165, 0, 0.5);
-            transition: all 0.2s;
+            position: absolute; top: 8px; right: 8px; width: 38px; height: 38px;
+            border-radius: 50%; background: var(--gold); color: #000; font-size: 20px;
+            border: none; cursor: pointer; z-index: 5; display: flex; align-items: center;
+            justify-content: center; box-shadow: 0 0 12px rgba(240,165,0,0.5); transition: all 0.2s;
         }
+        .gear-icon-btn:active { transform: scale(0.9); }
 
-        .gear-icon-btn:active {
-            transform: scale(0.9);
-        }
-
-        /* Gear Popup */
         .gear-popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 99;
-            display: none;
-            align-items: center;
-            justify-content: center;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 99; display: none; align-items: center; justify-content: center;
         }
-
-        .gear-popup-overlay.show {
-            display: flex;
-        }
+        .gear-popup-overlay.show { display: flex; }
 
         .gear-popup {
-            background: rgba(22, 22, 58, 0.95);
-            backdrop-filter: blur(15px);
-            border: 2px solid var(--gold);
-            border-radius: 16px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            min-width: 200px;
-            text-align: center;
+            background: rgba(22,22,58,0.95); backdrop-filter: blur(15px);
+            border: 2px solid var(--gold); border-radius: 16px; padding: 20px;
+            display: flex; flex-direction: column; gap: 15px; min-width: 180px; text-align: center;
         }
-
-        .gear-popup h3 {
-            color: var(--gold);
-            font-size: 16px;
-            margin: 0;
-        }
-
-        .gear-popup-options {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-        }
+        .gear-popup h3 { color: var(--gold); font-size: 16px; margin: 0; }
+        .gear-popup-options { display: flex; gap: 12px; justify-content: center; }
 
         .gear-popup-option {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 2px solid var(--gold);
-            background: transparent;
-            color: var(--gold);
-            font-size: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
+            width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold);
+            background: transparent; color: var(--gold); font-size: 18px; font-weight: bold;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;
         }
+        .gear-popup-option.active { background: var(--gold); color: #000; }
+        .gear-popup-option:active { transform: scale(0.9); }
 
-        .gear-popup-option.active {
-            background: var(--gold);
-            color: #000;
-        }
-
-        .gear-popup-option:active {
-            transform: scale(0.9);
-        }
-
-        /* Wheel */
         .wheel-container {
-            position: relative;
-            width: 390px;
-            height: 390px;
-            margin: 0 auto;
-            flex-shrink: 0;
-            z-index: 1;
+            position: relative; width: 100%; max-width: 390px; aspect-ratio: 1;
+            margin: 0 auto; flex-shrink: 0; z-index: 1;
         }
-
         .wheel-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 85px;
-            height: 85px;
-            border-radius: 50%;
-            background: rgba(240, 165, 0, 0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 42px;
-            font-weight: bold;
-            color: #000;
-            z-index: 2;
-            box-shadow: 0 0 25px rgba(240, 165, 0, 0.7);
-            overflow: hidden;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 22%; height: 22%; border-radius: 50%; background: rgba(240,165,0,0.9);
+            display: flex; align-items: center; justify-content: center; font-size: 200%;
+            font-weight: bold; color: #000; z-index: 2;
+            box-shadow: 0 0 25px rgba(240,165,0,0.7); overflow: hidden;
         }
-
-        .wheel-center img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-        }
+        .wheel-center img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
         .wheel-slot {
-            position: absolute;
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 38px;
-            cursor: pointer;
-            background: rgba(22, 22, 58, 0.8);
-            backdrop-filter: blur(5px);
-            transition: all 0.2s;
-            z-index: 1;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            flex-direction: column;
-            gap: 1px;
+            position: absolute; width: 18%; height: 18%; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; background: rgba(22,22,58,0.8); backdrop-filter: blur(5px);
+            transition: all 0.2s; z-index: 1; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); flex-direction: column; gap: 1px;
         }
-
-        .wheel-slot:active {
-            transform: translate(-50%, -50%) scale(1.1);
-            box-shadow: 0 0 20px rgba(240, 165, 0, 0.6);
-            z-index: 3;
-        }
-
-        .wheel-slot.veg {
-            box-shadow: 0 0 12px rgba(78, 159, 61, 0.4);
-        }
-
-        .wheel-slot.meat {
-            box-shadow: 0 0 12px rgba(233, 69, 96, 0.4);
-        }
-
-        .wheel-slot.pred-top {
-            box-shadow: 0 0 25px rgba(255, 0, 0, 0.9);
-            animation: pulse-evil 0.8s infinite;
-            background: rgba(40, 10, 10, 0.9);
-        }
-
-        .wheel-slot.pred-mid {
-            box-shadow: 0 0 18px rgba(255, 140, 0, 0.7);
-            background: rgba(40, 25, 5, 0.85);
-        }
-
-        .wheel-slot.pred-none {
-            opacity: 0.45;
-            box-shadow: none;
-            background: rgba(22, 22, 58, 0.5);
-        }
+        .wheel-slot:active { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 20px rgba(240,165,0,0.6); z-index: 3; }
+        .wheel-slot.veg { box-shadow: 0 0 12px rgba(78,159,61,0.4); }
+        .wheel-slot.meat { box-shadow: 0 0 12px rgba(233,69,96,0.4); }
+        .wheel-slot.pred-top { box-shadow: 0 0 25px rgba(255,0,0,0.9); animation: pulse-evil 0.8s infinite; background: rgba(40,10,10,0.9); }
+        .wheel-slot.pred-mid { box-shadow: 0 0 18px rgba(255,140,0,0.7); background: rgba(40,25,5,0.85); }
+        .wheel-slot.pred-none { opacity: 0.45; box-shadow: none; background: rgba(22,22,58,0.5); }
 
         @keyframes pulse-evil {
-            0%,
-            100% {
-                box-shadow: 0 0 18px rgba(255, 0, 0, 0.7);
-            }
-            50% {
-                box-shadow: 0 0 35px rgba(255, 0, 0, 1);
-            }
+            0%, 100% { box-shadow: 0 0 18px rgba(255,0,0,0.7); }
+            50% { box-shadow: 0 0 35px rgba(255,0,0,1); }
         }
 
-        .slot-badge {
-            font-size: 20px;
-            line-height: 1;
-            margin-top: 1px;
-        }
+        .slot-badge { font-size: 55%; line-height: 1; margin-top: 1px; }
+        .slot-prob { font-size: 25%; color: var(--gold); font-weight: bold; }
 
-        .slot-prob {
-            font-size: 9px;
-            color: var(--gold);
-            font-weight: bold;
-        }
-
-        /* Gear Strip */
         .gear-strip {
-            background: rgba(2, 2, 8, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 8px;
-            display: flex;
-            gap: 3px;
-            justify-content: center;
-            flex-wrap: wrap;
-            min-height: 38px;
-            align-items: center;
-            flex-shrink: 0;
-            margin-top: auto;
-            z-index: 1;
+            background: rgba(2,2,8,0.7); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 6px;
+            display: flex; gap: 3px; justify-content: center; flex-wrap: wrap;
+            min-height: 35px; align-items: center; flex-shrink: 0; margin-top: auto; z-index: 1;
         }
-
         .gear-slot {
-            width: 26px;
-            height: 26px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 15px;
-            background: rgba(10, 10, 34, 0.7);
-            border: 1px solid rgba(42, 42, 74, 0.5);
+            width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center;
+            justify-content: center; font-size: 14px; background: rgba(10,10,34,0.7);
+            border: 1px solid rgba(42,42,74,0.5);
         }
+        .gear-slot.newest { border-color: var(--gold); box-shadow: 0 0 10px var(--gold); }
 
-        .gear-slot.newest {
-            border-color: var(--gold);
-            box-shadow: 0 0 10px var(--gold);
-        }
-
-        /* Counter Box */
         .counter-box {
-            display: flex;
-            justify-content: space-around;
-            background: rgba(22, 22, 58, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            padding: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            flex-shrink: 0;
-            text-align: center;
-            z-index: 1;
+            display: flex; justify-content: space-around; background: rgba(22,22,58,0.7);
+            backdrop-filter: blur(10px); border-radius: 10px; padding: 8px;
+            border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; text-align: center; z-index: 1;
         }
+        .counter-value { font-size: 18px; font-weight: bold; }
+        .counter-value.correct { color: var(--green); }
+        .counter-value.wrong { color: var(--red); }
+        .counter-label { font-size: 9px; color: var(--muted); }
+        .counter-percent { font-size: 13px; font-weight: bold; color: var(--gold); }
 
-        .counter-value {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .counter-value.correct {
-            color: var(--green);
-        }
-
-        .counter-value.wrong {
-            color: var(--red);
-        }
-
-        .counter-label {
-            font-size: 10px;
-            color: var(--muted);
-        }
-
-        .counter-percent {
-            font-size: 14px;
-            font-weight: bold;
-            color: var(--gold);
-        }
-
-        /* Game Cards */
-        .game-cards {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            position: relative;
-            z-index: 1;
-        }
-
+        .game-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; position: relative; z-index: 1; }
         .game-card {
-            background: rgba(22, 22, 58, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px;
-            padding: 20px 10px;
-            text-align: center;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
+            background: rgba(22,22,58,0.7); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 18px 8px;
+            text-align: center; cursor: pointer; display: flex; flex-direction: column;
+            align-items: center; gap: 8px; transition: all 0.2s;
         }
-
-        .game-card:active {
-            transform: scale(0.95);
-            border-color: var(--gold);
-        }
-
-        .game-card h3 {
-            font-size: 14px;
-            color: var(--gold);
-            margin: 0;
-        }
-
+        .game-card:active { transform: scale(0.95); border-color: var(--gold); }
+        .game-card h3 { font-size: 13px; color: var(--gold); margin: 0; }
         .game-card .game-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            font-size: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 55px; height: 55px; border-radius: 50%; object-fit: cover;
+            font-size: 35px; display: flex; align-items: center; justify-content: center;
         }
 
-        /* Sections */
         .section {
-            background: rgba(22, 22, 58, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            padding: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            flex-shrink: 0;
-            position: relative;
-            z-index: 1;
+            background: rgba(22,22,58,0.7); backdrop-filter: blur(10px); border-radius: 10px;
+            padding: 8px; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; position: relative; z-index: 1;
         }
+        .section h3 { font-size: 13px; color: var(--gold); margin-bottom: 6px; }
+        .row { display: flex; gap: 5px; align-items: center; margin-bottom: 5px; flex-wrap: wrap; }
+        .row label { font-size: 10px; color: var(--muted); min-width: 55px; }
+        .row input, .row select, .row textarea { flex: 1; min-width: 60px; padding: 7px; font-size: 11px; }
 
-        .section h3 {
-            font-size: 14px;
-            color: var(--gold);
-            margin-bottom: 8px;
-        }
-
-        .row {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-            margin-bottom: 6px;
-            flex-wrap: wrap;
-        }
-
-        .row label {
-            font-size: 10px;
-            color: var(--muted);
-            min-width: 60px;
-        }
-
-        .row input,
-        .row select,
-        .row textarea {
-            flex: 1;
-            min-width: 70px;
-            padding: 8px;
-            font-size: 12px;
-        }
-
-        /* Lists */
-        .pass-list {
-            max-height: 200px;
-            overflow-y: auto;
-            font-size: 9px;
-            font-family: monospace;
-        }
-
+        .pass-list { max-height: 180px; overflow-y: auto; font-size: 9px; font-family: monospace; }
         .pass-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 5px;
-            border-bottom: 1px solid rgba(26, 26, 58, 0.5);
-            gap: 4px;
-            font-size: 9px;
+            display: flex; justify-content: space-between; align-items: center; padding: 4px;
+            border-bottom: 1px solid rgba(26,26,58,0.5); gap: 3px; font-size: 8px;
         }
+        .pass-item button { background: #b91c1c; color: #fff; border: none; padding: 2px 5px; border-radius: 4px; font-size: 8px; cursor: pointer; }
 
-        .pass-item button {
-            background: #b91c1c;
-            color: #fff;
-            border: none;
-            padding: 3px 6px;
-            border-radius: 4px;
-            font-size: 8px;
-            cursor: pointer;
+        .game-list-item, .ad-list-item {
+            display: flex; justify-content: space-between; align-items: center; padding: 7px 8px;
+            background: rgba(10,10,40,0.7); border-radius: 8px; margin-bottom: 4px; gap: 6px; font-size: 10px;
         }
+        .game-list-item .game-list-icon {
+            width: 30px; height: 30px; border-radius: 50%; object-fit: cover;
+            font-size: 22px; display: flex; align-items: center; justify-content: center;
+        }
+        .game-list-item .game-list-info, .ad-list-item .ad-list-info { flex: 1; text-align: right; }
+        .game-list-item .game-list-name { color: var(--gold); font-weight: bold; }
+        .game-list-item button, .ad-list-item button { background: #b91c1c; color: #fff; border: none; padding: 3px 6px; border-radius: 4px; font-size: 8px; cursor: pointer; margin: 1px; }
+        .game-list-item button.edit { background: var(--purple); }
 
-        .game-list-item,
-        .ad-list-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 10px;
-            background: rgba(10, 10, 40, 0.7);
-            border-radius: 8px;
-            margin-bottom: 5px;
-            gap: 8px;
+        /* Pattern Table */
+        .pattern-table {
+            width: 100%; border-collapse: collapse; font-size: 10px; margin-top: 6px;
+        }
+        .pattern-table th {
+            background: rgba(240,165,0,0.2); color: var(--gold); padding: 6px 4px;
+            text-align: center; font-size: 9px; border-bottom: 2px solid var(--gold);
+            position: sticky; top: 0; z-index: 2;
+        }
+        .pattern-table td {
+            padding: 5px 4px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05);
             font-size: 10px;
         }
-
-        .game-list-item .game-list-icon {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            object-fit: cover;
-            font-size: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .pattern-table tr:hover { background: rgba(240,165,0,0.1); }
+        .pattern-table .sequence-cell {
+            display: flex; align-items: center; justify-content: center; gap: 1px;
+            flex-wrap: wrap; font-size: 14px;
         }
+        .pattern-table .arrow-cell { color: var(--gold); font-weight: bold; font-size: 12px; }
 
-        .game-list-item .game-list-info,
-        .ad-list-item .ad-list-info {
-            flex: 1;
-            text-align: right;
+        .confidence-badge {
+            padding: 2px 6px; border-radius: 10px; font-weight: bold; font-size: 9px;
+            display: inline-block; white-space: nowrap;
         }
+        .confidence-badge.high { background: rgba(78,159,61,0.3); color: #4e9f3d; }
+        .confidence-badge.medium { background: rgba(240,165,0,0.3); color: #f0a500; }
+        .confidence-badge.low { background: rgba(233,69,96,0.3); color: #e94560; }
 
-        .game-list-item .game-list-name {
-            color: var(--gold);
-            font-weight: bold;
+        .pattern-header-row {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(10,10,40,0.8); border-radius: 8px; padding: 8px 10px; margin-bottom: 6px;
         }
+        .pattern-stats { display: flex; gap: 12px; font-size: 10px; }
+        .pattern-stats span { color: var(--gold); font-weight: bold; }
 
-        .game-list-item button,
-        .ad-list-item button {
-            background: #b91c1c;
-            color: #fff;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 9px;
-            cursor: pointer;
-            margin: 1px;
-        }
-
-        .game-list-item button.edit {
-            background: var(--purple);
-        }
-
-        /* Learn Log */
         .learn-log {
-            font-size: 9px;
-            color: var(--muted);
-            font-family: monospace;
-            background: rgba(2, 2, 8, 0.7);
-            padding: 8px;
-            border-radius: 8px;
-            line-height: 1.5;
-            flex-shrink: 0;
-            max-height: 45px;
-            overflow-y: auto;
-            z-index: 1;
+            font-size: 8px; color: var(--muted); font-family: monospace; background: rgba(2,2,8,0.7);
+            padding: 6px; border-radius: 8px; line-height: 1.4; flex-shrink: 0;
+            max-height: 40px; overflow-y: auto; z-index: 1;
         }
+        .learn-log div { padding: 1px 0; border-bottom: 1px solid rgba(17,17,17,0.5); }
+        .spacer { flex: 1; }
+        .error-msg { color: #ff6b6b; text-align: center; font-size: 11px; flex-shrink: 0; position: relative; z-index: 1; }
 
-        .learn-log div {
-            padding: 2px 0;
-            border-bottom: 1px solid rgba(17, 17, 17, 0.5);
-        }
-
-        .spacer {
-            flex: 1;
-        }
-
-        .error-msg {
-            color: #ff6b6b;
-            text-align: center;
-            font-size: 12px;
-            flex-shrink: 0;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Alerts */
         .alert {
-            display: none;
-            border-radius: 10px;
-            padding: 6px;
-            text-align: center;
-            font-size: 11px;
-            font-weight: bold;
-            flex-shrink: 0;
-            position: relative;
-            z-index: 1;
+            display: none; border-radius: 8px; padding: 5px; text-align: center; font-size: 10px;
+            font-weight: bold; flex-shrink: 0; position: relative; z-index: 1;
         }
+        .alert.show { display: block; }
+        .alert-info { background: rgba(5,26,26,0.7); border: 2px solid var(--cyan); color: var(--cyan); }
+        .alert-cloud { background: rgba(5,5,30,0.8); border: 2px solid #f0a500; color: #f0a500; }
 
-        .alert.show {
-            display: block;
-        }
-
-        .alert-info {
-            background: rgba(5, 26, 26, 0.7);
-            border: 2px solid var(--cyan);
-            color: var(--cyan);
-        }
-
-        .alert-cloud {
-            background: rgba(5, 5, 30, 0.8);
-            border: 2px solid #f0a500;
-            color: #f0a500;
-        }
-
-        /* Tabs */
-        .tabs {
-            display: flex;
-            gap: 4px;
-            flex-shrink: 0;
-            position: relative;
-            z-index: 1;
-        }
-
+        .tabs { display: flex; gap: 3px; flex-shrink: 0; position: relative; z-index: 1; }
         .tabs .tab {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            background: rgba(22, 22, 58, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 11px;
-            color: var(--muted);
-            transition: all 0.2s;
+            flex: 1; padding: 8px; text-align: center; background: rgba(22,22,58,0.5);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer;
+            font-size: 10px; color: var(--muted); transition: all 0.2s;
         }
+        .tabs .tab.active { background: rgba(139,92,246,0.3); border-color: var(--purple); color: #fff; font-weight: bold; }
 
-        .tabs .tab.active {
-            background: rgba(139, 92, 246, 0.3);
-            border-color: var(--purple);
-            color: #fff;
-            font-weight: bold;
-        }
-
-        .admin-tabs {
-            display: flex;
-            gap: 4px;
-            flex-shrink: 0;
-            margin-bottom: 8px;
-            position: relative;
-            z-index: 1;
-        }
-
+        .admin-tabs { display: flex; gap: 3px; flex-shrink: 0; margin-bottom: 6px; position: relative; z-index: 1; }
         .admin-tab {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            background: rgba(22, 22, 58, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 11px;
-            color: var(--muted);
-            transition: all 0.2s;
+            flex: 1; padding: 8px; text-align: center; background: rgba(22,22,58,0.5);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer;
+            font-size: 10px; color: var(--muted); transition: all 0.2s;
         }
+        .admin-tab.active { background: rgba(240,165,0,0.3); border-color: var(--gold); color: #fff; font-weight: bold; }
 
-        .admin-tab.active {
-            background: rgba(240, 165, 0, 0.3);
-            border-color: var(--gold);
-            color: #fff;
-            font-weight: bold;
-        }
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--gold);
-            border-radius: 2px;
-        }
-
-        /* Game screen specific layout */
-        #gameScreen {
-            gap: 3px;
-            padding: 2px;
-        }
+        #gameScreen { gap: 2px; padding: 2px; }
     </style>
 </head>
 <body>
@@ -953,13 +356,11 @@
         <!-- Login Screen -->
         <div class="screen active" id="loginScreen">
             <div class="screen-bg-overlay" id="loginScreenBg"></div>
-            <div class="ad-banner image-ad" id="loginAd" style="display:none;">
-                <div class="ad-slide-image" id="loginAdSlide"></div>
-            </div>
+            <div class="ad-banner image-ad" id="loginAd" style="display:none;"><div class="ad-slide-image" id="loginAdSlide"></div></div>
             <div class="spacer"></div>
             <div class="header"><h1>👑 CRAZY 👑</h1></div>
             <div class="status-msg online" id="connectionStatus">🟡</div>
-            <div style="display:flex;flex-direction:column;gap:10px;flex-shrink:0;">
+            <div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0;">
                 <input type="password" id="passInput" placeholder="🔐 كلمة المرور" maxlength="30" autocomplete="off">
                 <button class="btn" id="loginBtn" onclick="cpw()">🔓 دخول</button>
                 <p class="error-msg" id="loginError"></p>
@@ -970,27 +371,19 @@
         <!-- Game Select Screen -->
         <div class="screen" id="gameSelectScreen">
             <div class="screen-bg-overlay" id="gamesScreenBg"></div>
-            <div class="ad-banner image-ad" id="gamesAd" style="display:none;">
-                <div class="ad-slide-image" id="gamesAdSlide"></div>
-            </div>
+            <div class="ad-banner image-ad" id="gamesAd" style="display:none;"><div class="ad-slide-image" id="gamesAdSlide"></div></div>
             <div class="header"><h1>🎮 اختر اللعبة</h1><div style="font-size:9px;color:var(--muted);" id="selectUser"></div></div>
-            <div class="game-cards" style="margin-top:10px;" id="gameCardsContainer"></div>
-            <div class="btn-row" style="margin-top:10px;">
-                <button class="btn sm outline" onclick="lo()">🚪 خروج</button>
-            </div>
+            <div class="game-cards" style="margin-top:8px;" id="gameCardsContainer"></div>
+            <div class="btn-row" style="margin-top:8px;"><button class="btn sm outline" onclick="lo()">🚪 خروج</button></div>
         </div>
 
         <!-- Game Screen -->
         <div class="screen" id="gameScreen">
             <div class="screen-bg-overlay" id="predictScreenBg"></div>
-            <div class="ad-banner text-ad" id="predictAd" style="display:none;">
-                <div class="ad-slide-text" id="predictAdSlide"></div>
-            </div>
+            <div class="ad-banner text-ad" id="predictAd" style="display:none;"><div class="ad-slide-text" id="predictAdSlide"></div></div>
             <div class="alert alert-info" id="learnAlert">🧠</div>
             <div class="alert alert-cloud" id="cloudAlert" style="display:none;">☁️ تم رفع التعلم للسحابة</div>
-            <div class="wheel-container" id="wheelContainer">
-                <div class="wheel-center" id="wheelCenter">🎯</div>
-            </div>
+            <div class="wheel-container" id="wheelContainer"><div class="wheel-center" id="wheelCenter">🎯</div></div>
             <div class="gear-strip" id="gearStrip"></div>
             <div class="counter-box">
                 <div><span class="counter-value correct" id="correctCount">0</span><span class="counter-label"> ✅</span></div>
@@ -1013,9 +406,9 @@
                 <div class="admin-tab active" onclick="switchAdminTab('players')">👥 اللاعبين</div>
                 <div class="admin-tab" onclick="switchAdminTab('games')">🎮 البرامج</div>
                 <div class="admin-tab" onclick="switchAdminTab('ads')">📢 الإعلانات</div>
+                <div class="admin-tab" onclick="switchAdminTab('patterns')">📊 الأنماط</div>
             </div>
 
-            <!-- Players Tab -->
             <div id="adminPlayersTab">
                 <div class="section">
                     <h3>➕ إضافة لاعب جديد</h3>
@@ -1026,26 +419,22 @@
                     <div class="row"><label>أيام:</label><input type="number" id="newDays" value="0" min="0"></div>
                     <button class="btn sm" style="background:#f97316;" onclick="ap()">✅ إضافة للسحابة</button>
                 </div>
-                <div class="section" style="flex:1;display:flex;flex-direction:column;min-height:150px;">
+                <div class="section" style="flex:1;display:flex;flex-direction:column;min-height:120px;">
                     <h3>📋 اللاعبين (<span id="passCount">0</span>/200)</h3>
                     <div class="pass-list" id="passList" style="flex:1;"></div>
-                    <div class="btn-row" style="margin-top:8px;">
+                    <div class="btn-row" style="margin-top:6px;">
                         <button class="btn sm danger" onclick="da_()">🗑 حذف الكل</button>
                         <button class="btn sm" style="background:#f97316;" onclick="rad_()">🔓 فك الكل</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Games Tab -->
             <div id="adminGamesTab" style="display:none;">
                 <div class="tabs" id="settingsTabs">
                     <div class="tab active" onclick="switchSettingsTab('list')">📋 البرامج</div>
                     <div class="tab" onclick="switchSettingsTab('add')">➕ إضافة</div>
                 </div>
-                <div class="section" id="settingsList" style="flex:1;">
-                    <h3>🎮 البرامج الحالية</h3>
-                    <div id="gameListContainer" style="max-height:350px;overflow-y:auto;"></div>
-                </div>
+                <div class="section" id="settingsList" style="flex:1;"><h3>🎮 البرامج الحالية</h3><div id="gameListContainer" style="max-height:300px;overflow-y:auto;"></div></div>
                 <div class="section" id="settingsForm" style="display:none;flex:1;">
                     <h3 id="settingsFormTitle">➕ إضافة برنامج جديد</h3>
                     <input type="hidden" id="editGameKey" value="">
@@ -1055,14 +444,10 @@
                     <div class="row"><label>الخضار:</label><input type="text" id="gameVeg" placeholder="🥕,🌽,🍅,🌶"></div>
                     <div class="row"><label>اللحوم:</label><input type="text" id="gameMeat" placeholder="🍤,🐮,🐟,🐤"></div>
                     <div class="row"><label>الساعة:</label><textarea id="gameClock" placeholder="الساعة 12: 🥕&#10;الساعة 1:30: 🍤&#10;الساعة 3: 🍅&#10;الساعة 4:30: 🍗&#10;الساعة 6: 🌽&#10;الساعة 7:30: 🥩&#10;الساعة 9: 🥦&#10;الساعة 10:30: 🐟"></textarea></div>
-                    <div class="btn-row">
-                        <button class="btn sm purple" onclick="saveGame()">💾 حفظ</button>
-                        <button class="btn sm danger" onclick="cancelEdit()">❌ إلغاء</button>
-                    </div>
+                    <div class="btn-row"><button class="btn sm purple" onclick="saveGame()">💾 حفظ</button><button class="btn sm danger" onclick="cancelEdit()">❌ إلغاء</button></div>
                 </div>
             </div>
 
-            <!-- Ads Tab -->
             <div id="adminAdsTab" style="display:none;">
                 <div class="section">
                     <h3>➕ إضافة إعلان جديد</h3>
@@ -1071,17 +456,34 @@
                     <div class="row"><label>المحتوى:</label><input type="text" id="adContent" placeholder="رابط صورة أو نص الإعلان"></div>
                     <button class="btn sm" style="background:#f97316;" onclick="addAd()">✅ إضافة</button>
                 </div>
-                <div class="section" style="flex:1;min-height:150px;">
-                    <h3>📋 الإعلانات الحالية</h3>
-                    <div id="adListContainer" style="max-height:350px;overflow-y:auto;"></div>
+                <div class="section" style="flex:1;min-height:120px;"><h3>📋 الإعلانات الحالية</h3><div id="adListContainer" style="max-height:300px;overflow-y:auto;"></div></div>
+            </div>
+
+            <div id="adminPatternsTab" style="display:none;">
+                <div class="section">
+                    <h3>📊 أنماط البرامج</h3>
+                    <div class="row"><label>البرنامج:</label><select id="patternGameSelect" onchange="loadPatternsForGame()"><option value="">اختر برنامج</option></select></div>
+                </div>
+                <div class="section" style="flex:1;min-height:120px;">
+                    <div id="patternHeaderRow" class="pattern-header-row" style="display:none;">
+                        <h3 style="margin:0;font-size:12px;">📋 الأنماط المسجلة</h3>
+                        <div class="pattern-stats">
+                            <span>الأنماط: <b id="patternTotalCount">0</b></span>
+                            <span>أعلى ثقة: <b id="patternMaxConf">0%</b></span>
+                        </div>
+                    </div>
+                    <div id="patternListContainer" style="max-height:350px;overflow-y:auto;"></div>
+                    <div class="btn-row" style="margin-top:6px;">
+                        <button class="btn sm danger" onclick="clearPatterns()">🗑 مسح الأنماط</button>
+                        <button class="btn sm purple" onclick="exportPatterns()">📦 تصدير</button>
+                    </div>
                 </div>
             </div>
 
-            <button class="btn outline" onclick="gtl()" style="margin-top:10px;">🚪 خروج</button>
+            <button class="btn outline" onclick="gtl()" style="margin-top:8px;">🚪 خروج</button>
         </div>
     </div>
 
-    <!-- Gear Popup Overlay -->
     <div class="gear-popup-overlay" id="gearPopupOverlay" onclick="closeGearPopup(event)">
         <div class="gear-popup" onclick="event.stopPropagation()">
             <h3>⚙️ عدد الاحتمالات</h3>
@@ -1092,39 +494,28 @@
             </div>
             <button class="btn sm outline" onclick="document.getElementById('gearPopupOverlay').classList.remove('show')">إغلاق</button>
         </div>
-    </div>
-
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-    <script>
-// ==================== STAR BACKGROUND ====================
-(function createStars() {
+        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<script>
+// ==================== STARS ====================
+(function() {
     const bg = document.getElementById('starsBg');
-    for (let i = 0; i < 120; i++) {
-        const star = document.createElement('div');
-        star.className = 'star';
-        const size = Math.random() * 2.5 + 1;
-        star.style.width = size + 'px';
-        star.style.height = size + 'px';
-        star.style.left = Math.random() * 100 + '%';
-        star.style.top = Math.random() * 100 + '%';
-        star.style.setProperty('--dur', (Math.random() * 3 + 2) + 's');
-        star.style.setProperty('--delay', Math.random() * 5 + 's');
-        bg.appendChild(star);
+    for (let i = 0; i < 100; i++) {
+        const s = document.createElement('div'); s.className = 'star';
+        const sz = Math.random() * 2 + 1;
+        s.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${Math.random()*3+2}s;--delay:${Math.random()*5}s`;
+        bg.appendChild(s);
     }
     for (let i = 0; i < 3; i++) {
-        const shoot = document.createElement('div');
-        shoot.className = 'shooting-star';
-        shoot.style.left = Math.random() * 80 + '%';
-        shoot.style.top = Math.random() * 40 + '%';
-        shoot.style.setProperty('--sdelay', (Math.random() * 8 + i * 4) + 's');
-        bg.appendChild(shoot);
+        const sh = document.createElement('div'); sh.className = 'shooting-star';
+        sh.style.cssText = `left:${Math.random()*80}%;top:${Math.random()*40}%;--sdelay:${Math.random()*8+i*4}s`;
+        bg.appendChild(sh);
     }
 })();
 
-// ==================== FIREBASE CONFIG ====================
-const firebaseConfig = {
-    apiKey: "AIzaSyB9rN0N-0YlO5lW5l5l5l5l5l5l5l5l5l5l",
+// ==================== FIREBASE ====================
+const fc = {
+    apiKey: "AIzaSyB9rN0N-0YlO5lW5l5l5l5l5l5l5l5l5l5",
     authDomain: "hamdi-791e5.firebaseapp.com",
     databaseURL: "https://hamdi-791e5-default-rtdb.firebaseio.com",
     projectId: "hamdi-791e5",
@@ -1137,45 +528,21 @@ let db = null, on = false;
 
 function ifb() {
     try {
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        db = firebase.database();
-        on = true;
-        uc(true);
-        firebase.database().ref('.info/connected').on('value', s => {
-            on = s.val() === true;
-            uc(on);
-        });
-    } catch (e) {
-        on = false;
-        uc(false);
-    }
+        if (!firebase.apps.length) firebase.initializeApp(fc);
+        db = firebase.database(); on = true; uc(true);
+        firebase.database().ref('.info/connected').on('value', s => { on = s.val() === true; uc(on); });
+    } catch (e) { on = false; uc(false); }
 }
 
 function uc(o) {
-    const s1 = document.getElementById('connectionStatus');
-    if (s1) {
-        s1.textContent = o ? '🟢 متصل' : '🔴 غير متصل';
-        s1.className = o ? 'status-msg online' : 'status-msg offline';
-    }
-    const s2 = document.getElementById('adminConnStatus');
-    if (s2) {
-        s2.textContent = o ? '🟢 متصل' : '🔴 غير متصل';
-        s2.className = o ? 'status-msg online' : 'status-msg offline';
-    }
+    const s1 = document.getElementById('connectionStatus'), s2 = document.getElementById('adminConnStatus');
+    [s1, s2].forEach(el => { if (el) { el.textContent = o ? '🟢' : '🔴'; el.className = o ? 'status-msg online' : 'status-msg offline'; } });
 }
 
-// ==================== STORAGE HELPERS ====================
-const ls = (k, f = null) => {
-    try { return JSON.parse(localStorage.getItem(k)) || f; } catch (e) { return f; }
-};
-const ss = (k, v) => {
-    try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {}
-};
-
-// ==================== GAMES DATA ====================
-const GK = 'kf_games';
-const PK = 'kf_';
-const AK = 'kf_ads';
+// ==================== STORAGE ====================
+const ls = (k, f = null) => { try { return JSON.parse(localStorage.getItem(k)) || f; } catch (e) { return f; } };
+const ss = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const GK = 'kf_games', PK = 'kf_', AK = 'kf_ads', PTK = 'kf_patterns';
 
 const DEFAULT_GAMES = {
     zena: { n: '🎯 زينا لايف', v: ['🥕','🌽','🍅','🌶'], m: ['🍤','🐮','🐟','🐤'], a: ['🥕','🌽','🌶','🍅','🍤','🐮','🐟','🐤'], clock: ['🐤','🍅','🐮','🌶','🐟','🌽','🍤','🥕'], img: '' },
@@ -1185,1148 +552,402 @@ const DEFAULT_GAMES = {
 };
 
 function loadGames() {
-    let games = ls(GK, null);
-    if (!games || !Object.keys(games).length) {
-        games = JSON.parse(JSON.stringify(DEFAULT_GAMES));
-        ss(GK, games);
+    let g = ls(GK, null);
+    if (!g || !Object.keys(g).length) { g = JSON.parse(JSON.stringify(DEFAULT_GAMES)); ss(GK, g); }
+    for (const [k, v] of Object.entries(g)) {
+        if (!v.a) v.a = [...(v.v||[]), ...(v.m||[])];
+        if (!v.img) v.img = '';
+        if (!v.clock || v.clock.length < 8) v.clock = [...v.a.slice(0,8)];
     }
-    for (const [k, g] of Object.entries(games)) {
-        if (!g.a) g.a = [...(g.v || []), ...(g.m || [])];
-        if (!g.img) g.img = '';
-        if (!g.clock || g.clock.length < 8) g.clock = [...g.a.slice(0, 8)];
-    }
-    return games;
+    return g;
 }
 
-function saveGames(games) {
-    ss(GK, games);
-    if (on && db) db.ref('games').set(games).catch(() => {});
-}
+function saveGames(g) { ss(GK, g); if (on && db) db.ref('games').set(g).catch(()=>{}); }
+function loadAds() { return ls(AK, {}); }
+function saveAds(a) { ss(AK, a); if (on && db) db.ref('ads').set(a).catch(()=>{}); }
+function getPatterns(gk) { return (ls(PTK, {})[gk] || {}); }
+function savePatterns(gk, p) { const ap = ls(PTK, {}); ap[gk] = p; ss(PTK, ap); if (on && db) db.ref('patterns/'+gk).set(p).catch(()=>{}); }
 
-function loadAds() {
-    return ls(AK, {});
-}
+let G = loadGames(), ADS = loadAds();
 
-function saveAds(ads) {
-    ss(AK, ads);
-    if (on && db) db.ref('ads').set(ads).catch(() => {});
-}
+// ==================== AD ROTATORS ====================
+let imgAdInt = {}, bgInt = {};
 
-let G = loadGames();
-let ADS = loadAds();
-
-// ==================== IMAGE AD & BACKGROUND ROTATOR ====================
-let imageAdIntervals = {};
-let bgIntervals = {};
-
-function startImageAdRotation(bannerId, slideId, place) {
-    if (imageAdIntervals[place]) {
-        clearInterval(imageAdIntervals[place]);
-    }
-
-    const banner = document.getElementById(bannerId);
-    const slide = document.getElementById(slideId);
+function startImgAdRot(bid, sid, place) {
+    if (imgAdInt[place]) clearInterval(imgAdInt[place]);
+    const banner = document.getElementById(bid), slide = document.getElementById(sid);
     if (!banner || !slide) return;
-
-    const adsForPlace = Object.values(ADS).filter(a => a.place === place && a.type === 'image');
-    
-    if (adsForPlace.length === 0) {
-        banner.style.display = 'none';
-        return;
-    }
-
-    banner.style.display = 'flex';
-    
-    slide.innerHTML = '';
-    adsForPlace.forEach((ad, index) => {
-        const img = document.createElement('img');
-        img.src = ad.content;
-        img.alt = 'إعلان';
-        img.onerror = function() { this.style.display = 'none'; };
-        if (index === 0) img.classList.add('active');
-        slide.appendChild(img);
-    });
-
-    if (adsForPlace.length === 1) {
-        slide.querySelector('img').classList.add('active');
-        return;
-    }
-
-    let currentIndex = 0;
-    imageAdIntervals[place] = setInterval(() => {
-        const images = slide.querySelectorAll('img');
-        if (images.length === 0) return;
-        
-        images[currentIndex].classList.remove('active');
-        currentIndex = (currentIndex + 1) % images.length;
-        images[currentIndex].classList.add('active');
-    }, 3000);
+    const ads = Object.values(ADS).filter(a => a.place === place && a.type === 'image');
+    if (!ads.length) { banner.style.display = 'none'; return; }
+    banner.style.display = 'flex'; slide.innerHTML = '';
+    ads.forEach((a, i) => { const img = document.createElement('img'); img.src = a.content; img.alt = 'إعلان'; img.onerror = function(){this.style.display='none';}; if(i===0) img.classList.add('active'); slide.appendChild(img); });
+    if (ads.length === 1) { slide.querySelector('img').classList.add('active'); return; }
+    let ci = 0;
+    imgAdInt[place] = setInterval(() => { const imgs = slide.querySelectorAll('img'); if(!imgs.length) return; imgs[ci].classList.remove('active'); ci = (ci+1) % imgs.length; imgs[ci].classList.add('active'); }, 3000);
 }
 
-function startBackgroundRotation(screenId, bgElementId, place) {
-    if (bgIntervals[place]) {
-        clearInterval(bgIntervals[place]);
-    }
-
-    const screen = document.getElementById(screenId);
-    const bgElement = document.getElementById(bgElementId);
-    if (!screen || !bgElement) return;
-
-    const bgAds = Object.values(ADS).filter(a => a.place === place && a.type === 'bg');
-    
-    if (bgAds.length === 0) {
-        bgElement.style.backgroundImage = '';
-        bgElement.style.display = 'none';
-        return;
-    }
-
-    bgElement.style.display = 'block';
-
-    if (bgAds.length === 1) {
-        bgElement.style.backgroundImage = `url(${bgAds[0].content})`;
-        return;
-    }
-
-    let currentBgIndex = 0;
-    bgElement.style.backgroundImage = `url(${bgAds[currentBgIndex].content})`;
-
-    bgIntervals[place] = setInterval(() => {
-        currentBgIndex = (currentBgIndex + 1) % bgAds.length;
-        bgElement.style.backgroundImage = `url(${bgAds[currentBgIndex].content})`;
-    }, 3000);
-}
-
-// ==================== PREDICTION RULES ====================
-const BR = {
-    '🥕':['🍅','🌽'],'🌽':['🥕','🥦'],'🥦':['🍅','🌽'],'🍅':['🥕','🥦'],
-    '🌶':['🥕','🌽','🍅'],'🍤':['🌽','🥕'],'🐮':['🌽','🍅'],'🐟':['🍅','🥦'],
-    '🐤':['🍅','🥦'],'🍗':['🌽','🍅'],'🥩':['🍅','🥦'],'🍇':['🍓','🥬'],
-    '🥬':['🍇','🌽'],'🍓':['🍇','🥕'],'🐙':['🐟','🍤'],'🦐':['🐟','🥩'],
-    '🐠':['🐟','🍅'],'🐔':['🐤','🥬']
-};
-
-const RR = {
-    '🌽':{2:['🍅','🥕'],3:['🍅','🥕'],4:['🍅','🥕']},
-    '🥦':{2:['🥕','🍅'],3:['🥕','🍅'],4:['🥕','🍅']},
-    '🍅':{2:['🌽','🥦'],3:['🌽','🥦'],4:['🌽','🥦']},
-    '🥕':{2:['🍅','🌽'],3:['🍅','🌽'],4:['🍅','🌽']}
-};
-
-const TR = {
-    '🍤':{d:'🌽'},'🐮':{d:'🍅'},'🐟':{d:'🍅'},'🐤':{d:'🍅'},
-    '🍗':{d:'🍅'},'🥩':{d:'🥦'},'🐙':{d:'🍤'},'🦐':{d:'🥩'},
-    '🐠':{d:'🍅'},'🐔':{d:'🥬'}
-};
-
-const AD = 'Admin@Khal2024';
-const MK = 'AdminMasterKey2024';
-
-// ==================== PASSWORD GENERATION ====================
-function gtp(b, m) {
-    const n = new Date();
-    const p = v => ('' + v).padStart(2, '0');
-    if (m === 'hour') return `${b}_${n.getFullYear()}${p(n.getMonth()+1)}${p(n.getDate())}${p(n.getHours())}`;
-    if (m === 'day') return `${b}_${n.getFullYear()}${p(n.getMonth()+1)}${p(n.getDate())}`;
-    if (m === 'month') return `${b}_${n.getFullYear()}${p(n.getMonth()+1)}`;
-    return `${b}_static`;
-}
-
-function gex(pe) {
-    if (!pe.createdAt) return { ex: false, rm: 'غير محدود' };
-    const cr = new Date(pe.createdAt);
-    const nw = new Date();
-    let mh = Infinity;
-    if (pe.maxHours > 0) mh = pe.maxHours;
-    if (pe.maxDays > 0) mh = Math.min(mh, pe.maxDays * 24);
-    if (mh === Infinity) return { ex: false, rm: 'غير محدود' };
-    const rm = new Date(cr.getTime() + mh * 3600000) - nw;
-    if (rm <= 0) return { ex: true, rm: 'منتهي' };
-    const rh = Math.floor(rm / 3600000);
-    return { ex: false, rm: rh > 23 ? Math.floor(rh / 24) + ' يوم' : rh + ' ساعة' };
-}
-
-const dfp = () => {
-    const c = [navigator.userAgent || '', screen.width + '', new Date().getTimezoneOffset() + ''].join('|');
-    let h = 0;
-    for (let i = 0; i < c.length; i++) h = ((h << 5) - h) + c.charCodeAt(i);
-    return 'D' + Math.abs(h).toString(36).toUpperCase();
-};
-
-const CD = dfp();
-
-// ==================== FIREBASE PLAYER OPERATIONS ====================
-async function cgp() {
-    if (!db || !on) return null;
-    try { return (await db.ref('players').once('value')).val() || {}; } catch (e) { return null; }
-}
-
-async function csp(id, d) {
-    if (!db || !on) return false;
-    try { await db.ref('players/' + id).set(d); return true; } catch (e) { return false; }
-}
-
-async function cdp(id) {
-    if (!db || !on) return false;
-    try { await db.ref('players/' + id).remove(); return true; } catch (e) { return false; }
-}
-
-async function cda() {
-    if (!db || !on) return false;
-    try { await db.ref('players').remove(); return true; } catch (e) { return false; }
-}
-
-// ==================== LEARNING SYNC ====================
-async function uploadLearning(gameKey, lpData, dpData) {
-    if (!db || !on) return false;
-    try {
-        await db.ref('learning/' + gameKey + '/patterns').set(lpData);
-        await db.ref('learning/' + gameKey + '/discovered').set(dpData);
-        return true;
-    } catch (e) { return false; }
-}
-
-async function downloadLearning(gameKey) {
-    if (!db || !on) return null;
-    try {
-        const snap = await db.ref('learning/' + gameKey).once('value');
-        return snap.val() || { patterns: {}, discovered: {} };
-    } catch (e) { return null; }
-}
-
-function mergeLearning(localLp, localDp, cloudData) {
-    if (!cloudData) return { lp: localLp, dp: localDp };
-    const mergedLp = { ...localLp };
-    const mergedDp = { ...localDp };
-    if (cloudData.patterns) {
-        for (const [k, v] of Object.entries(cloudData.patterns)) {
-            mergedLp[k] = Math.max(mergedLp[k] || 0, v);
-        }
-    }
-    if (cloudData.discovered) {
-        for (const [k, v] of Object.entries(cloudData.discovered)) {
-            if (!mergedDp[k] || v.confidence > mergedDp[k].confidence) {
-                mergedDp[k] = v;
-            }
-        }
-    }
-    return { lp: mergedLp, dp: mergedDp };
-}
-
-// ==================== PLAYER STORAGE ====================
-const glp = () => ls(PK + 'p', {});
-const slp = pl => ss(PK + 'p', pl);
-
-// ==================== GAME STATE ====================
-let cu = null, cg = null, gs = [], las = null;
-let cV = [], cM = [], cA = [], cClock = [];
-let lp = {}, dp = {}, fh = [], cc = 0, wc = 0, al = [];
-let predCount = 5, cloudSynced = false;
-const MS = 10;
-
-// ==================== LOGGING ====================
-function alog(msg) {
-    al.unshift({ t: new Date().toLocaleTimeString('ar-EG'), m: msg });
-    if (al.length > 20) al = al.slice(0, 20);
-    const logEl = document.getElementById('learnLog');
-    if (logEl) logEl.innerHTML = al.map(l => `<div>${l.t} ${l.m}</div>`).join('');
-}
-
-// ==================== AUTH ====================
-async function cpw() {
-    document.getElementById('loginError').textContent = '';
-    const inp = document.getElementById('passInput').value.trim();
-    if (!inp) return;
-
-    if (inp === AD || inp === MK) {
-        document.getElementById('passInput').value = '';
-        showScreen('adminScreen');
-        await lap();
-        return;
-    }
-
-    document.getElementById('loginBtn').textContent = '⏳ جاري التحقق...';
-
-    let fd = null;
-    let ap = {};
-
-    if (on && db) {
-        const cl = await cgp();
-        if (cl) { ap = cl; slp(cl); }
-    }
-
-    if (!Object.keys(ap).length) ap = glp();
-
-    for (const p of Object.values(ap)) {
-        if ([p.key + '_master', p.key + '_static', gtp(p.key, p.mode), p.key].includes(inp)) {
-            fd = p;
-            break;
-        }
-    }
-
-    document.getElementById('loginBtn').textContent = '🔓 دخول';
-
-    if (!fd) {
-        document.getElementById('loginError').textContent = '❌ كلمة المرور غير صحيحة';
-        return;
-    }
-
-    if (gex(fd).ex) {
-        document.getElementById('loginError').textContent = '⏰ انتهت الصلاحية';
-        return;
-    }
-
-    if (fd.lockedDevice && fd.lockedDevice !== CD) {
-        document.getElementById('loginError').textContent = '🚫 هذا الحساب مقفل على جهاز آخر';
-        return;
-    }
-
-    if (!fd.lockedDevice) {
-        fd.lockedDevice = CD;
-        fd.createdAt = fd.createdAt || new Date().toISOString();
-        if (on && db) csp(fd.id, fd);
-        ap[fd.id] = fd;
-        slp(ap);
-    }
-
-    cu = fd;
-    document.getElementById('selectUser').textContent = '👤 ' + fd.id;
-    document.getElementById('passInput').value = '';
-    showScreen('gameSelectScreen');
-}
-
-async function lap() {
-    let pl = {};
-    if (on && db) {
-        const cl = await cgp();
-        if (cl) { pl = cl; slp(cl); } else pl = glp();
-    } else {
-        pl = glp();
-    }
-    rpl(pl);
-}
-
-// ==================== ADMIN PLAYERS ====================
-async function ap() {
-    const id = document.getElementById('newId').value.trim();
-    const key = document.getElementById('newKey').value.trim();
-    const mode = document.getElementById('newMode').value;
-    const hrs = parseInt(document.getElementById('newHours').value) || 0;
-    const dys = parseInt(document.getElementById('newDays').value) || 0;
-
-    if (!id || !key) return alert('الرجاء ملء جميع الحقول');
-
-    const all = on && db ? (await cgp()) || glp() : glp();
-
-    if (Object.keys(all).length >= 200) return alert('الحد الأقصى 200 لاعب');
-    if (all[id]) return alert('المعرف موجود مسبقاً');
-
-    const pd = { id, key, mode, maxHours: hrs, maxDays: dys, lockedDevice: null, createdAt: null };
-
-    if (on && db) await csp(id, pd);
-
-    const lc = glp();
-    lc[id] = pd;
-    slp(lc);
-
-    ['newId', 'newKey'].forEach(d => document.getElementById(d).value = '');
-    document.getElementById('newHours').value = '0';
-    document.getElementById('newDays').value = '0';
-
-    await lap();
-    alert('✅ تم إضافة ' + id);
-}
-
-async function dp_(id) {
-    if (!confirm('تأكيد حذف ' + id + '؟')) return;
-    if (on && db) await cdp(id);
-    const l = glp();
-    delete l[id];
-    slp(l);
-    await lap();
-}
-
-async function da_() {
-    if (!confirm('تأكيد حذف جميع اللاعبين؟')) return;
-    if (on && db) await cda();
-    slp({});
-    await lap();
-}
-
-async function rad_() {
-    if (!confirm('تأكيد فك قفل جميع الأجهزة؟')) return;
-    const all = on && db ? (await cgp()) || glp() : glp();
-    for (const [id, p] of Object.entries(all)) {
-        p.lockedDevice = null;
-        p.createdAt = null;
-        if (on && db) await csp(id, p);
-    }
-    slp(all);
-    await lap();
-    alert('✅ تم فك جميع الأجهزة');
-}
-
-function rpl(players) {
-    const arr = Object.values(players || {});
-    document.getElementById('passCount').textContent = arr.length;
-
-    const c = document.getElementById('passList');
-    if (!c) return;
-
-    c.innerHTML = arr.length ? arr.map(p => {
-        const v = gtp(p.key, p.mode);
-        const ei = gex(p);
-        const di = p.lockedDevice ? '<span style="color:#4e9f3d;">📱 مقفل</span>' : '<span style="color:#888;">- مفتوح</span>';
-        const ex = ei.ex ? '<span style="color:#e94560;">منتهي</span>' : '<span style="color:#4e9f3d;">' + ei.rm + '</span>';
-        return `<div class="pass-item"><strong>${p.id}</strong><span>${v}</span><small>[${p.mode}]</small>${di}${ex}<button onclick="dp_('${p.id}')">🗑</button></div>`;
-    }).join('') : '<p style="color:#888;text-align:center;">لا يوجد لاعبين</p>';
-}
-
-// ==================== GAME CARDS ====================
-async function buildGameCards() {
-    if (on && db) {
-        try {
-            const snap = await db.ref('games').once('value');
-            const cg = snap.val();
-            if (cg && Object.keys(cg).length > 0) { G = cg; ss(GK, G); }
-        } catch (e) {}
-    } else {
-        G = loadGames();
-    }
-
-    const container = document.getElementById('gameCardsContainer');
-    if (!container) return;
-
-    container.innerHTML = Object.entries(G).map(([key, g]) => {
-        const iconHtml = g.img ?
-            `<img class="game-icon" src="${g.img}" alt="${g.n}" onerror="this.style.display='none';this.parentElement.textContent='${g.n.split(' ')[0] || '🎯'}';" style="width:60px;height:60px;border-radius:50%;object-fit:cover;">` :
-            `<span class="game-icon">${g.n.split(' ')[0] || '🎯'}</span>`;
-        return `<div class="game-card" onclick="sg('${key}')">${iconHtml}<h3>${g.n}</h3></div>`;
-    }).join('');
-}
-
-// ==================== ADMIN TABS ====================
-function switchAdminTab(tab) {
-    const tabs = document.querySelectorAll('.admin-tab');
-    tabs.forEach((t, i) => {
-        t.classList.remove('active');
-        if ((tab === 'players' && i === 0) || (tab === 'games' && i === 1) || (tab === 'ads' && i === 2)) {
-            t.classList.add('active');
-        }
-    });
-
-    document.getElementById('adminPlayersTab').style.display = tab === 'players' ? 'block' : 'none';
-    document.getElementById('adminGamesTab').style.display = tab === 'games' ? 'block' : 'none';
-    document.getElementById('adminAdsTab').style.display = tab === 'ads' ? 'block' : 'none';
-
-    if (tab === 'games') refreshGameList();
-    if (tab === 'ads') refreshAdList();
-}
-
-function switchSettingsTab(tab) {
-    const tabs = document.querySelectorAll('#settingsTabs .tab');
-    if (tab === 'list') {
-        tabs[0].classList.add('active');
-        tabs[1].classList.remove('active');
-    } else {
-        tabs[1].classList.add('active');
-        tabs[0].classList.remove('active');
-    }
-
-    document.getElementById('settingsList').style.display = tab === 'list' ? 'block' : 'none';
-    document.getElementById('settingsForm').style.display = tab === 'add' ? 'block' : 'none';
-
-    if (tab === 'list') refreshGameList();
-    if (tab === 'add') {
-        document.getElementById('settingsFormTitle').textContent = '➕ إضافة برنامج جديد';
-        clearGameForm();
-    }
-}
-
-// ==================== GAME MANAGEMENT ====================
-function refreshGameList() {
-    const container = document.getElementById('gameListContainer');
-    if (!container) return;
-
-    container.innerHTML = Object.entries(G).map(([key, g]) => {
-        const iconHtml = g.img ?
-            `<img class="game-list-icon" src="${g.img}" alt="${g.n}" onerror="this.style.display='none';this.parentElement.textContent='${g.n.split(' ')[0] || '🎯'}';" style="width:35px;height:35px;border-radius:50%;object-fit:cover;">` :
-            `<span class="game-list-icon">${g.n.split(' ')[0] || '🎯'}</span>`;
-        return `<div class="game-list-item">
-            <div>${iconHtml}</div>
-            <div class="game-list-info">
-                <div class="game-list-name">${g.n}</div>
-                <div style="font-size:9px;color:var(--muted);">${key} | 🟢${g.v.length} 🥩${g.m.length}</div>
-            </div>
-            <button class="edit" onclick="editGame('${key}')">✏️</button>
-            <button onclick="deleteGame('${key}')">🗑</button>
-        </div>`;
-    }).join('');
-}
-
-function clearGameForm() {
-    ['editGameKey', 'gameKey', 'gameName', 'gameImage', 'gameVeg', 'gameMeat', 'gameClock'].forEach(id => {
-        document.getElementById(id).value = '';
-    });
-}
-
-function editGame(key) {
-    const g = G[key];
-    if (!g) return;
-
-    document.getElementById('editGameKey').value = key;
-    document.getElementById('gameKey').value = key;
-    document.getElementById('gameName').value = g.n;
-    document.getElementById('gameImage').value = g.img || '';
-    document.getElementById('gameVeg').value = (g.v || []).join(',');
-    document.getElementById('gameMeat').value = (g.m || []).join(',');
-
-    const times = ['12:00', '1:30', '3:00', '4:30', '6:00', '7:30', '9:00', '10:30'];
-    document.getElementById('gameClock').value = (g.clock || []).map((s, i) => {
-        return `الساعة ${times[i] || (i+1)}: ${s}`;
-    }).join('\n');
-
-    document.getElementById('settingsFormTitle').textContent = '✏️ تعديل: ' + g.n;
-    document.getElementById('settingsList').style.display = 'none';
-    document.getElementById('settingsForm').style.display = 'block';
-}
-
-function cancelEdit() {
-    document.getElementById('settingsList').style.display = 'block';
-    document.getElementById('settingsForm').style.display = 'none';
-    clearGameForm();
-    refreshGameList();
-}
-
-async function saveGame() {
-    const editKey = document.getElementById('editGameKey').value;
-    const key = document.getElementById('gameKey').value.trim().toLowerCase();
-    const name = document.getElementById('gameName').value.trim();
-    const img = document.getElementById('gameImage').value.trim();
-    const vegRaw = document.getElementById('gameVeg').value.trim();
-    const meatRaw = document.getElementById('gameMeat').value.trim();
-    const clockRaw = document.getElementById('gameClock').value.trim();
-
-    if (!key || !name) return alert('المفتاح والاسم مطلوبين');
-    if (!/^[a-z0-9_]+$/.test(key)) return alert('المفتاح: حروف إنجليزية وأرقام فقط');
-
-    const veg = vegRaw.split(/[,،\s]+/).filter(Boolean);
-    const meat = meatRaw.split(/[,،\s]+/).filter(Boolean);
-
-    if (veg.length < 2 || meat.length < 2) return alert('أدخل رمزين على الأقل لكل من الخضار واللحوم');
-
-    let clock = [];
-    const clockLines = clockRaw.split('\n').filter(Boolean);
-    if (clockLines.length === 8) {
-        clock = clockLines.map(line => {
-            const parts = line.split(/[:：]\s*/);
-            return parts[parts.length - 1].trim();
-        });
-    } else {
-        clock = [...veg, ...meat].slice(0, 8);
-    }
-
-    const a = [...veg, ...meat];
-    const gameData = { n: name, v: veg, m: meat, a, clock, img };
-
-    if (editKey && editKey !== key) delete G[editKey];
-    G[key] = gameData;
-    saveGames(G);
-
-    await buildGameCards();
-    cancelEdit();
-    alert('✅ تم حفظ ' + name);
-}
-
-async function deleteGame(key) {
-    if (!confirm('تأكيد حذف ' + (G[key]?.n || key) + '؟')) return;
-    delete G[key];
-    saveGames(G);
-    await buildGameCards();
-    refreshGameList();
-    alert('🗑 تم الحذف');
-}
-
-// ==================== AD MANAGEMENT ====================
-function addAd() {
-    const type = document.getElementById('adType').value;
-    const place = document.getElementById('adPlace').value;
-    const content = document.getElementById('adContent').value.trim();
-
-    if (!content) return alert('أدخل محتوى الإعلان');
-
-    const id = 'ad_' + Date.now();
-    ADS[id] = { id, type, place, content, createdAt: new Date().toISOString() };
-    saveAds(ADS);
-
-    document.getElementById('adContent').value = '';
-    refreshAdList();
-    refreshAllAds();
-    alert('✅ تم إضافة الإعلان');
-}
-
-function deleteAd(id) {
-    if (!confirm('تأكيد حذف الإعلان؟')) return;
-    delete ADS[id];
-    saveAds(ADS);
-    refreshAdList();
-    refreshAllAds();
-}
-
-function refreshAdList() {
-    const container = document.getElementById('adListContainer');
-    if (!container) return;
-
-    const arr = Object.values(ADS);
-    const placeNames = { login: '🔐 تسجيل الدخول', games: '🎮 البرامج', predict: '🎯 التوقعات' };
-    const typeNames = { image: '🖼️ صورة', text: '📝 نص', bg: '🖼️ خلفية' };
-
-    container.innerHTML = arr.length ? arr.map(a => {
-        const placeName = placeNames[a.place] || a.place;
-        const typeName = typeNames[a.type] || a.type;
-        const preview = a.content.substring(0, 50);
-        return `<div class="ad-list-item">
-            <div class="ad-list-info">${typeName} [${placeName}] ${preview}</div>
-            <button onclick="deleteAd('${a.id}')">🗑</button>
-        </div>`;
-    }).join('') : '<p style="color:#888;text-align:center;">لا توجد إعلانات</p>';
+function startBgRot(sid, bid, place) {
+    if (bgInt[place]) clearInterval(bgInt[place]);
+    const bgEl = document.getElementById(bid);
+    if (!bgEl) return;
+    const ads = Object.values(ADS).filter(a => a.place === place && a.type === 'bg');
+    if (!ads.length) { bgEl.style.backgroundImage = ''; bgEl.style.display = 'none'; return; }
+    bgEl.style.display = 'block';
+    if (ads.length === 1) { bgEl.style.backgroundImage = `url(${ads[0].content})`; return; }
+    let ci = 0;
+    bgEl.style.backgroundImage = `url(${ads[ci].content})`;
+    bgInt[place] = setInterval(() => { ci = (ci+1) % ads.length; bgEl.style.backgroundImage = `url(${ads[ci].content})`; }, 3000);
 }
 
 function refreshAllAds() {
     ADS = loadAds();
-    
-    // Image ads with rotation
-    startImageAdRotation('loginAd', 'loginAdSlide', 'login');
-    startImageAdRotation('gamesAd', 'gamesAdSlide', 'games');
-    
-    // Text ad for prediction screen
-    refreshTextAd();
-    
-    // Background images
-    startBackgroundRotation('loginScreen', 'loginScreenBg', 'login');
-    startBackgroundRotation('gameSelectScreen', 'gamesScreenBg', 'games');
-    startBackgroundRotation('gameScreen', 'predictScreenBg', 'predict');
+    startImgAdRot('loginAd', 'loginAdSlide', 'login');
+    startImgAdRot('gamesAd', 'gamesAdSlide', 'games');
+    startBgRot('loginScreen', 'loginScreenBg', 'login');
+    startBgRot('gameSelectScreen', 'gamesScreenBg', 'games');
+    startBgRot('gameScreen', 'predictScreenBg', 'predict');
+    const tb = document.getElementById('predictAd'), ts = document.getElementById('predictAdSlide');
+    if (tb && ts) {
+        const ta = Object.values(ADS).filter(a => a.place === 'predict' && a.type === 'text');
+        if (!ta.length) { tb.style.display = 'none'; return; }
+        tb.style.display = 'flex'; ts.textContent = ta.map(a => a.content).join('   ★★★   ');
+    }
 }
 
-function refreshTextAd() {
-    const banner = document.getElementById('predictAd');
-    const slide = document.getElementById('predictAdSlide');
-    if (!banner || !slide) return;
+// ==================== RULES ====================
+const BR = {'🥕':['🍅','🌽'],'🌽':['🥕','🥦'],'🥦':['🍅','🌽'],'🍅':['🥕','🥦'],'🌶':['🥕','🌽','🍅'],'🍤':['🌽','🥕'],'🐮':['🌽','🍅'],'🐟':['🍅','🥦'],'🐤':['🍅','🥦'],'🍗':['🌽','🍅'],'🥩':['🍅','🥦'],'🍇':['🍓','🥬'],'🥬':['🍇','🌽'],'🍓':['🍇','🥕'],'🐙':['🐟','🍤'],'🦐':['🐟','🥩'],'🐠':['🐟','🍅'],'🐔':['🐤','🥬']};
+const RR = {'🌽':{2:['🍅','🥕'],3:['🍅','🥕'],4:['🍅','🥕']},'🥦':{2:['🥕','🍅'],3:['🥕','🍅'],4:['🥕','🍅']},'🍅':{2:['🌽','🥦'],3:['🌽','🥦'],4:['🌽','🥦']},'🥕':{2:['🍅','🌽'],3:['🍅','🌽'],4:['🍅','🌽']}};
+const TR = {'🍤':{d:'🌽'},'🐮':{d:'🍅'},'🐟':{d:'🍅'},'🐤':{d:'🍅'},'🍗':{d:'🍅'},'🥩':{d:'🥦'},'🐙':{d:'🍤'},'🦐':{d:'🥩'},'🐠':{d:'🍅'},'🐔':{d:'🥬'}};
+const AD = 'Admin@Khal2024', MK = 'AdminMasterKey2024';
 
-    const textAds = Object.values(ADS).filter(a => a.place === 'predict' && a.type === 'text');
+function gtp(b, m) { const n = new Date(), p = v => (''+v).padStart(2,'0'); if(m==='hour') return `${b}_${n.getFullYear()}${p(n.getMonth()+1)}${p(n.getDate())}${p(n.getHours())}`; if(m==='day') return `${b}_${n.getFullYear()}${p(n.getMonth()+1)}${p(n.getDate())}`; if(m==='month') return `${b}_${n.getFullYear()}${p(n.getMonth()+1)}`; return `${b}_static`; }
+function gex(pe) { if(!pe.createdAt) return {ex:false,rm:'غير محدود'}; const cr = new Date(pe.createdAt), nw = new Date(); let mh = Infinity; if(pe.maxHours>0) mh = pe.maxHours; if(pe.maxDays>0) mh = Math.min(mh, pe.maxDays*24); if(mh===Infinity) return {ex:false,rm:'غير محدود'}; const rm = new Date(cr.getTime()+mh*3600000)-nw; if(rm<=0) return {ex:true,rm:'منتهي'}; const rh = Math.floor(rm/3600000); return {ex:false,rm:rh>23?Math.floor(rh/24)+' يوم':rh+' ساعة'}; }
+const dfp = () => { const c = [navigator.userAgent||'', screen.width+'', new Date().getTimezoneOffset()+''].join('|'); let h=0; for(let i=0;i<c.length;i++) h=((h<<5)-h)+c.charCodeAt(i); return 'D'+Math.abs(h).toString(36).toUpperCase(); };
+const CD = dfp();
 
-    if (textAds.length === 0) {
-        banner.style.display = 'none';
+async function cgp() { if(!db||!on) return null; try { return (await db.ref('players').once('value')).val()||{}; } catch(e) { return null; } }
+async function csp(id,d) { if(!db||!on) return false; try { await db.ref('players/'+id).set(d); return true; } catch(e) { return false; } }
+async function cdp(id) { if(!db||!on) return false; try { await db.ref('players/'+id).remove(); return true; } catch(e) { return false; } }
+async function cda() { if(!db||!on) return false; try { await db.ref('players').remove(); return true; } catch(e) { return false; } }
+async function uploadLearning(gk,lpD,dpD) { if(!db||!on) return false; try { await db.ref('learning/'+gk+'/patterns').set(lpD); await db.ref('learning/'+gk+'/discovered').set(dpD); return true; } catch(e) { return false; } }
+async function downloadLearning(gk) { if(!db||!on) return null; try { const s = await db.ref('learning/'+gk).once('value'); return s.val()||{patterns:{},discovered:{}}; } catch(e) { return null; } }
+function mergeLearning(lLp,lDp,cD) { if(!cD) return {lp:lLp,dp:lDp}; const mLp={...lLp}, mDp={...lDp}; if(cD.patterns) { for(const[k,v] of Object.entries(cD.patterns)) mLp[k]=Math.max(mLp[k]||0,v); } if(cD.discovered) { for(const[k,v] of Object.entries(cD.discovered)) { if(!mDp[k]||v.confidence>mDp[k].confidence) mDp[k]=v; } } return {lp:mLp,dp:mDp}; }
+const glp = () => ls(PK+'p',{}); const slp = pl => ss(PK+'p',pl);
+
+let cu=null, cg=null, gs=[], las=null, cV=[], cM=[], cA=[], cClock=[];
+let lp={}, dp={}, fh=[], cc=0, wc=0, al=[], predCount=5, cloudSynced=false;
+const MS=10;
+
+function alog(msg) { al.unshift({t:new Date().toLocaleTimeString('ar-EG'),m:msg}); if(al.length>20) al=al.slice(0,20); const el=document.getElementById('learnLog'); if(el) el.innerHTML=al.map(l=>`<div>${l.t} ${l.m}</div>`).join(''); }
+
+function toggleGearPopup() { document.getElementById('gearPopupOverlay').classList.add('show'); document.querySelectorAll('.gear-popup-option').forEach(o=>{ o.classList.remove('active'); if(parseInt(o.dataset.count)===predCount) o.classList.add('active'); }); }
+function closeGearPopup(e) { if(e.target===document.getElementById('gearPopupOverlay')) document.getElementById('gearPopupOverlay').classList.remove('show'); }
+function setPredCount(c) { predCount=c; if(cg) localStorage.setItem(PK+cg+'_pc',predCount); document.getElementById('gearPopupOverlay').classList.remove('show'); ra(); }
+
+function lo() { cu=null; cg=null; showScreen('loginScreen'); }
+function gtl() { showScreen('loginScreen'); }
+async function btg() { await showScreen('gameSelectScreen'); }
+
+async function showScreen(id) {
+    Object.keys(imgAdInt).forEach(k=>{ clearInterval(imgAdInt[k]); delete imgAdInt[k]; });
+    Object.keys(bgInt).forEach(k=>{ clearInterval(bgInt[k]); delete bgInt[k]; });
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    const sc = document.getElementById(id);
+    if(sc) { sc.classList.add('active'); if(id==='adminScreen') { await lap(); refreshGameList(); refreshAdList(); } if(id==='gameSelectScreen') await buildGameCards(); }
+    refreshAllAds();
+}
+</script>
+<script>
+// ==================== AUTH ====================
+async function cpw() {
+    document.getElementById('loginError').textContent = '';
+    const inp = document.getElementById('passInput').value.trim(); if(!inp) return;
+    if(inp===AD||inp===MK) { document.getElementById('passInput').value=''; showScreen('adminScreen'); await lap(); return; }
+    document.getElementById('loginBtn').textContent = '⏳';
+    let fd=null, ap={}; if(on&&db) { const cl=await cgp(); if(cl) { ap=cl; slp(cl); } }
+    if(!Object.keys(ap).length) ap=glp();
+    for(const p of Object.values(ap)) { if([p.key+'_master',p.key+'_static',gtp(p.key,p.mode),p.key].includes(inp)) { fd=p; break; } }
+    document.getElementById('loginBtn').textContent = '🔓 دخول';
+    if(!fd) { document.getElementById('loginError').textContent='❌ غير صحيح'; return; }
+    if(gex(fd).ex) { document.getElementById('loginError').textContent='⏰ منتهي'; return; }
+    if(fd.lockedDevice&&fd.lockedDevice!==CD) { document.getElementById('loginError').textContent='🚫 جهاز آخر'; return; }
+    if(!fd.lockedDevice) { fd.lockedDevice=CD; fd.createdAt=fd.createdAt||new Date().toISOString(); if(on&&db) csp(fd.id,fd); ap[fd.id]=fd; slp(ap); }
+    cu=fd; document.getElementById('selectUser').textContent='👤 '+fd.id;
+    document.getElementById('passInput').value=''; showScreen('gameSelectScreen');
+}
+
+async function lap() { let pl={}; if(on&&db) { const cl=await cgp(); if(cl) { pl=cl; slp(cl); } else pl=glp(); } else pl=glp(); rpl(pl); }
+
+// ==================== ADMIN PLAYERS ====================
+async function ap() { const id=document.getElementById('newId').value.trim(), key=document.getElementById('newKey').value.trim(); const mode=document.getElementById('newMode').value, hrs=parseInt(document.getElementById('newHours').value)||0, dys=parseInt(document.getElementById('newDays').value)||0; if(!id||!key) return alert('املأ'); const all=on&&db?(await cgp())||glp():glp(); if(Object.keys(all).length>=200) return alert('200 كحد أقصى'); if(all[id]) return alert('مكرر'); const pd={id,key,mode,maxHours:hrs,maxDays:dys,lockedDevice:null,createdAt:null}; if(on&&db) await csp(id,pd); const lc=glp(); lc[id]=pd; slp(lc); ['newId','newKey'].forEach(d=>document.getElementById(d).value=''); document.getElementById('newHours').value='0'; document.getElementById('newDays').value='0'; await lap(); alert('✅ '+id); }
+async function dp_(id) { if(!confirm('حذف '+id+'؟')) return; if(on&&db) await cdp(id); const l=glp(); delete l[id]; slp(l); await lap(); }
+async function da_() { if(!confirm('حذف الكل؟')) return; if(on&&db) await cda(); slp({}); await lap(); }
+async function rad_() { if(!confirm('فك الكل؟')) return; const all=on&&db?(await cgp())||glp():glp(); for(const[id,p] of Object.entries(all)) { p.lockedDevice=null; p.createdAt=null; if(on&&db) await csp(id,p); } slp(all); await lap(); alert('✅'); }
+function rpl(players) { const arr=Object.values(players||{}); document.getElementById('passCount').textContent=arr.length; const c=document.getElementById('passList'); if(!c) return; c.innerHTML=arr.length?arr.map(p=>{ const v=gtp(p.key,p.mode), ei=gex(p); const di=p.lockedDevice?'<span style="color:#4e9f3d;">📱</span>':'<span style="color:#888;">-</span>'; const ex=ei.ex?'<span style="color:#e94560;">منتهي</span>':'<span style="color:#4e9f3d;">'+ei.rm+'</span>'; return `<div class="pass-item"><strong>${p.id}</strong><span>${v}</span><small>[${p.mode}]</small>${di}${ex}<button onclick="dp_('${p.id}')">🗑</button></div>`; }).join(''):'<p style="color:#888;text-align:center;">لا يوجد</p>'; }
+
+// ==================== GAME CARDS ====================
+async function buildGameCards() { if(on&&db) { try { const s=await db.ref('games').once('value'); const cg=s.val(); if(cg&&Object.keys(cg).length>0) { G=cg; ss(GK,G); } } catch(e){} } else G=loadGames(); const c=document.getElementById('gameCardsContainer'); if(!c) return; c.innerHTML=Object.entries(G).map(([k,g])=>{ const icon=g.img?`<img class="game-icon" src="${g.img}" alt="${g.n}" onerror="this.style.display='none';this.parentElement.textContent='${g.n.split(' ')[0]||'🎯'}';" style="width:55px;height:55px;border-radius:50%;object-fit:cover;">`:`<span class="game-icon">${g.n.split(' ')[0]||'🎯'}</span>`; return `<div class="game-card" onclick="sg('${k}')">${icon}<h3>${g.n}</h3></div>`; }).join(''); }
+
+// ==================== ADMIN TABS ====================
+function switchAdminTab(tab) { document.querySelectorAll('.admin-tab').forEach((t,i)=>{ t.classList.remove('active'); if((tab==='players'&&i===0)||(tab==='games'&&i===1)||(tab==='ads'&&i===2)||(tab==='patterns'&&i===3)) t.classList.add('active'); }); ['adminPlayersTab','adminGamesTab','adminAdsTab','adminPatternsTab'].forEach(id=>document.getElementById(id).style.display='none'); document.getElementById('admin'+tab.charAt(0).toUpperCase()+tab.slice(1)+'Tab').style.display='block'; if(tab==='games') refreshGameList(); if(tab==='ads') refreshAdList(); if(tab==='patterns') { loadPatternGamesList(); loadPatternsForGame(); } }
+function switchSettingsTab(tab) { document.querySelectorAll('#settingsTabs .tab').forEach((t,i)=>{ t.classList.remove('active'); if((tab==='list'&&i===0)||(tab==='add'&&i===1)) t.classList.add('active'); }); document.getElementById('settingsList').style.display=tab==='list'?'block':'none'; document.getElementById('settingsForm').style.display=tab==='add'?'block':'none'; if(tab==='list') refreshGameList(); if(tab==='add') { document.getElementById('settingsFormTitle').textContent='➕ إضافة برنامج جديد'; clearGameForm(); } }
+
+// ==================== GAME MANAGEMENT ====================
+function refreshGameList() { const c=document.getElementById('gameListContainer'); if(!c) return; c.innerHTML=Object.entries(G).map(([k,g])=>{ const icon=g.img?`<img class="game-list-icon" src="${g.img}" alt="${g.n}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`:`<span class="game-list-icon">${g.n.split(' ')[0]||'🎯'}</span>`; return `<div class="game-list-item"><div>${icon}</div><div class="game-list-info"><div class="game-list-name">${g.n}</div><div style="font-size:8px;color:var(--muted);">${k} | 🟢${g.v.length} 🥩${g.m.length}</div></div><button class="edit" onclick="editGame('${k}')">✏️</button><button onclick="deleteGame('${k}')">🗑</button></div>`; }).join(''); }
+function clearGameForm() { ['editGameKey','gameKey','gameName','gameImage','gameVeg','gameMeat','gameClock'].forEach(id=>document.getElementById(id).value=''); }
+function editGame(key) { const g=G[key]; if(!g) return; document.getElementById('editGameKey').value=key; document.getElementById('gameKey').value=key; document.getElementById('gameName').value=g.n; document.getElementById('gameImage').value=g.img||''; document.getElementById('gameVeg').value=(g.v||[]).join(','); document.getElementById('gameMeat').value=(g.m||[]).join(','); const times=['12:00','1:30','3:00','4:30','6:00','7:30','9:00','10:30']; document.getElementById('gameClock').value=(g.clock||[]).map((s,i)=>`الساعة ${times[i]||(i+1)}: ${s}`).join('\n'); document.getElementById('settingsFormTitle').textContent='✏️ تعديل: '+g.n; document.getElementById('settingsList').style.display='none'; document.getElementById('settingsForm').style.display='block'; }
+function cancelEdit() { document.getElementById('settingsList').style.display='block'; document.getElementById('settingsForm').style.display='none'; clearGameForm(); refreshGameList(); }
+async function saveGame() { const ek=document.getElementById('editGameKey').value, key=document.getElementById('gameKey').value.trim().toLowerCase(); const name=document.getElementById('gameName').value.trim(), img=document.getElementById('gameImage').value.trim(); const veg=document.getElementById('gameVeg').value.trim().split(/[,،\s]+/).filter(Boolean); const meat=document.getElementById('gameMeat').value.trim().split(/[,،\s]+/).filter(Boolean); if(!key||!name) return alert('مطلوب'); if(!/^[a-z0-9_]+$/.test(key)) return alert('مفتاح خطأ'); if(veg.length<2||meat.length<2) return alert('رمزين على الأقل'); let clock=[]; const cl=document.getElementById('gameClock').value.trim().split('\n').filter(Boolean); if(cl.length===8) clock=cl.map(l=>{ const p=l.split(/[:：]\s*/); return p[p.length-1].trim(); }); else clock=[...veg,...meat].slice(0,8); const gd={n:name,v:veg,m:meat,a:[...veg,...meat],clock,img}; if(ek&&ek!==key) delete G[ek]; G[key]=gd; saveGames(G); await buildGameCards(); cancelEdit(); alert('✅ '+name); }
+async function deleteGame(key) { if(!confirm('حذف '+(G[key]?.n||key)+'؟')) return; delete G[key]; saveGames(G); await buildGameCards(); refreshGameList(); }
+
+// ==================== AD MANAGEMENT ====================
+function addAd() { const type=document.getElementById('adType').value, place=document.getElementById('adPlace').value; const content=document.getElementById('adContent').value.trim(); if(!content) return alert('محتوى'); ADS['ad_'+Date.now()]={id:'ad_'+Date.now(),type,place,content,createdAt:new Date().toISOString()}; saveAds(ADS); document.getElementById('adContent').value=''; refreshAdList(); refreshAllAds(); alert('✅'); }
+function deleteAd(id) { if(!confirm('حذف؟')) return; delete ADS[id]; saveAds(ADS); refreshAdList(); refreshAllAds(); }
+function refreshAdList() { const c=document.getElementById('adListContainer'); if(!c) return; const pn={login:'🔐 تسجيل',games:'🎮 برامج',predict:'🎯 توقعات'}; const tn={image:'🖼️',text:'📝',bg:'🖼️ خلفية'}; c.innerHTML=Object.values(ADS).length?Object.values(ADS).map(a=>`<div class="ad-list-item"><div class="ad-list-info">${tn[a.type]} [${pn[a.place]}] ${a.content.substring(0,40)}</div><button onclick="deleteAd('${a.id}')">🗑</button></div>`).join(''):'<p style="color:#888;text-align:center;">لا يوجد</p>'; }
+
+// ==================== PATTERNS SYSTEM ====================
+let currentPatternGame = null;
+
+async function recordWrongPattern(wrongSymbol) {
+    if (!cg || gs.length < 4) return;
+    
+    const last4 = gs.slice(-4);
+    const pk = last4.join(',');
+    const patterns = getPatterns(cg);
+    
+    if (!patterns[pk]) {
+        patterns[pk] = { sequence: last4, results: {}, totalCount: 0 };
+    }
+    
+    patterns[pk].results[wrongSymbol] = (patterns[pk].results[wrongSymbol] || 0) + 1;
+    patterns[pk].totalCount++;
+    
+    savePatterns(cg, patterns);
+    applyPatternImmediately(last4, wrongSymbol, patterns[pk]);
+}
+
+function applyPatternImmediately(last4, wrongSymbol, pd) {
+    const confidence = Math.round((pd.results[wrongSymbol] / pd.totalCount) * 100);
+    const lastSymbol = last4[last4.length - 1];
+    const learnKey = lastSymbol + '>' + wrongSymbol;
+    
+    if (!lp[learnKey]) lp[learnKey] = 0;
+    lp[learnKey] = Math.max(lp[learnKey], Math.max(confidence, 30));
+    ss(PK + cg + '_p', lp);
+    
+    const discKey = lastSymbol + '>' + wrongSymbol;
+    if (!dp[discKey] || dp[discKey].confidence < confidence) {
+        dp[discKey] = { count: pd.totalCount, confidence: Math.max(confidence, 30) };
+        ss(PK + cg + '_d', dp);
+    }
+    
+    alog('📊 ' + last4.join('') + ' → ' + wrongSymbol + ' (' + confidence + '%)');
+    
+    const pt = document.getElementById('adminPatternsTab');
+    if (pt && pt.style.display === 'block') {
+        const cg2 = document.getElementById('patternGameSelect');
+        if (cg2 && cg2.value === cg) loadPatternsForGame();
+    }
+    
+    ra();
+}
+
+function loadPatternGamesList() {
+    const s = document.getElementById('patternGameSelect'); if (!s) return;
+    s.innerHTML = '<option value="">اختر برنامج</option>' + Object.entries(G).map(([k, g]) => `<option value="${k}">${g.n}</option>`).join('');
+}
+
+function loadPatternsForGame() {
+    const gk = document.getElementById('patternGameSelect').value;
+    const header = document.getElementById('patternHeaderRow');
+    if (!gk) {
+        document.getElementById('patternListContainer').innerHTML = '<p style="color:#888;text-align:center;">اختر برنامج</p>';
+        if (header) header.style.display = 'none';
         return;
     }
-
-    banner.style.display = 'flex';
-    const combinedText = textAds.map(a => a.content).join('   ★★★   ');
-    slide.textContent = combinedText;
+    currentPatternGame = gk;
+    const patterns = getPatterns(gk);
+    displayPatterns(patterns);
 }
 
-// ==================== GEAR POPUP ====================
-function toggleGearPopup() {
-    const overlay = document.getElementById('gearPopupOverlay');
-    overlay.classList.add('show');
-
-    const options = overlay.querySelectorAll('.gear-popup-option');
-    options.forEach(opt => {
-        opt.classList.remove('active');
-        if (parseInt(opt.dataset.count) === predCount) opt.classList.add('active');
-    });
-}
-
-function closeGearPopup(e) {
-    if (e.target === document.getElementById('gearPopupOverlay')) {
-        document.getElementById('gearPopupOverlay').classList.remove('show');
+function displayPatterns(patterns) {
+    const c = document.getElementById('patternListContainer');
+    const header = document.getElementById('patternHeaderRow');
+    if (!c) return;
+    
+    const entries = Object.entries(patterns);
+    
+    if (!entries.length) {
+        c.innerHTML = '<p style="color:#888;text-align:center;">لا توجد أنماط مسجلة</p>';
+        if (header) header.style.display = 'none';
+        return;
     }
+    
+    entries.sort((a, b) => a[0].localeCompare(b[0], 'ar'));
+    
+    let maxConf = 0;
+    entries.forEach(([k, p]) => {
+        let best = null, bc = 0;
+        for (const [s, ct] of Object.entries(p.results)) { if (ct > bc) { bc = ct; best = s; } }
+        const conf = best ? Math.round((bc / p.totalCount) * 100) : 0;
+        if (conf > maxConf) maxConf = conf;
+    });
+    
+    if (header) {
+        header.style.display = 'flex';
+        document.getElementById('patternTotalCount').textContent = entries.length;
+        document.getElementById('patternMaxConf').textContent = maxConf + '%';
+    }
+    
+    c.innerHTML = `
+        <div style="overflow-x:auto;">
+            <table class="pattern-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>التسلسل</th>
+                        <th>النتيجة</th>
+                        <th>التكرار</th>
+                        <th>الثقة</th>
+                        <th>الحالة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${entries.map(([k, p], index) => {
+                        const seq = p.sequence.map(s => `<span style="font-size:14px;">${s}</span>`).join('<span style="color:#666;margin:0 2px;font-size:10px;">→</span>');
+                        let best = null, bc = 0;
+                        for (const [s, ct] of Object.entries(p.results)) { if (ct > bc) { bc = ct; best = s; } }
+                        const conf = best ? Math.round((bc / p.totalCount) * 100) : 0;
+                        const cls = conf >= 70 ? 'high' : conf >= 50 ? 'medium' : 'low';
+                        return `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td><div class="sequence-cell">${seq}</div></td>
+                                <td style="font-size:14px;">${best || '?'}</td>
+                                <td>${p.totalCount}</td>
+                                <td><span class="confidence-badge ${cls}">${conf}%</span></td>
+                                <td><span class="confidence-badge ${cls}">✓ مطبق</span></td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
 }
 
-function setPredCount(count) {
-    predCount = count;
-    if (cg) localStorage.setItem(PK + cg + '_pc', predCount);
-    document.getElementById('gearPopupOverlay').classList.remove('show');
-    ra();
+function clearPatterns() {
+    if (!currentPatternGame) return alert('اختر برنامج');
+    if (!confirm('مسح أنماط ' + (G[currentPatternGame]?.n || currentPatternGame) + '؟')) return;
+    savePatterns(currentPatternGame, {});
+    loadPatternsForGame();
+    alert('✅');
+}
+
+function exportPatterns() {
+    if (!currentPatternGame) return alert('اختر برنامج');
+    const d = { game: currentPatternGame, gameName: G[currentPatternGame]?.n, patterns: getPatterns(currentPatternGame), exportedAt: new Date().toISOString() };
+    const b = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(b);
+    a.download = 'patterns_' + currentPatternGame + '_' + new Date().toISOString().split('T')[0] + '.json'; a.click();
 }
 
 // ==================== GAME PLAY ====================
 async function sg(gk) {
-    if (on && db) {
-        try {
-            const snap = await db.ref('games').once('value');
-            const cg = snap.val();
-            if (cg && Object.keys(cg).length > 0) { G = cg; ss(GK, G); }
-        } catch (e) {}
-    } else {
-        G = loadGames();
-    }
-
-    cg = gk;
-    const g = G[gk];
-
-    if (!g) { alert('البرنامج غير موجود'); return; }
-
-    cV = g.v;
-    cM = g.m;
-    cA = g.a;
-    cClock = g.clock || [...g.a.slice(0, 8)];
-    cloudSynced = false;
-
-    lp = ls(PK + gk + '_p', {});
-    dp = ls(PK + gk + '_d', {});
-
-    if (on && db) {
-        const cloudData = await downloadLearning(gk);
-        if (cloudData && (Object.keys(cloudData.patterns || {}).length > 0 || Object.keys(cloudData.discovered || {}).length > 0)) {
-            const merged = mergeLearning(lp, dp, cloudData);
-            lp = merged.lp;
-            dp = merged.dp;
-            ss(PK + gk + '_p', lp);
-            ss(PK + gk + '_d', dp);
-            cloudSynced = true;
-            alog('☁️ تم تحميل التعلم المشترك');
-        }
-    }
-
-    fh = ls(PK + gk + '_h', []);
-    cc = parseInt(localStorage.getItem(PK + gk + '_c') || '0');
-    wc = parseInt(localStorage.getItem(PK + gk + '_w') || '0');
-    predCount = parseInt(localStorage.getItem(PK + gk + '_pc') || '5');
-
-    gs = [];
-    las = null;
-    al = [];
-
-    const s = cV[Math.floor(Math.random() * cV.length)];
-    gs.push(s);
-    las = s;
-
-    showScreen('gameScreen');
-    ra();
-    alog('🟢 بدأ ' + g.n);
+    if (on && db) { try { const s = await db.ref('games').once('value'); const cg = s.val(); if (cg && Object.keys(cg).length > 0) { G = cg; ss(GK, G); } } catch (e) {} } else G = loadGames();
+    cg = gk; const g = G[gk]; if (!g) { alert('غير موجود'); return; }
+    cV = g.v; cM = g.m; cA = g.a; cClock = g.clock || [...g.a.slice(0, 8)]; cloudSynced = false;
+    lp = ls(PK + gk + '_p', {}); dp = ls(PK + gk + '_d', {});
+    if (on && db) { const cd = await downloadLearning(gk); if (cd && (Object.keys(cd.patterns || {}).length > 0 || Object.keys(cd.discovered || {}).length > 0)) { const m = mergeLearning(lp, dp, cd); lp = m.lp; dp = m.dp; ss(PK + gk + '_p', lp); ss(PK + gk + '_d', dp); cloudSynced = true; alog('☁️ تعلم مشترك'); } }
+    fh = ls(PK + gk + '_h', []); cc = parseInt(localStorage.getItem(PK + gk + '_c') || '0'); wc = parseInt(localStorage.getItem(PK + gk + '_w') || '0'); predCount = parseInt(localStorage.getItem(PK + gk + '_pc') || '5');
+    gs = []; las = null; al = [];
+    const s = cV[Math.floor(Math.random() * cV.length)]; gs.push(s); las = s;
+    showScreen('gameScreen'); ra(); alog('🟢 ' + g.n);
 }
 
-function gfr(sym) {
-    return (BR[sym] || []).filter(s => cA.includes(s));
-}
-
-function gfrp(sym, cnt) {
-    return RR[sym]?.[cnt]?.filter(s => cA.includes(s)) || [];
-}
-
-function uc_() {
-    document.getElementById('correctCount').textContent = cc;
-    document.getElementById('wrongCount').textContent = wc;
-    const total = cc + wc;
-    document.getElementById('percentDisplay').textContent = total > 0 ? Math.round((cc / total) * 100) + '%' : '0%';
-}
+function gfr(sym) { return (BR[sym] || []).filter(s => cA.includes(s)); }
+function gfrp(sym, cnt) { return RR[sym]?.[cnt]?.filter(s => cA.includes(s)) || []; }
+function uc_() { document.getElementById('correctCount').textContent = cc; document.getElementById('wrongCount').textContent = wc; document.getElementById('percentDisplay').textContent = (cc + wc > 0 ? Math.round((cc / (cc + wc)) * 100) : 0) + '%'; }
 
 async function lrn(f, t) {
-    const k = f + '>' + t;
-    lp[k] = (lp[k] || 0) + 1;
-    ss(PK + cg + '_p', lp);
-
-    if (!gfr(f).includes(t) && lp[k] >= 2 && !dp[k]) {
-        dp[k] = { count: lp[k], confidence: Math.min(lp[k] * 15, 90) };
-        ss(PK + cg + '_d', dp);
-        document.getElementById('learnAlert').textContent = '🧠 اكتشاف: ' + f + ' → ' + t;
-        document.getElementById('learnAlert').classList.add('show');
-        setTimeout(() => document.getElementById('learnAlert').classList.remove('show'), 3000);
-        alog('🆕 ' + f + '→' + t + ' (' + dp[k].confidence + '%)');
-    }
-
-    if (dp[k]) {
-        dp[k].count = lp[k];
-        dp[k].confidence = Math.min(lp[k] * 15, 95);
-        ss(PK + cg + '_d', dp);
-    }
-
-    if (on && db && lp[k] % 5 === 0) {
-        const uploaded = await uploadLearning(cg, lp, dp);
-        if (uploaded) {
-            const cloudAlert = document.getElementById('cloudAlert');
-            cloudAlert.style.display = 'block';
-            setTimeout(() => cloudAlert.style.display = 'none', 2000);
-            alog('☁️ رفع للسحابة');
-        }
-    }
+    const k = f + '>' + t; lp[k] = (lp[k] || 0) + 1; ss(PK + cg + '_p', lp);
+    if (!gfr(f).includes(t) && lp[k] >= 2 && !dp[k]) { dp[k] = { count: lp[k], confidence: Math.min(lp[k] * 15, 90) }; ss(PK + cg + '_d', dp); document.getElementById('learnAlert').textContent = '🧠 ' + f + ' → ' + t; document.getElementById('learnAlert').classList.add('show'); setTimeout(() => document.getElementById('learnAlert').classList.remove('show'), 3000); alog('🆕 ' + f + '→' + t + '(' + dp[k].confidence + '%)'); }
+    if (dp[k]) { dp[k].count = lp[k]; dp[k].confidence = Math.min(lp[k] * 15, 95); ss(PK + cg + '_d', dp); }
+    if (on && db && lp[k] % 5 === 0) { const up = await uploadLearning(cg, lp, dp); if (up) { document.getElementById('cloudAlert').style.display = 'block'; setTimeout(() => document.getElementById('cloudAlert').style.display = 'none', 2000); alog('☁️ رفع'); } }
 }
 
-function gco(strip, sym) {
-    if (!sym || !strip.length) return 0;
-    let c = 0;
-    for (let i = strip.length - 1; i >= 0; i--) {
-        if (strip[i] === sym) c++;
-        else break;
-    }
-    return c;
-}
+function gco(strip, sym) { if (!sym || !strip.length) return 0; let c = 0; for (let i = strip.length - 1; i >= 0; i--) { if (strip[i] === sym) c++; else break; } return c; }
 
 function ans(strip) {
     if (strip.length < 1) return { pred: null, conf: 0, forced: [], src: [] };
-
-    const last = strip[strip.length - 1];
-    const cons = gco(strip, last);
-    const res = { last, cons, pred: null, conf: 0, forced: [], src: [] };
-
-    if (cons >= 2) {
-        const rp = gfrp(last, Math.min(cons, 4));
-        if (rp.length > 0) {
-            res.forced = [...rp];
-            res.pred = rp[0];
-            res.conf = 70 + cons * 5;
-            res.src.push('تكرار');
-        }
-    }
-
-    const lr = [];
-    for (const [k, c] of Object.entries(lp)) {
-        if (k.startsWith(last + '>') && c >= 2) {
-            lr.push({ sym: k.split('>')[1], count: c });
-        }
-    }
-    lr.sort((a, b) => b.count - a.count);
-
-    if (!res.pred && lr[0]?.count >= 3) {
-        res.pred = lr[0].sym;
-        res.conf = 40 + lr[0].count * 3;
-        res.src.push('متعلم');
-        res.forced = [...new Set([...res.forced, ...lr.slice(0, 3).map(l => l.sym)])];
-    }
-
-    if (!res.pred) {
-        const disc = [];
-        for (const [k, d] of Object.entries(dp)) {
-            if (k.startsWith(last + '>') && d.confidence >= 40) {
-                disc.push({ sym: k.split('>')[1], conf: d.confidence });
-            }
-        }
-        disc.sort((a, b) => b.conf - a.conf);
-        if (disc[0]?.conf >= 50) {
-            res.pred = disc[0].sym;
-            res.conf = disc[0].conf;
-            res.src.push('مكتشف');
-            if (!res.forced.includes(disc[0].sym)) res.forced.push(disc[0].sym);
-        }
-    }
-
-    if (!res.pred && TR[last]) {
-        const t = TR[last];
-        if (cA.includes(t.d)) {
-            if (!res.forced.includes(t.d)) res.forced.push(t.d);
-            res.pred = t.d;
-            res.conf = 45;
-            res.src.push('محفز');
-        }
-    }
-
-    if (!res.pred) {
-        const bn = gfr(last);
-        if (bn.length > 0) {
-            res.pred = bn[0];
-            res.conf = 30;
-            res.src.push('طبيعي');
-            if (!res.forced.length) res.forced = bn;
-        }
-    }
-
+    const last = strip[strip.length - 1], cons = gco(strip, last), res = { last, cons, pred: null, conf: 0, forced: [], src: [] };
+    if (cons >= 2) { const rp = gfrp(last, Math.min(cons, 4)); if (rp.length > 0) { res.forced = [...rp]; res.pred = rp[0]; res.conf = 70 + cons * 5; res.src.push('تكرار'); } }
+    const lr = []; for (const [k, c] of Object.entries(lp)) { if (k.startsWith(last + '>') && c >= 2) lr.push({ sym: k.split('>')[1], count: c }); } lr.sort((a, b) => b.count - a.count);
+    if (!res.pred && lr[0]?.count >= 3) { res.pred = lr[0].sym; res.conf = 40 + lr[0].count * 3; res.src.push('متعلم'); res.forced = [...new Set([...res.forced, ...lr.slice(0, 3).map(l => l.sym)])]; }
+    if (!res.pred) { const disc = []; for (const [k, d] of Object.entries(dp)) { if (k.startsWith(last + '>') && d.confidence >= 40) disc.push({ sym: k.split('>')[1], conf: d.confidence }); } disc.sort((a, b) => b.conf - a.conf); if (disc[0]?.conf >= 50) { res.pred = disc[0].sym; res.conf = disc[0].conf; res.src.push('مكتشف'); if (!res.forced.includes(disc[0].sym)) res.forced.push(disc[0].sym); } }
+    if (!res.pred && TR[last]) { const t = TR[last]; if (cA.includes(t.d)) { if (!res.forced.includes(t.d)) res.forced.push(t.d); res.pred = t.d; res.conf = 45; res.src.push('محفز'); } }
+    if (!res.pred) { const bn = gfr(last); if (bn.length > 0) { res.pred = bn[0]; res.conf = 30; res.src.push('طبيعي'); if (!res.forced.length) res.forced = bn; } }
     return res;
 }
 
 function addSymbol(sym) {
-    if (cu && gex(cu).ex) { alert('⏰ انتهت الصلاحية'); lo(); return; }
-
+    if (cu && gex(cu).ex) { alert('⏰ منتهي'); lo(); return; }
     if (gs.length > 0) {
-        const a = ans(gs);
-        const preds = gpr();
-        const ps = preds.map(p => p.emoji);
-        ps.includes(sym) ? cc++ : wc++;
-        localStorage.setItem(PK + cg + '_c', cc);
-        localStorage.setItem(PK + cg + '_w', wc);
-        uc_();
-        lrn(gs[gs.length - 1], sym);
+        const pr = gpr(), ps = pr.map(p => p.emoji);
+        if (ps.includes(sym)) { cc++; }
+        else { wc++; if (gs.length >= 4) { recordWrongPattern(sym); } }
+        localStorage.setItem(PK + cg + '_c', cc); localStorage.setItem(PK + cg + '_w', wc); uc_(); lrn(gs[gs.length - 1], sym);
     }
-
-    fh.push(sym);
-    if (fh.length > 500) fh = fh.slice(-250);
-    ss(PK + cg + '_h', fh);
-
-    gs.push(sym);
-    if (gs.length > MS) gs.shift();
-    las = sym;
-
+    fh.push(sym); if (fh.length > 500) fh = fh.slice(-250); ss(PK + cg + '_h', fh);
+    gs.push(sym); if (gs.length > MS) gs.shift(); las = sym;
     if (fh.length % 50 === 0) alog('📈 50 | ✅' + cc + ' ❌' + wc);
-    alog('➕ ' + sym);
-    ra();
+    alog('➕ ' + sym); ra();
 }
 
-function rg() {
-    gs = [];
-    las = null;
-    cc = 0;
-    wc = 0;
-    localStorage.setItem(PK + cg + '_c', '0');
-    localStorage.setItem(PK + cg + '_w', '0');
-    uc_();
-    gs.push(cV[Math.floor(Math.random() * cV.length)]);
-    las = gs[0];
-    alog('🔄 إعادة تعيين');
-    ra();
-}
+function rg() { gs = []; las = null; cc = 0; wc = 0; localStorage.setItem(PK + cg + '_c', '0'); localStorage.setItem(PK + cg + '_w', '0'); uc_(); gs.push(cV[Math.floor(Math.random() * cV.length)]); las = gs[0]; alog('🔄'); ra(); }
 
 function gpr() {
-    const halfVeg = Math.ceil(predCount / 2);
-    const halfMeat = predCount - halfVeg;
-
-    if (gs.length === 0) {
-        const def = [];
-        for (let i = 0; i < halfVeg; i++) def.push({ emoji: cV[i] || cA[0] || '🥕', prob: 35, type: 'veg', forced: false, learned: false, last: false });
-        for (let i = 0; i < halfMeat; i++) def.push({ emoji: cM[i] || cA[cV.length] || '🍤', prob: 25, type: 'meat', forced: false, learned: false, last: false });
-        return def;
-    }
-
-    const a = ans(gs);
-    const preds = [];
-    const used = new Set();
-    let vc = 0, mc = 0;
-    const maxVeg = halfVeg, maxMeat = halfMeat;
-
-    const add = (sym, prob, forced, learned) => {
-        if (used.has(sym) || !cA.includes(sym)) return;
-        const t = cV.includes(sym) ? 'veg' : 'meat';
-        if (t === 'veg' && vc >= maxVeg) return;
-        if (t === 'meat' && mc >= maxMeat) return;
-        preds.push({ emoji: sym, prob: Math.round(Math.min(prob, 95)), type: t, forced, learned, last: sym === las });
-        used.add(sym);
-        if (t === 'veg') vc++; else mc++;
-    };
-
+    const hv = Math.ceil(predCount / 2), hm = predCount - hv;
+    if (gs.length === 0) { const d = []; for (let i = 0; i < hv; i++) d.push({ emoji: cV[i] || cA[0] || '🥕', prob: 35, type: 'veg', forced: false, learned: false, last: false }); for (let i = 0; i < hm; i++) d.push({ emoji: cM[i] || cA[cV.length] || '🍤', prob: 25, type: 'meat', forced: false, learned: false, last: false }); return d; }
+    const a = ans(gs), preds = [], used = new Set(); let vc = 0, mc = 0;
+    const add = (sym, prob, forced, learned) => { if (used.has(sym) || !cA.includes(sym)) return; const t = cV.includes(sym) ? 'veg' : 'meat'; if (t === 'veg' && vc >= hv) return; if (t === 'meat' && mc >= hm) return; preds.push({ emoji: sym, prob: Math.round(Math.min(prob, 95)), type: t, forced, learned, last: sym === las }); used.add(sym); if (t === 'veg') vc++; else mc++; };
     for (const s of a.forced) add(s, a.conf + 20, true, a.src.includes('متعلم'));
     if (!used.has(las)) add(las, 35, false, false);
-    const bn = gfr(a.last);
-    for (const s of bn) { if (!used.has(s)) add(s, 25, false, false); }
+    const bn = gfr(a.last); for (const s of bn) { if (!used.has(s)) add(s, 25, false, false); }
     for (const s of cA) { if (!used.has(s)) add(s, 15, false, false); }
-
-    preds.sort((a2, b2) => {
-        if (a2.last !== b2.last) return a2.last ? -1 : 1;
-        if (a2.forced !== b2.forced) return a2.forced ? -1 : 1;
-        return b2.prob - a2.prob;
-    });
-
+    preds.sort((a2, b2) => { if (a2.last !== b2.last) return a2.last ? -1 : 1; if (a2.forced !== b2.forced) return a2.forced ? -1 : 1; return b2.prob - a2.prob; });
     return preds.slice(0, predCount);
 }
 
 function buildWheel(preds) {
-    const container = document.getElementById('wheelContainer');
-    container.querySelectorAll('.wheel-slot').forEach(el => el.remove());
-
-    const oldBtn = container.querySelector('.gear-icon-btn');
-    if (oldBtn) oldBtn.remove();
-
-    const radius = 145;
-    const centerX = 195;
-    const centerY = 195;
-
-    const topPredEmojis = preds.slice(0, predCount).map(p => p.emoji);
-    const topPredMap = {};
-    preds.slice(0, predCount).forEach((p, i) => { topPredMap[p.emoji] = { prob: p.prob, rank: i }; });
-
-    const allItems = cClock.map((emoji, i) => {
-        const isPred = topPredEmojis.includes(emoji);
-        const predInfo = topPredMap[emoji];
-        return {
-            emoji,
-            type: cV.includes(emoji) ? 'veg' : 'meat',
-            isPred,
-            rank: predInfo ? predInfo.rank : -1,
-            prob: predInfo ? predInfo.prob : 0
-        };
-    });
-
-    const angleStep = 360 / allItems.length;
-
-    allItems.forEach((item, i) => {
-        const angleDeg = -90 + (i * angleStep);
-        const angleRad = (angleDeg * Math.PI) / 180;
-        const x = centerX + radius * Math.cos(angleRad);
-        const y = centerY + radius * Math.sin(angleRad);
-
-        const slot = document.createElement('div');
-        slot.className = 'wheel-slot ' + item.type;
-
-        if (item.isPred) {
-            if (item.rank < 2) {
-                slot.classList.add('pred-top');
-                slot.innerHTML = `<span style="font-size:38px;">${item.emoji}</span><span class="slot-badge">👹</span><span class="slot-prob">${item.prob}%</span>`;
-            } else {
-                slot.classList.add('pred-mid');
-                slot.innerHTML = `<span style="font-size:38px;">${item.emoji}</span><span class="slot-badge">😈</span><span class="slot-prob">${item.prob}%</span>`;
-            }
-        } else {
-            slot.classList.add('pred-none');
-            slot.innerHTML = `<span style="font-size:38px;">${item.emoji}</span>`;
-        }
-
-        slot.style.left = x + 'px';
-        slot.style.top = y + 'px';
-        slot.title = item.isPred ? (item.rank < 2 ? '👹 ' : '😈 ') + item.prob + '%' : item.emoji;
-        slot.onclick = () => addSymbol(item.emoji);
-
-        container.appendChild(slot);
-    });
-
-    const centerEl = document.getElementById('wheelCenter');
-    const g = G[cg];
-    if (g && g.img && g.img.startsWith('http')) {
-        centerEl.innerHTML = `<img src="${g.img}" alt="${g.n}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
-    } else if (g && g.img) {
-        centerEl.textContent = g.img;
-    } else {
-        centerEl.textContent = las || '🎯';
-    }
-
-    const gearBtn = document.createElement('button');
-    gearBtn.className = 'gear-icon-btn';
-    gearBtn.textContent = '⚙️';
-    gearBtn.onclick = toggleGearPopup;
-    container.appendChild(gearBtn);
+    const c = document.getElementById('wheelContainer'); c.querySelectorAll('.wheel-slot').forEach(e => e.remove());
+    const ob = c.querySelector('.gear-icon-btn'); if (ob) ob.remove();
+    const w = c.offsetWidth, h = c.offsetHeight; const radius = Math.min(w, h) * 0.37, cx = w / 2, cy = h / 2;
+    const tpe = preds.slice(0, predCount).map(p => p.emoji); const tpm = {}; preds.slice(0, predCount).forEach((p, i) => { tpm[p.emoji] = { prob: p.prob, rank: i }; });
+    const items = cClock.map((emoji, i) => { const ip = tpe.includes(emoji), pi = tpm[emoji]; return { emoji, type: cV.includes(emoji) ? 'veg' : 'meat', isPred: ip, rank: pi ? pi.rank : -1, prob: pi ? pi.prob : 0 }; });
+    const as = 360 / items.length;
+    items.forEach((item, i) => { const ad = -90 + (i * as), ar = (ad * Math.PI) / 180; const x = cx + radius * Math.cos(ar), y = cy + radius * Math.sin(ar); const slot = document.createElement('div'); slot.className = 'wheel-slot ' + item.type; const fs = Math.min(w * 0.097, 38); if (item.isPred) { if (item.rank < 2) { slot.classList.add('pred-top'); slot.innerHTML = `<span style="font-size:${fs}px;">${item.emoji}</span><span class="slot-badge">👹</span><span class="slot-prob">${item.prob}%</span>`; } else { slot.classList.add('pred-mid'); slot.innerHTML = `<span style="font-size:${fs}px;">${item.emoji}</span><span class="slot-badge">😈</span><span class="slot-prob">${item.prob}%</span>`; } } else { slot.classList.add('pred-none'); slot.innerHTML = `<span style="font-size:${fs}px;">${item.emoji}</span>`; } slot.style.left = x + 'px'; slot.style.top = y + 'px'; slot.title = item.isPred ? (item.rank < 2 ? '👹 ' : '😈 ') + item.prob + '%' : item.emoji; slot.onclick = () => addSymbol(item.emoji); c.appendChild(slot); });
+    const ce = document.getElementById('wheelCenter'); const g = G[cg]; if (g && g.img && g.img.startsWith('http')) ce.innerHTML = `<img src="${g.img}" alt="${g.n}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`; else if (g && g.img) ce.textContent = g.img; else ce.textContent = las || '🎯';
+    const gb = document.createElement('button'); gb.className = 'gear-icon-btn'; gb.textContent = '⚙️'; gb.onclick = toggleGearPopup; c.appendChild(gb);
 }
 
-function ra() {
-    const preds = gpr();
-    buildWheel(preds);
-
-    document.getElementById('gearStrip').innerHTML = Array.from({ length: MS }, (_, i) => {
-        const s = gs[i] || '';
-        return `<div class="gear-slot${i === gs.length - 1 && s ? ' newest' : ''}">${s}</div>`;
-    }).join('');
-
-    uc_();
-}
-
-function ex() {
-    const data = {
-        game: cg,
-        user: cu?.id,
-        strip: [...gs],
-        analysis: ans(gs),
-        correct: cc,
-        wrong: wc,
-        percent: (cc + wc) > 0 ? Math.round((cc / (cc + wc)) * 100) : 0,
-        learned: lp,
-        discovered: dp,
-        history: fh.slice(-50),
-        predCount,
-        cloudSynced
-    };
-
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'khal_' + cg + '_' + new Date().toISOString().split('T')[0] + '.json';
-    a.click();
-    alog('📦 تصدير البيانات');
-}
-
-// ==================== NAVIGATION ====================
-function lo() {
-    cu = null;
-    cg = null;
-    showScreen('loginScreen');
-}
-
-function gtl() {
-    showScreen('loginScreen');
-}
-
-async function btg() {
-    await showScreen('gameSelectScreen');
-}
-
-async function showScreen(id) {
-    // Clear all intervals when leaving screens
-    Object.keys(imageAdIntervals).forEach(key => {
-        if (imageAdIntervals[key]) {
-            clearInterval(imageAdIntervals[key]);
-            delete imageAdIntervals[key];
-        }
-    });
-    
-    Object.keys(bgIntervals).forEach(key => {
-        if (bgIntervals[key]) {
-            clearInterval(bgIntervals[key]);
-            delete bgIntervals[key];
-        }
-    });
-
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    const sc = document.getElementById(id);
-
-    if (sc) {
-        sc.classList.add('active');
-
-        if (id === 'adminScreen') {
-            await lap();
-            refreshGameList();
-            refreshAdList();
-        }
-
-        if (id === 'gameSelectScreen') {
-            await buildGameCards();
-        }
-    }
-
-    refreshAllAds();
-}
+function ra() { const p = gpr(); buildWheel(p); document.getElementById('gearStrip').innerHTML = Array.from({ length: MS }, (_, i) => { const s = gs[i] || ''; return `<div class="gear-slot${i === gs.length - 1 && s ? ' newest' : ''}">${s}</div>`; }).join(''); uc_(); }
+function ex() { const d = { game: cg, user: cu?.id, strip: [...gs], analysis: ans(gs), correct: cc, wrong: wc, percent: (cc + wc > 0 ? Math.round((cc / (cc + wc)) * 100) : 0), learned: lp, discovered: dp, history: fh.slice(-50), predCount, cloudSynced }; const b = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'khal_' + cg + '_' + new Date().toISOString().split('T')[0] + '.json'; a.click(); alog('📦'); }
 
 // ==================== INIT ====================
 async function init() {
-    ifb();
-    G = loadGames();
-    ADS = loadAds();
-
+    ifb(); G = loadGames(); ADS = loadAds();
     if (on && db) {
-        try {
-            const snap = await db.ref('games').once('value');
-            const cg = snap.val();
-            if (cg && Object.keys(cg).length > 0) { G = cg; ss(GK, G); }
-        } catch (e) {}
-
-        try {
-            const adSnap = await db.ref('ads').once('value');
-            const cAds = adSnap.val();
-            if (cAds && Object.keys(cAds).length > 0) { ADS = cAds; ss(AK, ADS); }
-        } catch (e) {}
+        try { const s = await db.ref('games').once('value'); const cg = s.val(); if (cg && Object.keys(cg).length > 0) { G = cg; ss(GK, G); } } catch (e) {}
+        try { const s = await db.ref('ads').once('value'); const ca = s.val(); if (ca && Object.keys(ca).length > 0) { ADS = ca; ss(AK, ADS); } } catch (e) {}
+        db.ref('ads').on('value', s => { const na = s.val(); ADS = na && Object.keys(na).length > 0 ? na : {}; ss(AK, ADS); refreshAllAds(); });
+        db.ref('patterns').on('value', s => { const cp = s.val() || {}; const lp2 = ls(PTK, {}); for (const [gk, patterns] of Object.entries(cp)) { if (!lp2[gk]) lp2[gk] = {}; for (const [pk, pd] of Object.entries(patterns)) { if (!lp2[gk][pk]) lp2[gk][pk] = pd; else { for (const [sym, cnt] of Object.entries(pd.results)) { lp2[gk][pk].results[sym] = Math.max(lp2[gk][pk].results[sym] || 0, cnt); } lp2[gk][pk].totalCount = Math.max(lp2[gk][pk].totalCount, pd.totalCount); } } } ss(PTK, lp2); if (document.getElementById('adminPatternsTab').style.display === 'block') { const cg2 = document.getElementById('patternGameSelect').value; if (cg2) loadPatternsForGame(); } });
     }
-
-    await buildGameCards();
-    refreshAllAds();
-
-    let pl = {};
-    if (on && db) {
-        const cl = await cgp();
-        if (cl) pl = cl;
-    }
-    if (!Object.keys(pl).length) pl = glp();
-
-    if (!Object.keys(pl).length) {
-        pl['player01'] = {
-            id: 'player01',
-            key: 'Khali2024',
-            mode: 'fixed',
-            maxHours: 0,
-            maxDays: 0,
-            lockedDevice: null,
-            createdAt: null
-        };
-        slp(pl);
-        if (on && db) csp('player01', pl['player01']);
-    }
-
-    document.getElementById('passInput').addEventListener('keydown', e => {
-        if (e.key === 'Enter') cpw();
-    });
+    await buildGameCards(); refreshAllAds();
+    let pl = {}; if (on && db) { const cl = await cgp(); if (cl) pl = cl; } if (!Object.keys(pl).length) pl = glp();
+    if (!Object.keys(pl).length) { pl['player01'] = { id: 'player01', key: 'Khali2024', mode: 'fixed', maxHours: 0, maxDays: 0, lockedDevice: null, createdAt: null }; slp(pl); if (on && db) csp('player01', pl['player01']); }
+    document.getElementById('passInput').addEventListener('keydown', e => { if (e.key === 'Enter') cpw(); });
 }
-
 document.addEventListener('DOMContentLoaded', init);
 </script>
+    </div>

@@ -123,18 +123,10 @@
         .ad-banner.image-ad { height: 200px; }
         .ad-banner.text-ad { height: 25px; min-height: 25px; }
         .ad-banner.video-ad { height: 200px; background: #000; }
-        .ad-banner.video-ad video {
-            width: 100%; height: 100%; object-fit: cover; border-radius: 8px;
-        }
+        .ad-banner.video-ad video { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
 
-        .ad-slide-image {
-            width: 100%; height: 100%; display: flex; align-items: center;
-            justify-content: center; position: relative;
-        }
-        .ad-slide-image img {
-            height: 200px; width: 400px; object-fit: cover; border-radius: 8px;
-            position: absolute; opacity: 0; transition: opacity 0.8s ease-in-out;
-        }
+        .ad-slide-image { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; }
+        .ad-slide-image img { height: 200px; width: 400px; object-fit: cover; border-radius: 8px; position: absolute; opacity: 0; transition: opacity 0.8s ease-in-out; }
         .ad-slide-image img.active { opacity: 1; }
 
         .ad-slide-text {
@@ -216,12 +208,12 @@
         .gear-strip {
             background: rgba(2,2,8,0.7); backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 6px;
-            display: flex; gap: 3px; justify-content: center; flex-wrap: wrap;
-            min-height: 35px; align-items: center; flex-shrink: 0; margin-top: auto; z-index: 1;
+            display: flex; gap: 2px; justify-content: center; flex-wrap: wrap;
+            min-height: 70px; align-items: center; flex-shrink: 0; margin-top: auto; z-index: 1;
         }
         .gear-slot {
-            width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center;
-            justify-content: center; font-size: 14px; background: rgba(10,10,34,0.7);
+            width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center;
+            justify-content: center; font-size: 11px; background: rgba(10,10,34,0.7);
             border: 1px solid rgba(42,42,74,0.5);
         }
         .gear-slot.newest { border-color: var(--gold); box-shadow: 0 0 10px var(--gold); }
@@ -260,40 +252,6 @@
         .row label { font-size: 10px; color: var(--muted); min-width: 55px; }
         .row input, .row select, .row textarea { flex: 1; min-width: 60px; padding: 7px; font-size: 11px; }
 
-        .pass-list { max-height: 180px; overflow-y: auto; font-size: 9px; font-family: monospace; }
-        .pass-item {
-            display: flex; justify-content: space-between; align-items: center; padding: 4px;
-            border-bottom: 1px solid rgba(26,26,58,0.5); gap: 3px; font-size: 8px;
-        }
-        .pass-item button { background: #b91c1c; color: #fff; border: none; padding: 2px 5px; border-radius: 4px; font-size: 8px; cursor: pointer; }
-
-        .game-list-item, .ad-list-item {
-            display: flex; justify-content: space-between; align-items: center; padding: 7px 8px;
-            background: rgba(10,10,40,0.7); border-radius: 8px; margin-bottom: 4px; gap: 6px; font-size: 10px;
-        }
-        .game-list-item .game-list-icon {
-            width: 30px; height: 30px; border-radius: 50%; object-fit: cover;
-            font-size: 22px; display: flex; align-items: center; justify-content: center;
-        }
-        .game-list-item .game-list-info, .ad-list-item .ad-list-info { flex: 1; text-align: right; }
-        .game-list-item .game-list-name { color: var(--gold); font-weight: bold; }
-        .game-list-item button, .ad-list-item button { background: #b91c1c; color: #fff; border: none; padding: 3px 6px; border-radius: 4px; font-size: 8px; cursor: pointer; margin: 1px; }
-        .game-list-item button.edit { background: var(--purple); }
-
-        .pattern-table {
-            width: 100%; border-collapse: collapse; font-size: 10px; margin-top: 6px;
-        }
-        .pattern-table th {
-            background: rgba(240,165,0,0.2); color: var(--gold); padding: 6px 4px;
-            text-align: center; font-size: 9px; border-bottom: 2px solid var(--gold);
-            position: sticky; top: 0; z-index: 2;
-        }
-        .pattern-table td {
-            padding: 5px 4px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05);
-            font-size: 10px;
-        }
-        .pattern-table tr:hover { background: rgba(240,165,0,0.1); }
-
         .learn-log {
             font-size: 8px; color: var(--muted); font-family: monospace; background: rgba(2,2,8,0.7);
             padding: 6px; border-radius: 8px; line-height: 1.4; flex-shrink: 0;
@@ -309,14 +267,6 @@
         }
         .alert.show { display: block; }
 
-        .tabs { display: flex; gap: 3px; flex-shrink: 0; position: relative; z-index: 1; }
-        .tabs .tab {
-            flex: 1; padding: 8px; text-align: center; background: rgba(22,22,58,0.5);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer;
-            font-size: 10px; color: var(--muted); transition: all 0.2s;
-        }
-        .tabs .tab.active { background: rgba(139,92,246,0.3); border-color: var(--purple); color: #fff; font-weight: bold; }
-
         .admin-tabs { display: flex; gap: 3px; flex-shrink: 0; margin-bottom: 6px; position: relative; z-index: 1; }
         .admin-tab {
             flex: 1; padding: 8px; text-align: center; background: rgba(22,22,58,0.5);
@@ -330,59 +280,47 @@
         ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
 
         #gameScreen { gap: 2px; padding: 2px; }
-        
-        .ad-list-item {
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 8px; background: rgba(10,10,40,0.7); border-radius: 8px; 
-            margin-bottom: 5px; gap: 6px; font-size: 10px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .btn-delete-ad {
-            background: #dc2626 !important; color: white !important; border: none !important;
-            padding: 6px 10px !important; border-radius: 6px !important; cursor: pointer !important;
-            font-size: 10px !important; font-weight: bold !important;
-        }
     </style>
 </head>
 <body>
     <div class="stars-bg" id="starsBg"></div>
     <div class="app" id="appRoot">
-        <!-- Login Screen -->
+
+        <!-- LOGIN SCREEN -->
         <div class="screen active" id="loginScreen">
             <div class="screen-bg-overlay" id="loginScreenBg"></div>
             <div class="ad-banner image-ad" id="loginAd" style="display:none;"></div>
             <div class="spacer"></div>
             <div class="header"><h1>👑 CRAZY 👑</h1></div>
-            <div class="status-msg online" id="connectionStatus">🟡 جاري الاتصال...</div>
+            <div class="status-msg online" id="connectionStatus">🟡</div>
             <div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0;">
-                <input type="password" id="passInput" placeholder="🔐 كلمة المرور" maxlength="30" autocomplete="off">
-                <button class="btn" id="loginBtn" onclick="cpw()">🔓 دخول</button>
+                <input type="password" id="passInput" placeholder="🔐 كلمة المرور" autocomplete="off">
+                <button class="btn" onclick="cpw()">🔓 دخول</button>
                 <p class="error-msg" id="loginError"></p>
             </div>
             <div class="spacer"></div>
         </div>
 
-        <!-- Game Select Screen -->
+        <!-- GAME SELECT SCREEN -->
         <div class="screen" id="gameSelectScreen">
             <div class="screen-bg-overlay" id="gamesScreenBg"></div>
             <div class="ad-banner image-ad" id="gamesAd" style="display:none;"></div>
-            <div class="header"><h1>🎮 اختر اللعبة</h1><div style="font-size:9px;color:var(--muted);" id="selectUser"></div></div>
-            <div class="game-cards" style="margin-top:8px;" id="gameCardsContainer"></div>
-            <div class="btn-row" style="margin-top:8px;"><button class="btn sm outline" onclick="lo()">🚪 خروج</button></div>
+            <div class="header"><h1>🎮 اختر اللعبة</h1><div id="selectUser" style="font-size:9px;color:var(--muted);"></div></div>
+            <div class="game-cards" id="gameCardsContainer"></div>
+            <div class="btn-row"><button class="btn sm outline" onclick="lo()">🚪 خروج</button></div>
         </div>
 
-        <!-- Game Screen -->
+        <!-- GAME SCREEN -->
         <div class="screen" id="gameScreen">
             <div class="screen-bg-overlay" id="predictScreenBg"></div>
             <div class="ad-banner text-ad" id="predictAd" style="display:none;"><div class="ad-slide-text" id="predictAdSlide"></div></div>
-            <div class="alert alert-info" id="learnAlert" style="background: rgba(5,26,26,0.7); border: 2px solid var(--cyan); color: var(--cyan);">🧠</div>
-            <div class="alert alert-cloud" id="cloudAlert" style="display:none; background: rgba(5,5,30,0.8); border: 2px solid #f0a500; color: #f0a500;">☁️</div>
+            <div class="alert alert-info" id="learnAlert" style="background:rgba(5,26,26,0.7);border:2px solid var(--cyan);color:var(--cyan);">🧠</div>
             <div class="wheel-container" id="wheelContainer"><div class="wheel-center" id="wheelCenter">🎯</div></div>
             <div class="gear-strip" id="gearStrip"></div>
             <div class="counter-box">
-                <div><span class="counter-value correct" id="correctCount">0</span><span class="counter-label"> ✅</span></div>
+                <div><span class="counter-value correct" id="correctCount">0</span><span class="counter-label">✅</span></div>
                 <div><span class="counter-percent" id="percentDisplay">0%</span></div>
-                <div><span class="counter-value wrong" id="wrongCount">0</span><span class="counter-label"> ❌</span></div>
+                <div><span class="counter-value wrong" id="wrongCount">0</span><span class="counter-label">❌</span></div>
             </div>
             <div class="learn-log" id="learnLog"><div>🟢 جاهز</div></div>
             <div class="btn-row">
@@ -392,69 +330,41 @@
             </div>
         </div>
 
-        <!-- Admin Screen -->
+        <!-- ADMIN SCREEN -->
         <div class="screen" id="adminScreen">
             <div class="header admin-h"><h1>👑 لوحة التحكم</h1></div>
-            <div class="status-msg online" id="adminConnStatus">🟡 جاري الاتصال...</div>
+            <div class="status-msg online" id="adminConnStatus">🟡</div>
             <div class="admin-tabs">
                 <div class="admin-tab active" onclick="switchAdminTab('players')">👥 اللاعبين</div>
-                <div class="admin-tab" onclick="switchAdminTab('games')">🎮 البرامج</div>
                 <div class="admin-tab" onclick="switchAdminTab('ads')">📢 الإعلانات</div>
-                <div class="admin-tab" onclick="switchAdminTab('patterns')">📊 الأنماط</div>
             </div>
-
             <div id="adminPlayersTab">
                 <div class="section">
-                    <h3>➕ إضافة لاعب جديد</h3>
-                    <div class="row"><label>المعرف:</label><input type="text" id="newId" placeholder="اسم اللاعب"></div>
-                    <div class="row"><label>المفتاح:</label><input type="text" id="newKey" placeholder="المفتاح السري"></div>
-                    <div class="row"><label>النمط:</label><select id="newMode"><option value="fixed">ثابت</option><option value="day">يومي</option><option value="hour">ساعي</option><option value="month">شهري</option></select></div>
-                    <div class="row"><label>ساعات:</label><input type="number" id="newHours" value="0" min="0"></div>
-                    <div class="row"><label>أيام:</label><input type="number" id="newDays" value="0" min="0"></div>
-                    <button class="btn sm" style="background:#f97316;" onclick="addPlayer()">✅ إضافة للسحابة</button>
-                </div>
-                <div class="section" style="flex:1;display:flex;flex-direction:column;min-height:120px;">
-                    <h3>📋 اللاعبين (<span id="passCount">0</span>/200)</h3>
-                    <div class="pass-list" id="passList" style="flex:1;"></div>
+                    <h3>➕ إضافة لاعب</h3>
+                    <div class="row"><label>المعرف:</label><input type="text" id="newId"></div>
+                    <div class="row"><label>المفتاح:</label><input type="text" id="newKey"></div>
+                    <button class="btn sm" style="background:#f97316;" onclick="addPlayer()">✅ إضافة</button>
                 </div>
             </div>
-
-            <div id="adminGamesTab" style="display:none;">
-                <div class="section" style="flex:1;"><h3>🎮 البرامج الحالية</h3><div id="gameListContainer" style="max-height:300px;overflow-y:auto;"></div></div>
-            </div>
-
             <div id="adminAdsTab" style="display:none;">
                 <div class="section">
-                    <h3>➕ إضافة إعلان جديد</h3>
+                    <h3>➕ إضافة إعلان</h3>
                     <div class="row"><label>النوع:</label><select id="adType"><option value="image">🖼️ صورة</option><option value="text">📝 نص</option><option value="video">🎬 فيديو</option><option value="background">🎨 خلفية</option></select></div>
                     <div class="row"><label>المكان:</label><select id="adPlace"><option value="login">🔐 تسجيل الدخول</option><option value="games">🎮 البرامج</option><option value="predict">🎯 التوقعات</option></select></div>
-                    <div class="row"><label>المحتوى:</label><input type="text" id="adContent" placeholder="رابط صورة/فيديو/نص الإعلان"></div>
+                    <div class="row"><label>المحتوى:</label><input type="text" id="adContent"></div>
                     <button class="btn sm" style="background:#f97316;" onclick="addAd()">✅ إضافة</button>
                 </div>
-                <div class="section" style="flex:1;min-height:120px;">
-                    <h3>📋 الإعلانات الحالية (<span id="adCountDisplay">0</span>)</h3>
-                    <div id="adListContainer" style="max-height:300px;overflow-y:auto;"></div>
-                    <div class="btn-row" style="margin-top:10px;">
-                        <button class="btn sm danger" onclick="deleteAllAds()">🗑 مسح الكل</button>
-                        <button class="btn sm cyan" onclick="syncAdsFromCloud()">☁️ مزامنة</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="adminPatternsTab" style="display:none;">
                 <div class="section">
-                    <h3>📊 أنماط البرامج (مشتركة تلقائياً)</h3>
-                    <div class="row"><label>البرنامج:</label><select id="patternGameSelect" onchange="loadPatternsForGame()"><option value="">اختر برنامج</option></select></div>
-                </div>
-                <div class="section" style="flex:1;min-height:120px;">
-                    <div id="patternListContainer" style="max-height:350px;overflow-y:auto;"></div>
+                    <h3>📋 الإعلانات</h3>
+                    <div id="adListContainer"></div>
+                    <button class="btn sm danger" onclick="deleteAllAds()">🗑 مسح الكل</button>
                 </div>
             </div>
-
-            <button class="btn outline" onclick="goToLogin()" style="margin-top:8px;">🚪 خروج</button>
+            <button class="btn outline" onclick="goToLogin()">🚪 خروج</button>
         </div>
     </div>
 
+    <!-- GEAR POPUP -->
     <div class="gear-popup-overlay" id="gearPopupOverlay" onclick="closeGearPopup(event)">
         <div class="gear-popup" onclick="event.stopPropagation()">
             <h3>⚙️ عدد الاحتمالات</h3>
@@ -470,23 +380,17 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script>
-    // ==================== STARS BACKGROUND ====================
+    // ==================== STARS ====================
     (function() {
         const bg = document.getElementById('starsBg');
         for (let i = 0; i < 100; i++) {
             const s = document.createElement('div'); s.className = 'star';
-            const sz = Math.random() * 2 + 1;
-            s.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${Math.random()*3+2}s;--delay:${Math.random()*5}s`;
+            s.style.cssText = `width:${Math.random()*2+1}px;height:${Math.random()*2+1}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${Math.random()*3+2}s;--delay:${Math.random()*5}s`;
             bg.appendChild(s);
-        }
-        for (let i = 0; i < 3; i++) {
-            const sh = document.createElement('div'); sh.className = 'shooting-star';
-            sh.style.cssText = `left:${Math.random()*80}%;top:${Math.random()*40}%;--sdelay:${Math.random()*8+i*4}s`;
-            bg.appendChild(sh);
         }
     })();
 
-    // ==================== FIREBASE CONFIGURATION ====================
+    // ==================== FIREBASE ====================
     const firebaseConfig = {
         apiKey: "AIzaSyB9rN0N-0YlO5lW5l5l5l5l5l5l5l5l5l5",
         authDomain: "hamdi-791e5.firebaseapp.com",
@@ -497,37 +401,14 @@
         appId: "1:123456789012:web:abcdef1234567890"
     };
 
-    let db = null;
-    let isOnline = false;
-
-    function initFirebase() {
-        try {
-            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-            db = firebase.database();
-            firebase.database().ref('.info/connected').on('value', snap => {
-                isOnline = snap.val() === true;
-                updateConnectionStatus(isOnline);
-            });
-            return true;
-        } catch (e) {
-            isOnline = false;
-            updateConnectionStatus(false);
-            return false;
-        }
-    }
-
-    function updateConnectionStatus(online) {
-        const status = online ? '🟢 متصل' : '🔴 غير متصل';
-        document.querySelectorAll('#connectionStatus, #adminConnStatus').forEach(el => {
-            if (el) { el.textContent = status; el.className = 'status-msg ' + (online ? 'online' : 'offline'); }
-        });
-    }
-
-    // ==================== STORAGE HELPERS ====================
+    let db = null, isOnline = false;
     const ls = (k, f = null) => { try { return JSON.parse(localStorage.getItem(k)) || f; } catch (e) { return f; } };
     const ss = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
 
-    // ==================== DEFAULT DATA ====================
+    // ==================== GAME DATA ====================
+    const STRIP_MAX = 30;
+    const ADMIN_PASS = 'Admin@Khal2024';
+    
     const DEFAULT_GAMES = {
         zena: { n: '🎯 زينا لايف', v: ['🥕','🌽','🍅','🌶'], m: ['🍤','🐮','🐟','🐤'], a: ['🥕','🌽','🌶','🍅','🍤','🐮','🐟','🐤'], clock: ['🐤','🍅','🐮','🌶','🐟','🌽','🍤','🥕'], img: '' },
         yoho: { n: '🎯 يوهو لايف', v: ['🥕','🌽','🍅','🌶'], m: ['🍤','🐮','🐟','🐤'], a: ['🥕','🌽','🍅','🌶','🍤','🐮','🐟','🐤'], clock: ['🐤','🍅','🐮','🌶','🐟','🌽','🍤','🥕'], img: '' },
@@ -535,377 +416,228 @@
         majles: { n: '🎯 المجلس', v: ['🥕','🌽','🍅','🥦'], m: ['🍤','🍗','🥩','🐟'], a: ['🥕','🌽','🍅','🥦','🍤','🍗','🥩','🐟'], clock: ['🥕','🍤','🍅','🍗','🌽','🥩','🥦','🐟'], img: '' }
     };
 
-    const ADMIN_PASS = 'Admin@Khal2024';
-    const MASTER_KEY = 'AdminMasterKey2024';
-
-    // ==================== GAME RULES ====================
-    const BASIC_RULES = {
-        '🥕': ['🍅', '🌽'], '🌽': ['🥕', '🥦'], '🥦': ['🍅', '🌽'],
-        '🍅': ['🥕', '🥦'], '🌶': ['🥕', '🌽', '🍅'],
-        '🍤': ['🌽', '🥕'], '🐮': ['🌽', '🍅'], '🐟': ['🍅', '🥦'],
-        '🐤': ['🍅', '🥦'], '🍗': ['🌽', '🍅'], '🥩': ['🍅', '🥦']
-    };
-
-    const REPEAT_RULES = {
-        '🌽': {2: ['🍅','🥕'], 3: ['🍅','🥕'], 4: ['🍅','🥕']},
-        '🥦': {2: ['🥕','🍅'], 3: ['🥕','🍅'], 4: ['🥕','🍅']},
-        '🍅': {2: ['🌽','🥦'], 3: ['🌽','🥦'], 4: ['🌽','🥦']},
-        '🥕': {2: ['🍅','🌽'], 3: ['🍅','🌽'], 4: ['🍅','🌽']}
-    };
-
-    const TRIGGER_RULES = {
-        '🍤': {d:'🌽'}, '🐮': {d:'🍅'}, '🐟': {d:'🍅'},
-        '🐤': {d:'🍅'}, '🍗': {d:'🍅'}, '🥩': {d:'🥦'}
-    };
-
-    // ==================== GLOBAL STATE ====================
     let GAMES = ls('kf_games', DEFAULT_GAMES);
     let ADS = ls('kf_ads', {});
-    let currentUser = null;
-    let currentGame = null;
-    let gs = { strip: [], last: null, veg: [], meat: [], all: [], clock: [], correct: 0, wrong: 0, history: [], predCount: 5, learned: {}, discovered: {} };
-    let learnLog = [];
+    let currentUser = null, currentGame = null;
+    let gs = { strip: [], veg: [], meat: [], all: [], clock: [], correct: 0, wrong: 0, predCount: 5, patterns: {} };
     let adIntervals = {};
+    let learnLog = [];
 
-    function generateTimeKey(base, mode) {
-        const now = new Date();
-        const pad = v => ('' + v).padStart(2, '0');
-        if (mode === 'hour') return `${base}_${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}${pad(now.getHours())}`;
-        if (mode === 'day') return `${base}_${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}`;
-        if (mode === 'month') return `${base}_${now.getFullYear()}${pad(now.getMonth()+1)}`;
-        return `${base}_static`;
-    }
-
-    function checkExpiry(player) {
-        if (!player.createdAt) return { ex: false, rm: 'غير محدود' };
-        const created = new Date(player.createdAt);
-        const now = new Date();
-        let maxHours = Infinity;
-        if (player.maxHours > 0) maxHours = player.maxHours;
-        if (player.maxDays > 0) maxHours = Math.min(maxHours, player.maxDays * 24);
-        if (maxHours === Infinity) return { ex: false, rm: 'غير محدود' };
-        const remaining = new Date(created.getTime() + maxHours * 3600000) - now;
-        if (remaining <= 0) return { ex: true, rm: 'منتهي' };
-        const rh = Math.floor(remaining / 3600000);
-        return { ex: false, rm: rh > 23 ? Math.floor(rh / 24) + ' يوم' : rh + ' ساعة' };
-    }
-
-    function getDeviceFingerprint() {
-        const data = [navigator.userAgent || '', screen.width + '', new Date().getTimezoneOffset() + ''].join('|');
-        let hash = 0;
-        for (let i = 0; i < data.length; i++) hash = ((hash << 5) - hash) + data.charCodeAt(i);
-        return 'D' + Math.abs(hash).toString(36).toUpperCase();
-    }
-
-    const deviceId = getDeviceFingerprint();
-
-    // ==================== AUTH ====================
-    async function cpw() {
-        document.getElementById('loginError').textContent = '';
-        const input = document.getElementById('passInput').value.trim();
-        if (!input) return;
+    // ==================== SMART LEARNER ENGINE ====================
+    function analyzeFullStrip() {
+        const strip = gs.strip;
+        if (strip.length < 2) return { pairs: {}, triplets: {}, quads: {}, vegToMeat: {}, meatToVeg: {}, consecutive: {}, symbolCount: {}, vegCount: 0, meatCount: 0 };
         
-        if (input === ADMIN_PASS || input === MASTER_KEY) {
-            document.getElementById('passInput').value = '';
-            showScreen('adminScreen');
-            refreshAdList();
-            loadPatternGamesList();
-            return;
-        }
-        
-        document.getElementById('loginBtn').textContent = '⏳';
-        
-        let players = {};
-        if (isOnline && db) {
-            try { const snap = await db.ref('players').once('value'); players = snap.val() || {}; } catch (e) {}
-        }
-        if (!Object.keys(players).length) players = ls('kf_players', {});
-        
-        let foundPlayer = null;
-        for (const player of Object.values(players)) {
-            const validKeys = [player.key + '_master', player.key + '_static', generateTimeKey(player.key, player.mode), player.key];
-            if (validKeys.includes(input)) { foundPlayer = player; break; }
-        }
-        
-        document.getElementById('loginBtn').textContent = '🔓 دخول';
-        
-        if (!foundPlayer) { document.getElementById('loginError').textContent = '❌ كلمة مرور غير صحيحة'; return; }
-        if (checkExpiry(foundPlayer).ex) { document.getElementById('loginError').textContent = '⏰ منتهي الصلاحية'; return; }
-        if (foundPlayer.lockedDevice && foundPlayer.lockedDevice !== deviceId) { document.getElementById('loginError').textContent = '🚫 جهاز آخر'; return; }
-        
-        if (!foundPlayer.lockedDevice) {
-            foundPlayer.lockedDevice = deviceId;
-            foundPlayer.createdAt = foundPlayer.createdAt || new Date().toISOString();
-            if (isOnline && db) db.ref('players/' + foundPlayer.id).set(foundPlayer);
-            const ap = ls('kf_players', {});
-            ap[foundPlayer.id] = foundPlayer;
-            ss('kf_players', ap);
-        }
-        
-        currentUser = foundPlayer;
-        document.getElementById('selectUser').textContent = '👤 ' + foundPlayer.id;
-        document.getElementById('passInput').value = '';
-        showScreen('gameSelectScreen');
-    }
-
-    // ==================== SCREEN MANAGEMENT ====================
-    function showScreen(screenId) {
-        Object.keys(adIntervals).forEach(k => { clearInterval(adIntervals[k]); delete adIntervals[k]; });
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        const screen = document.getElementById(screenId);
-        if (screen) {
-            screen.classList.add('active');
-            if (screenId === 'gameSelectScreen') buildGameCards();
-            if (screenId === 'adminScreen') { refreshAdList(); loadPatternGamesList(); }
-        }
-        refreshAllAds();
-    }
-
-    function lo() { currentUser = null; currentGame = null; showScreen('loginScreen'); }
-    function goToLogin() { showScreen('loginScreen'); }
-    function backToGames() { showScreen('gameSelectScreen'); }
-
-    function switchAdminTab(tab) {
-        const tabs = ['players', 'games', 'ads', 'patterns'];
-        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.admin-tab')[tabs.indexOf(tab)].classList.add('active');
-        ['adminPlayersTab','adminGamesTab','adminAdsTab','adminPatternsTab'].forEach(id => document.getElementById(id).style.display = 'none');
-        document.getElementById('admin' + tab.charAt(0).toUpperCase() + tab.slice(1) + 'Tab').style.display = 'block';
-        if (tab === 'ads') refreshAdList();
-        if (tab === 'patterns') loadPatternsForGame();
-    }
-
-    // ==================== GAME CARDS ====================
-    async function buildGameCards() {
-        const container = document.getElementById('gameCardsContainer');
-        if (!container) return;
-        container.innerHTML = Object.entries(GAMES).map(([key, game]) => {
-            const icon = game.img ? `<img class="game-icon" src="${game.img}" alt="${game.n}" style="width:55px;height:55px;border-radius:50%;object-fit:cover;">` : `<span class="game-icon">${game.n.split(' ')[0] || '🎯'}</span>`;
-            return `<div class="game-card" onclick="startGame('${key}')">${icon}<h3>${game.n}</h3></div>`;
-        }).join('');
-    }
-
-    function startGame(gameKey) {
-        currentGame = gameKey;
-        const game = GAMES[gameKey];
-        if (!game) { alert('اللعبة غير موجودة'); return; }
-        
-        const gk = gameKey;
-        gs = {
-            strip: [], last: null,
-            veg: game.v, meat: game.m, all: game.a,
-            clock: game.clock || [...game.a.slice(0, 8)],
-            correct: parseInt(localStorage.getItem('kf_' + gk + '_c') || '0'),
-            wrong: parseInt(localStorage.getItem('kf_' + gk + '_w') || '0'),
-            history: ls('kf_' + gk + '_h', []),
-            predCount: parseInt(localStorage.getItem('kf_' + gk + '_pc') || '5'),
-            learned: ls('kf_' + gk + '_p', {}),
-            discovered: ls('kf_' + gk + '_d', {})
+        const stats = {
+            symbolCount: {}, vegCount: 0, meatCount: 0,
+            pairs: {}, triplets: {}, quads: {},
+            vegToMeat: {}, meatToVeg: {}, consecutive: {}
         };
         
-        learnLog = [];
-        const firstSymbol = gs.veg[Math.floor(Math.random() * gs.veg.length)];
-        gs.strip.push(firstSymbol);
-        gs.last = firstSymbol;
-        
-        showScreen('gameScreen');
-        renderWheel();
-        addLog('🟢 ' + game.n);
-    }
-
-    function addLog(msg) {
-        learnLog.unshift({ t: new Date().toLocaleTimeString('ar-EG'), m: msg });
-        if (learnLog.length > 20) learnLog = learnLog.slice(0, 20);
-        document.getElementById('learnLog').innerHTML = learnLog.map(l => `<div>${l.t} ${l.m}</div>`).join('');
-    }
-
-    function updateCounters() {
-        document.getElementById('correctCount').textContent = gs.correct;
-        document.getElementById('wrongCount').textContent = gs.wrong;
-        const total = gs.correct + gs.wrong;
-        document.getElementById('percentDisplay').textContent = total > 0 ? Math.round((gs.correct / total) * 100) + '%' : '0%';
-    }
-
-    // ==================== PREDICTION ENGINE ====================
-    function countConsecutive(strip, symbol) {
-        if (!symbol || !strip.length) return 0;
-        let count = 0;
-        for (let i = strip.length - 1; i >= 0; i--) {
-            if (strip[i] === symbol) count++;
-            else break;
-        }
-        return count;
-    }
-
-    function analyze(strip) {
-        if (strip.length < 1) return { pred: null, conf: 0, forced: [], src: [] };
-        const last = strip[strip.length - 1];
-        const cons = countConsecutive(strip, last);
-        const result = { last, cons, pred: null, conf: 0, forced: [], src: [] };
-        
-        if (cons >= 2) {
-            const rp = REPEAT_RULES[last]?.[Math.min(cons, 4)];
-            if (rp && rp.length > 0) {
-                result.forced = [...rp];
-                result.pred = rp[0];
-                result.conf = 70 + cons * 5;
-                result.src.push('تكرار');
-            }
+        for (const s of strip) {
+            stats.symbolCount[s] = (stats.symbolCount[s] || 0) + 1;
+            if (gs.veg.includes(s)) stats.vegCount++;
+            if (gs.meat.includes(s)) stats.meatCount++;
         }
         
-        const learned = [];
-        for (const [key, count] of Object.entries(gs.learned)) {
-            if (key.startsWith(last + '>') && count >= 2) {
-                learned.push({ sym: key.split('>')[1], count });
-            }
-        }
-        learned.sort((a, b) => b.count - a.count);
-        
-        if (!result.pred && learned[0]?.count >= 3) {
-            result.pred = learned[0].sym;
-            result.conf = 40 + learned[0].count * 3;
-            result.src.push('متعلم');
-            result.forced = [...new Set([...result.forced, ...learned.slice(0, 3).map(l => l.sym)])];
-        }
-        
-        if (!result.pred) {
-            const discovered = [];
-            for (const [key, data] of Object.entries(gs.discovered)) {
-                if (key.startsWith(last + '>') && data.confidence >= 40) {
-                    discovered.push({ sym: key.split('>')[1], conf: data.confidence });
-                }
-            }
-            discovered.sort((a, b) => b.conf - a.conf);
+        for (let i = 1; i < strip.length; i++) {
+            const pairKey = strip[i-1] + '>' + strip[i];
+            stats.pairs[pairKey] = (stats.pairs[pairKey] || 0) + 1;
             
-            if (discovered[0]?.conf >= 50) {
-                result.pred = discovered[0].sym;
-                result.conf = discovered[0].conf;
-                result.src.push('مكتشف');
-                if (!result.forced.includes(discovered[0].sym)) result.forced.push(discovered[0].sym);
+            if (gs.veg.includes(strip[i-1]) && gs.meat.includes(strip[i])) {
+                stats.vegToMeat[pairKey] = (stats.vegToMeat[pairKey] || 0) + 1;
+            }
+            if (gs.meat.includes(strip[i-1]) && gs.veg.includes(strip[i])) {
+                stats.meatToVeg[pairKey] = (stats.meatToVeg[pairKey] || 0) + 1;
+            }
+            
+            if (i >= 2) {
+                const tripKey = strip[i-2] + ',' + strip[i-1] + '>' + strip[i];
+                stats.triplets[tripKey] = (stats.triplets[tripKey] || 0) + 1;
+            }
+            
+            if (i >= 3) {
+                const quadKey = strip[i-3] + ',' + strip[i-2] + ',' + strip[i-1] + '>' + strip[i];
+                stats.quads[quadKey] = (stats.quads[quadKey] || 0) + 1;
             }
         }
         
-        if (!result.pred && TRIGGER_RULES[last]) {
-            const trigger = TRIGGER_RULES[last];
-            if (gs.all.includes(trigger.d)) {
-                if (!result.forced.includes(trigger.d)) result.forced.push(trigger.d);
-                result.pred = trigger.d;
-                result.conf = 45;
-                result.src.push('محفز');
+        let consCount = 1;
+        for (let i = 1; i < strip.length; i++) {
+            if (strip[i] === strip[i-1]) { consCount++; }
+            else {
+                if (consCount >= 2) stats.consecutive[strip[i-1]] = Math.max(stats.consecutive[strip[i-1]] || 0, consCount);
+                consCount = 1;
             }
         }
+        if (consCount >= 2) stats.consecutive[strip[strip.length-1]] = Math.max(stats.consecutive[strip[strip.length-1]] || 0, consCount);
         
-        if (!result.pred) {
-            const basic = (BASIC_RULES[last] || []).filter(s => gs.all.includes(s));
-            if (basic.length > 0) {
-                result.pred = basic[0];
-                result.conf = 30;
-                result.src.push('طبيعي');
-                if (!result.forced.length) result.forced = basic;
-            }
-        }
-        
-        return result;
+        return stats;
     }
 
-    function getPredictions() {
+    function getSmartPredictions() {
         const hv = Math.ceil(gs.predCount / 2);
         const hm = gs.predCount - hv;
         
         if (gs.strip.length === 0) {
             const d = [];
-            for (let i = 0; i < hv; i++) d.push({ emoji: gs.veg[i] || gs.all[0] || '🥕', prob: 35, type: 'veg', forced: false, learned: false, last: false });
-            for (let i = 0; i < hm; i++) d.push({ emoji: gs.meat[i] || gs.all[gs.veg.length] || '🍤', prob: 25, type: 'meat', forced: false, learned: false, last: false });
+            for (let i = 0; i < hv; i++) d.push({ emoji: gs.veg[i] || '🥕', prob: 35, type: 'veg' });
+            for (let i = 0; i < hm; i++) d.push({ emoji: gs.meat[i] || '🍤', prob: 25, type: 'meat' });
             return d;
         }
         
-        const analysis = analyze(gs.strip);
+        const stats = analyzeFullStrip();
+        const last1 = gs.strip[gs.strip.length - 1];
+        const last2 = gs.strip.length >= 2 ? gs.strip[gs.strip.length - 2] : null;
+        const last3 = gs.strip.length >= 3 ? gs.strip[gs.strip.length - 3] : null;
+        
         const preds = [];
         const used = new Set();
         let vc = 0, mc = 0;
         
-        const addPred = (sym, prob, forced, learned) => {
+        const addPred = (sym, prob) => {
             if (used.has(sym) || !gs.all.includes(sym)) return;
             const type = gs.veg.includes(sym) ? 'veg' : 'meat';
             if (type === 'veg' && vc >= hv) return;
             if (type === 'meat' && mc >= hm) return;
-            preds.push({ emoji: sym, prob: Math.round(Math.min(prob, 95)), type, forced, learned, last: sym === gs.last });
+            preds.push({ emoji: sym, prob: Math.round(Math.min(prob, 98)), type });
             used.add(sym);
             if (type === 'veg') vc++; else mc++;
         };
         
-        for (const s of analysis.forced) addPred(s, analysis.conf + 20, true, analysis.src.includes('متعلم'));
-        if (!used.has(gs.last)) addPred(gs.last, 35, false, false);
+        // 1. رباعي
+        if (last3 && last2) {
+            const quadKey = last3 + ',' + last2 + ',' + last1 + '>';
+            const matches = Object.entries(stats.quads).filter(([k]) => k.startsWith(quadKey)).sort((a, b) => b[1] - a[1]);
+            for (const [key, count] of matches) addPred(key.split('>')[1], 70 + count * 5);
+        }
         
-        const basic = (BASIC_RULES[analysis.last] || []).filter(s => gs.all.includes(s));
-        for (const s of basic) { if (!used.has(s)) addPred(s, 25, false, false); }
-        for (const s of gs.all) { if (!used.has(s)) addPred(s, 15, false, false); }
+        // 2. ثلاثي
+        if (last2) {
+            const tripKey = last2 + ',' + last1 + '>';
+            const matches = Object.entries(stats.triplets).filter(([k]) => k.startsWith(tripKey)).sort((a, b) => b[1] - a[1]);
+            for (const [key, count] of matches) addPred(key.split('>')[1], 55 + count * 5);
+        }
         
-        preds.sort((a, b) => {
-            if (a.last !== b.last) return a.last ? -1 : 1;
-            if (a.forced !== b.forced) return a.forced ? -1 : 1;
-            return b.prob - a.prob;
-        });
+        // 3. ثنائي
+        const pairKey = last1 + '>';
+        const pairMatches = Object.entries(stats.pairs).filter(([k]) => k.startsWith(pairKey)).sort((a, b) => b[1] - a[1]);
+        for (const [key, count] of pairMatches) addPred(key.split('>')[1], 40 + count * 5);
         
+        // 4. ربط خضار-لحوم
+        if (gs.veg.includes(last1)) {
+            const matches = Object.entries(stats.vegToMeat).filter(([k]) => k.startsWith(last1 + '>')).sort((a, b) => b[1] - a[1]);
+            for (const [key, count] of matches) addPred(key.split('>')[1], 35 + count * 5);
+        } else {
+            const matches = Object.entries(stats.meatToVeg).filter(([k]) => k.startsWith(last1 + '>')).sort((a, b) => b[1] - a[1]);
+            for (const [key, count] of matches) addPred(key.split('>')[1], 35 + count * 5);
+        }
+        
+        // 5. كسر التكرار
+        const consCount = stats.consecutive[last1] || 1;
+        if (consCount >= 3) {
+            const otherType = gs.veg.includes(last1) ? gs.meat : gs.veg;
+            for (const sym of otherType) addPred(sym, 40 + consCount * 5);
+        }
+        
+        // 6. موازنة
+        if (stats.vegCount > stats.meatCount * 1.5) {
+            for (const sym of gs.meat) addPred(sym, 30);
+        } else if (stats.meatCount > stats.vegCount * 1.5) {
+            for (const sym of gs.veg) addPred(sym, 30);
+        }
+        
+        // 7. ملء
+        for (const sym of gs.all) addPred(sym, 15);
+        
+        preds.sort((a, b) => b.prob - a.prob);
         return preds.slice(0, gs.predCount);
     }
 
-    // ==================== WHEEL RENDERING ====================
+    // ==================== GAME ACTIONS ====================
+    function addSymbol(symbol) {
+        if (gs.strip.length > 0) {
+            const predictions = getSmartPredictions();
+            const predEmojis = predictions.map(p => p.emoji);
+            
+            if (predEmojis.includes(symbol)) {
+                gs.correct++;
+                addLog('✅ ' + symbol);
+            } else {
+                gs.wrong++;
+                addLog('❌ ' + symbol);
+            }
+            
+            localStorage.setItem('kf_' + currentGame + '_c', gs.correct);
+            localStorage.setItem('kf_' + currentGame + '_w', gs.wrong);
+            
+            // تسجيل النمط
+            if (gs.strip.length >= 4) {
+                const last4 = gs.strip.slice(-4);
+                const pk = last4.join(',');
+                if (!gs.patterns[pk]) gs.patterns[pk] = { sequence: last4, results: {}, total: 0 };
+                gs.patterns[pk].results[symbol] = (gs.patterns[pk].results[symbol] || 0) + 1;
+                gs.patterns[pk].total++;
+                if (isOnline && db) db.ref('patterns/' + currentGame).set(gs.patterns).catch(()=>{});
+            }
+        }
+        
+        gs.strip.push(symbol);
+        if (gs.strip.length > STRIP_MAX) gs.strip.shift();
+        
+        const stats = analyzeFullStrip();
+        addLog('➕ ' + symbol + ' | 📊 ' + Object.keys(stats.pairs).length + ' نمط');
+        renderWheel();
+    }
+
+    function addLog(msg) {
+        learnLog.unshift({ t: new Date().toLocaleTimeString('ar-EG'), m: msg });
+        if (learnLog.length > 20) learnLog = learnLog.slice(0, 20);
+        const el = document.getElementById('learnLog');
+        if (el) el.innerHTML = learnLog.map(l => `<div>${l.t} ${l.m}</div>`).join('');
+    }
+
     function renderWheel() {
         const container = document.getElementById('wheelContainer');
         container.querySelectorAll('.wheel-slot').forEach(e => e.remove());
         const gearBtn = container.querySelector('.gear-icon-btn');
         if (gearBtn) gearBtn.remove();
         
-        const predictions = getPredictions();
-        const predEmojis = predictions.slice(0, gs.predCount).map(p => p.emoji);
+        const predictions = getSmartPredictions();
         const predMap = {};
-        predictions.slice(0, gs.predCount).forEach((p, i) => { predMap[p.emoji] = { prob: p.prob, rank: i }; });
+        predictions.forEach((p, i) => { predMap[p.emoji] = { prob: p.prob, rank: i }; });
         
         const w = container.offsetWidth, h = container.offsetHeight;
-        const radius = Math.min(w, h) * 0.37;
-        const cx = w / 2, cy = h / 2;
+        const radius = Math.min(w, h) * 0.37, cx = w / 2, cy = h / 2;
+        const angleStep = 360 / gs.clock.length;
         
-        const items = gs.clock.map(emoji => {
-            const isPred = predEmojis.includes(emoji);
-            const info = predMap[emoji];
-            return {
-                emoji,
-                type: gs.veg.includes(emoji) ? 'veg' : 'meat',
-                isPred,
-                rank: info ? info.rank : -1,
-                prob: info ? info.prob : 0
-            };
-        });
-        
-        const angleStep = 360 / items.length;
-        
-        items.forEach((item, i) => {
+        gs.clock.forEach((emoji, i) => {
             const angle = -90 + (i * angleStep);
             const rad = (angle * Math.PI) / 180;
             const x = cx + radius * Math.cos(rad);
             const y = cy + radius * Math.sin(rad);
             
             const slot = document.createElement('div');
-            slot.className = 'wheel-slot ' + item.type;
+            slot.className = 'wheel-slot ' + (gs.veg.includes(emoji) ? 'veg' : 'meat');
             const fontSize = Math.min(w * 0.097, 38);
+            const pred = predMap[emoji];
             
-            if (item.isPred) {
-                if (item.rank < 2) {
+            if (pred) {
+                if (pred.rank < 2) {
                     slot.classList.add('pred-top');
-                    slot.innerHTML = `<span style="font-size:${fontSize}px;">${item.emoji}</span><span class="slot-badge">👹</span><span class="slot-prob">${item.prob}%</span>`;
+                    slot.innerHTML = `<span style="font-size:${fontSize}px;">${emoji}</span><span class="slot-badge">👹</span><span class="slot-prob">${pred.prob}%</span>`;
                 } else {
                     slot.classList.add('pred-mid');
-                    slot.innerHTML = `<span style="font-size:${fontSize}px;">${item.emoji}</span><span class="slot-badge">😈</span><span class="slot-prob">${item.prob}%</span>`;
+                    slot.innerHTML = `<span style="font-size:${fontSize}px;">${emoji}</span><span class="slot-badge">😈</span><span class="slot-prob">${pred.prob}%</span>`;
                 }
             } else {
                 slot.classList.add('pred-none');
-                slot.innerHTML = `<span style="font-size:${fontSize}px;">${item.emoji}</span>`;
+                slot.innerHTML = `<span style="font-size:${fontSize}px;">${emoji}</span>`;
             }
             
             slot.style.left = x + 'px';
             slot.style.top = y + 'px';
-            slot.onclick = () => addSymbol(item.emoji);
+            slot.onclick = () => addSymbol(emoji);
             container.appendChild(slot);
         });
         
@@ -913,10 +645,8 @@
         const game = GAMES[currentGame];
         if (game?.img?.startsWith('http')) {
             center.innerHTML = `<img src="${game.img}" alt="${game.n}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
-        } else if (game?.img) {
-            center.textContent = game.img;
         } else {
-            center.textContent = gs.last || '🎯';
+            center.textContent = gs.strip.length > 0 ? gs.strip[gs.strip.length - 1] : (game?.img || '🎯');
         }
         
         const gb = document.createElement('button');
@@ -925,140 +655,68 @@
         gb.onclick = () => document.getElementById('gearPopupOverlay').classList.add('show');
         container.appendChild(gb);
         
-        document.getElementById('gearStrip').innerHTML = Array.from({ length: 10 }, (_, i) => {
+        document.getElementById('gearStrip').innerHTML = Array.from({ length: STRIP_MAX }, (_, i) => {
             const sym = gs.strip[i] || '';
-            return `<div class="gear-slot${i === gs.strip.length - 1 && sym ? ' newest' : ''}">${sym}</div>`;
+            return `<div class="gear-slot${i === gs.strip.length - 1 && sym ? ' newest' : ''}">${sym || '·'}</div>`;
         }).join('');
         
-        updateCounters();
+        document.getElementById('correctCount').textContent = gs.correct;
+        document.getElementById('wrongCount').textContent = gs.wrong;
+        const total = gs.correct + gs.wrong;
+        document.getElementById('percentDisplay').textContent = total > 0 ? Math.round((gs.correct / total) * 100) + '%' : '0%';
     }
 
-    function addSymbol(symbol) {
-        if (currentUser && checkExpiry(currentUser).ex) { alert('⏰ منتهي'); lo(); return; }
+    function startGame(gameKey) {
+        currentGame = gameKey;
+        const game = GAMES[gameKey];
+        if (!game) return alert('اللعبة غير موجودة');
         
-        if (gs.strip.length > 0) {
-            const predictions = getPredictions();
-            const predEmojis = predictions.map(p => p.emoji);
-            
-            if (predEmojis.includes(symbol)) {
-                gs.correct++;
-            } else {
-                gs.wrong++;
-                recordPattern(symbol);
-            }
-            
-            localStorage.setItem('kf_' + currentGame + '_c', gs.correct);
-            localStorage.setItem('kf_' + currentGame + '_w', gs.wrong);
-            
-            const lastSym = gs.strip[gs.strip.length - 1];
-            const learnKey = lastSym + '>' + symbol;
-            gs.learned[learnKey] = (gs.learned[learnKey] || 0) + 1;
-            localStorage.setItem('kf_' + currentGame + '_p', JSON.stringify(gs.learned));
-            
-            if (gs.learned[learnKey] >= 3 && !gs.discovered[learnKey]) {
-                gs.discovered[learnKey] = { count: gs.learned[learnKey], confidence: 50 };
-                localStorage.setItem('kf_' + currentGame + '_d', JSON.stringify(gs.discovered));
-                document.getElementById('learnAlert').textContent = '🧠 ' + lastSym + ' → ' + symbol;
-                document.getElementById('learnAlert').style.display = 'block';
-                setTimeout(() => document.getElementById('learnAlert').style.display = 'none', 3000);
-            }
-        }
+        gs = {
+            strip: [], veg: game.v, meat: game.m, all: game.a,
+            clock: game.clock || [...game.a.slice(0, 8)],
+            correct: parseInt(localStorage.getItem('kf_' + gameKey + '_c') || '0'),
+            wrong: parseInt(localStorage.getItem('kf_' + gameKey + '_w') || '0'),
+            predCount: parseInt(localStorage.getItem('kf_' + gameKey + '_pc') || '5'),
+            patterns: JSON.parse(localStorage.getItem('kf_patterns') || '{}')[gameKey] || {}
+        };
         
-        gs.history.push(symbol);
-        if (gs.history.length > 500) gs.history = gs.history.slice(-250);
-        localStorage.setItem('kf_' + currentGame + '_h', JSON.stringify(gs.history));
-        
-        gs.strip.push(symbol);
-        if (gs.strip.length > 10) gs.strip.shift();
-        gs.last = symbol;
-        
-        addLog('➕ ' + symbol);
+        learnLog = [];
+        gs.strip.push(gs.veg[Math.floor(Math.random() * gs.veg.length)]);
+        showScreen('gameScreen');
         renderWheel();
-    }
-
-    async function recordPattern(wrongSymbol) {
-        if (gs.strip.length < 4) return;
-        
-        const last4 = gs.strip.slice(-4);
-        const pk = last4.join(',');
-        
-        let allPatterns = JSON.parse(localStorage.getItem('kf_patterns') || '{}');
-        if (!allPatterns[currentGame]) allPatterns[currentGame] = {};
-        
-        if (!allPatterns[currentGame][pk]) {
-            allPatterns[currentGame][pk] = { sequence: last4, results: {}, totalCount: 0 };
-        }
-        
-        allPatterns[currentGame][pk].results[wrongSymbol] = (allPatterns[currentGame][pk].results[wrongSymbol] || 0) + 1;
-        allPatterns[currentGame][pk].totalCount++;
-        
-        localStorage.setItem('kf_patterns', JSON.stringify(allPatterns));
-        
-        if (isOnline && db) {
-            try { await db.ref('patterns/' + currentGame).set(allPatterns[currentGame]); } catch (e) {}
-        }
-        
-        const confidence = Math.round((allPatterns[currentGame][pk].results[wrongSymbol] / allPatterns[currentGame][pk].totalCount) * 100);
-        const lastSym = last4[last4.length - 1];
-        const learnKey = lastSym + '>' + wrongSymbol;
-        
-        gs.learned[learnKey] = Math.max(gs.learned[learnKey] || 0, Math.max(confidence, 30));
-        localStorage.setItem('kf_' + currentGame + '_p', JSON.stringify(gs.learned));
-        
-        if (!gs.discovered[learnKey] || gs.discovered[learnKey].confidence < confidence) {
-            gs.discovered[learnKey] = { count: allPatterns[currentGame][pk].totalCount, confidence: Math.max(confidence, 30) };
-            localStorage.setItem('kf_' + currentGame + '_d', JSON.stringify(gs.discovered));
-        }
-        
-        addLog('📊 ' + last4.join('') + ' → ' + wrongSymbol + ' (' + confidence + '%)');
+        addLog('🟢 ' + game.n + ' | 30 رمز | تحليل فوري');
     }
 
     function resetGame() {
-        gs.strip = [];
-        gs.last = null;
-        gs.correct = 0;
-        gs.wrong = 0;
+        gs.strip = []; gs.correct = 0; gs.wrong = 0; gs.patterns = {};
         localStorage.setItem('kf_' + currentGame + '_c', '0');
         localStorage.setItem('kf_' + currentGame + '_w', '0');
-        
-        const firstSymbol = gs.veg[Math.floor(Math.random() * gs.veg.length)];
-        gs.strip.push(firstSymbol);
-        gs.last = firstSymbol;
-        
+        gs.strip.push(gs.veg[Math.floor(Math.random() * gs.veg.length)]);
         addLog('🔄 إعادة تعيين');
         renderWheel();
     }
 
     function exportData() {
         const data = {
-            game: currentGame,
-            gameName: GAMES[currentGame]?.n,
-            user: currentUser?.id,
-            strip: [...gs.strip],
-            correct: gs.correct,
-            wrong: gs.wrong,
+            game: currentGame, gameName: GAMES[currentGame]?.n,
+            strip: [...gs.strip], correct: gs.correct, wrong: gs.wrong,
             percent: (gs.correct + gs.wrong > 0 ? Math.round((gs.correct / (gs.correct + gs.wrong)) * 100) : 0),
-            predictions: getPredictions().map(p => ({ emoji: p.emoji, prob: p.prob })),
-            patterns: JSON.parse(localStorage.getItem('kf_patterns') || '{}')[currentGame] || {},
-            exportedAt: new Date().toISOString()
+            stats: analyzeFullStrip(),
+            predictions: getSmartPredictions().map(p => ({ emoji: p.emoji, prob: p.prob })),
+            patterns: gs.patterns
         };
-        
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
+        const b = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a'); a.href = URL.createObjectURL(b);
         a.download = 'khal_' + currentGame + '_' + new Date().toISOString().split('T')[0] + '.json';
-        a.click();
-        addLog('📦 تم التصدير');
+        a.click(); addLog('📦 تصدير');
     }
 
     function setPredCount(count) {
         gs.predCount = count;
         localStorage.setItem('kf_' + currentGame + '_pc', count);
         document.getElementById('gearPopupOverlay').classList.remove('show');
-        document.querySelectorAll('.gear-popup-option').forEach(o => {
-            o.classList.remove('active');
-            if (parseInt(o.dataset.count) === count) o.classList.add('active');
-        });
+        document.querySelectorAll('.gear-popup-option').forEach(o => o.classList.remove('active'));
+        document.querySelector(`.gear-popup-option[data-count="${count}"]`)?.classList.add('active');
         renderWheel();
     }
 
@@ -1068,368 +726,164 @@
         }
     }
 
-    // ==================== ADVERTISEMENTS (WITH BACKGROUND SUPPORT) ====================
-    function refreshAllAds() {
+    // ==================== SCREENS ====================
+    function showScreen(id) {
         Object.keys(adIntervals).forEach(k => { clearInterval(adIntervals[k]); delete adIntervals[k]; });
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        const sc = document.getElementById(id);
+        if (sc) { sc.classList.add('active'); if (id === 'gameSelectScreen') buildGameCards(); }
+        refreshAllAds();
+    }
+
+    function lo() { currentUser = null; currentGame = null; showScreen('loginScreen'); }
+    function goToLogin() { showScreen('loginScreen'); }
+    function backToGames() { showScreen('gameSelectScreen'); }
+
+    function switchAdminTab(tab) {
+        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.admin-tab')[['players','ads'].indexOf(tab)].classList.add('active');
+        document.getElementById('adminPlayersTab').style.display = tab === 'players' ? 'block' : 'none';
+        document.getElementById('adminAdsTab').style.display = tab === 'ads' ? 'block' : 'none';
+    }
+
+    async function buildGameCards() {
+        const c = document.getElementById('gameCardsContainer');
+        if (!c) return;
+        c.innerHTML = Object.entries(GAMES).map(([k, g]) => {
+            const icon = g.img ? `<img class="game-icon" src="${g.img}" style="width:55px;height:55px;border-radius:50%;object-fit:cover;">` : `<span class="game-icon">${g.n.split(' ')[0]||'🎯'}</span>`;
+            return `<div class="game-card" onclick="startGame('${k}')">${icon}<h3>${g.n}</h3></div>`;
+        }).join('');
+    }
+
+    // ==================== ADS ====================
+    function refreshAllAds() {
         ADS = ls('kf_ads', {});
         
-        // ========== الخلفيات ==========
-        // خلفية شاشة الدخول
-        const loginBg = Object.values(ADS).filter(a => a.place === 'login' && a.type === 'background');
-        const loginScreenBg = document.getElementById('loginScreenBg');
-        if (loginScreenBg) {
-            if (loginBg.length > 0) {
-                loginScreenBg.style.display = 'block';
-                loginScreenBg.style.backgroundImage = `url(${loginBg[loginBg.length - 1].content})`;
-            } else {
-                loginScreenBg.style.display = 'none';
-                loginScreenBg.style.backgroundImage = '';
+        ['login', 'games', 'predict'].forEach(place => {
+            const bg = Object.values(ADS).filter(a => a.place === place && a.type === 'background');
+            const bgEl = document.getElementById((place === 'login' ? 'loginScreenBg' : place === 'games' ? 'gamesScreenBg' : 'predictScreenBg'));
+            if (bgEl) {
+                if (bg.length > 0) {
+                    bgEl.style.display = 'block';
+                    bgEl.style.backgroundImage = `url(${bg[bg.length-1].content})`;
+                } else { bgEl.style.display = 'none'; }
             }
-        }
-        
-        // خلفية شاشة الألعاب
-        const gamesBg = Object.values(ADS).filter(a => a.place === 'games' && a.type === 'background');
-        const gamesScreenBg = document.getElementById('gamesScreenBg');
-        if (gamesScreenBg) {
-            if (gamesBg.length > 0) {
-                gamesScreenBg.style.display = 'block';
-                gamesScreenBg.style.backgroundImage = `url(${gamesBg[gamesBg.length - 1].content})`;
-            } else {
-                gamesScreenBg.style.display = 'none';
-                gamesScreenBg.style.backgroundImage = '';
-            }
-        }
-        
-        // خلفية شاشة التوقعات
-        const predictBg = Object.values(ADS).filter(a => a.place === 'predict' && a.type === 'background');
-        const predictScreenBg = document.getElementById('predictScreenBg');
-        if (predictScreenBg) {
-            if (predictBg.length > 0) {
-                predictScreenBg.style.display = 'block';
-                predictScreenBg.style.backgroundImage = `url(${predictBg[predictBg.length - 1].content})`;
-            } else {
-                predictScreenBg.style.display = 'none';
-                predictScreenBg.style.backgroundImage = '';
-            }
-        }
-        
-        // ========== شاشة الدخول ==========
-        const loginContainer = document.getElementById('loginAd');
-        if (loginContainer) {
-            loginContainer.innerHTML = '';
-            const loginVideo = Object.values(ADS).filter(a => a.place === 'login' && a.type === 'video')[0];
             
-            if (loginVideo) {
-                loginContainer.style.display = 'flex';
-                loginContainer.className = 'ad-banner video-ad';
+            const container = document.getElementById(place === 'login' ? 'loginAd' : place === 'games' ? 'gamesAd' : 'predictAd');
+            if (!container) return;
+            container.innerHTML = '';
+            
+            const video = Object.values(ADS).filter(a => a.place === place && a.type === 'video')[0];
+            if (video) {
+                container.style.display = 'flex'; container.className = 'ad-banner video-ad';
                 const v = document.createElement('video');
-                v.src = loginVideo.content;
-                v.autoplay = true; v.loop = true; v.muted = true; v.playsInline = true;
+                v.src = video.content; v.autoplay = true; v.loop = true; v.muted = true; v.playsInline = true;
                 v.setAttribute('playsinline', '');
                 v.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:8px;';
-                v.play().catch(() => {
-                    document.addEventListener('click', function p() { v.play(); document.removeEventListener('click', p); }, { once: true });
-                });
-                loginContainer.appendChild(v);
+                v.play().catch(() => document.addEventListener('click', function p() { v.play(); document.removeEventListener('click', p); }, { once: true }));
+                container.appendChild(v);
             } else {
-                const loginImages = Object.values(ADS).filter(a => a.place === 'login' && a.type === 'image');
-                if (loginImages.length > 0) {
-                    loginContainer.style.display = 'flex';
-                    loginContainer.className = 'ad-banner image-ad';
-                    const sd = document.createElement('div'); sd.className = 'ad-slide-image'; sd.id = 'loginAdSlide';
-                    loginImages.forEach((a, i) => { const img = document.createElement('img'); img.src = a.content; if(i===0) img.classList.add('active'); sd.appendChild(img); });
-                    loginContainer.appendChild(sd);
-                    if (loginImages.length > 1) {
-                        let ci = 0;
-                        adIntervals['login'] = setInterval(() => {
-                            const imgs = sd.querySelectorAll('img'); if(!imgs.length) return;
-                            imgs[ci].classList.remove('active'); ci = (ci+1) % imgs.length; imgs[ci].classList.add('active');
-                        }, 3000);
-                    }
-                } else { loginContainer.style.display = 'none'; }
+                const images = Object.values(ADS).filter(a => a.place === place && a.type === 'image');
+                if (images.length > 0) {
+                    container.style.display = 'flex'; container.className = 'ad-banner image-ad';
+                    images.forEach((a, i) => { const img = document.createElement('img'); img.src = a.content; img.style.cssText = 'height:200px;width:400px;object-fit:cover;border-radius:8px;position:absolute;opacity:' + (i===0?'1':'0') + ';transition:opacity 0.8s;'; container.appendChild(img); });
+                } else if (place === 'predict') {
+                    const texts = Object.values(ADS).filter(a => a.place === 'predict' && a.type === 'text');
+                    if (texts.length > 0) {
+                        container.style.display = 'flex'; container.className = 'ad-banner text-ad';
+                        container.innerHTML = `<div class="ad-slide-text">${texts.map(a=>a.content).join(' ★★★ ')}</div>`;
+                    } else { container.style.display = 'none'; }
+                } else { container.style.display = 'none'; }
             }
-        }
-        
-        // ========== شاشة الألعاب ==========
-        const gamesContainer = document.getElementById('gamesAd');
-        if (gamesContainer) {
-            gamesContainer.innerHTML = '';
-            const gamesVideo = Object.values(ADS).filter(a => a.place === 'games' && a.type === 'video')[0];
-            
-            if (gamesVideo) {
-                gamesContainer.style.display = 'flex';
-                gamesContainer.className = 'ad-banner video-ad';
-                const v = document.createElement('video');
-                v.src = gamesVideo.content;
-                v.autoplay = true; v.loop = true; v.muted = true; v.playsInline = true;
-                v.setAttribute('playsinline', '');
-                v.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:8px;';
-                v.play().catch(() => {
-                    document.addEventListener('click', function p() { v.play(); document.removeEventListener('click', p); }, { once: true });
-                });
-                gamesContainer.appendChild(v);
-            } else {
-                const gamesImages = Object.values(ADS).filter(a => a.place === 'games' && a.type === 'image');
-                if (gamesImages.length > 0) {
-                    gamesContainer.style.display = 'flex';
-                    gamesContainer.className = 'ad-banner image-ad';
-                    const sd = document.createElement('div'); sd.className = 'ad-slide-image'; sd.id = 'gamesAdSlide';
-                    gamesImages.forEach((a, i) => { const img = document.createElement('img'); img.src = a.content; if(i===0) img.classList.add('active'); sd.appendChild(img); });
-                    gamesContainer.appendChild(sd);
-                    if (gamesImages.length > 1) {
-                        let ci = 0;
-                        adIntervals['games'] = setInterval(() => {
-                            const imgs = sd.querySelectorAll('img'); if(!imgs.length) return;
-                            imgs[ci].classList.remove('active'); ci = (ci+1) % imgs.length; imgs[ci].classList.add('active');
-                        }, 3000);
-                    }
-                } else { gamesContainer.style.display = 'none'; }
-            }
-        }
-        
-        // ========== شاشة التوقعات (نصوص) ==========
-        const predictContainer = document.getElementById('predictAd');
-        const predictSlide = document.getElementById('predictAdSlide');
-        if (predictContainer && predictSlide) {
-            const predictText = Object.values(ADS).filter(a => a.place === 'predict' && a.type === 'text');
-            if (predictText.length > 0) {
-                predictContainer.style.display = 'flex';
-                predictSlide.textContent = predictText.map(a => a.content).join('   ★★★   ');
-            } else { predictContainer.style.display = 'none'; }
-        }
+        });
     }
 
     async function addAd() {
         const type = document.getElementById('adType').value;
         const place = document.getElementById('adPlace').value;
         const content = document.getElementById('adContent').value.trim();
-        if (!content) return alert('أدخل محتوى الإعلان');
-        
-        const adId = 'ad_' + Date.now();
-        const newAd = { id: adId, type, place, content, createdAt: new Date().toISOString() };
-        ADS[adId] = newAd;
+        if (!content) return alert('أدخل المحتوى');
+        ADS['ad_'+Date.now()] = { id: 'ad_'+Date.now(), type, place, content };
         ss('kf_ads', ADS);
-        
-        if (isOnline && db) {
-            try { await db.ref('ads').set(ADS); } catch (e) {}
-        }
-        
+        if (isOnline && db) db.ref('ads').set(ADS).catch(()=>{});
         document.getElementById('adContent').value = '';
-        refreshAdList();
         refreshAllAds();
-        alert('✅ تم إضافة الإعلان وسيظهر عند الجميع');
-    }
-
-    async function deleteAd(id) {
-        if (!confirm('حذف هذا الإعلان؟')) return;
-        delete ADS[id];
-        ss('kf_ads', ADS);
-        if (isOnline && db) {
-            try { await db.ref('ads').set(ADS); } catch (e) {}
-        }
-        refreshAdList();
-        refreshAllAds();
+        alert('✅ تم الإضافة');
     }
 
     async function deleteAllAds() {
-        if (!confirm('حذف جميع الإعلانات؟')) return;
-        ADS = {};
-        ss('kf_ads', ADS);
-        if (isOnline && db) {
-            try { await db.ref('ads').set({}); } catch (e) {}
-        }
-        refreshAdList();
+        if (!confirm('حذف الكل؟')) return;
+        ADS = {}; ss('kf_ads', ADS);
+        if (isOnline && db) db.ref('ads').set({}).catch(()=>{});
         refreshAllAds();
     }
 
-    async function syncAdsFromCloud() {
-        if (!isOnline || !db) return alert('لا يوجد اتصال');
-        try {
-            const snap = await db.ref('ads').once('value');
-            ADS = snap.val() || {};
-            ss('kf_ads', ADS);
-            refreshAdList();
-            refreshAllAds();
-            alert('✅ تمت المزامنة: ' + Object.keys(ADS).length + ' إعلان');
-        } catch (e) { alert('فشلت المزامنة'); }
-    }
-
-    function refreshAdList() {
-        const container = document.getElementById('adListContainer');
-        const countDisplay = document.getElementById('adCountDisplay');
-        if (!container) return;
-        
-        ADS = ls('kf_ads', {});
-        const adArray = Object.values(ADS);
-        if (countDisplay) countDisplay.textContent = adArray.length;
-        
-        if (!adArray.length) {
-            container.innerHTML = '<p style="color:#888;text-align:center;padding:20px;">📭 لا توجد إعلانات</p>';
-            return;
+    // ==================== AUTH ====================
+    async function cpw() {
+        const inp = document.getElementById('passInput').value.trim();
+        if (!inp) return;
+        if (inp === ADMIN_PASS) { document.getElementById('passInput').value = ''; showScreen('adminScreen'); return; }
+        let players = ls('kf_players', {});
+        if (!Object.keys(players).length) {
+            players['player01'] = { id: 'player01', key: 'Khali2024', mode: 'fixed' };
+            ss('kf_players', players);
         }
-        
-        const placeNames = { login: '🔐 تسجيل الدخول', games: '🎮 البرامج', predict: '🎯 التوقعات' };
-        const typeNames = { image: '🖼️ صورة', text: '📝 نص', video: '🎬 فيديو', background: '🎨 خلفية' };
-        
-        container.innerHTML = adArray.map(ad => `
-            <div class="ad-list-item">
-                <div class="ad-list-info">
-                    <div style="color:var(--gold);font-weight:bold;">${typeNames[ad.type] || ad.type}</div>
-                    <div style="font-size:9px;color:var(--muted);">${placeNames[ad.place] || ad.place}</div>
-                    <div style="font-size:10px;">${ad.content.substring(0, 50)}</div>
-                </div>
-                <button onclick="deleteAd('${ad.id}')" class="btn-delete-ad">🗑️</button>
-            </div>
-        `).join('');
+        let found = null;
+        for (const p of Object.values(players)) {
+            if ([p.key, p.key+'_static'].includes(inp)) { found = p; break; }
+        }
+        if (!found) { document.getElementById('loginError').textContent = '❌ خطأ'; return; }
+        currentUser = found;
+        document.getElementById('selectUser').textContent = '👤 ' + found.id;
+        document.getElementById('passInput').value = '';
+        showScreen('gameSelectScreen');
     }
 
-    // ==================== PLAYERS ====================
-    async function addPlayer() {
+    function addPlayer() {
         const id = document.getElementById('newId').value.trim();
         const key = document.getElementById('newKey').value.trim();
-        const mode = document.getElementById('newMode').value;
-        const hrs = parseInt(document.getElementById('newHours').value) || 0;
-        const dys = parseInt(document.getElementById('newDays').value) || 0;
-        
         if (!id || !key) return alert('املأ البيانات');
-        
-        const players = isOnline && db ? (await db.ref('players').once('value')).val() || {} : ls('kf_players', {});
-        if (Object.keys(players).length >= 200) return alert('الحد الأقصى 200');
-        if (players[id]) return alert('اللاعب موجود مسبقاً');
-        
-        const player = { id, key, mode, maxHours: hrs, maxDays: dys, lockedDevice: null, createdAt: null };
-        
-        if (isOnline && db) await db.ref('players/' + id).set(player);
-        
-        const localPlayers = ls('kf_players', {});
-        localPlayers[id] = player;
-        ss('kf_players', localPlayers);
-        
-        ['newId', 'newKey'].forEach(d => document.getElementById(d).value = '');
-        document.getElementById('newHours').value = '0';
-        document.getElementById('newDays').value = '0';
-        
+        const players = ls('kf_players', {});
+        players[id] = { id, key, mode: 'fixed' };
+        ss('kf_players', players);
+        document.getElementById('newId').value = '';
+        document.getElementById('newKey').value = '';
         alert('✅ تم إضافة ' + id);
     }
 
-    // ==================== PATTERNS ====================
-    function loadPatternGamesList() {
-        const select = document.getElementById('patternGameSelect');
-        if (!select) return;
-        select.innerHTML = '<option value="">اختر برنامج</option>' + 
-            Object.entries(GAMES).map(([k, g]) => `<option value="${k}">${g.n}</option>`).join('');
-    }
-
-    function loadPatternsForGame() {
-        const gameKey = document.getElementById('patternGameSelect').value;
-        const container = document.getElementById('patternListContainer');
-        
-        if (!gameKey) {
-            container.innerHTML = '<p style="color:#888;text-align:center;">اختر برنامج</p>';
-            return;
-        }
-        
-        const patterns = JSON.parse(localStorage.getItem('kf_patterns') || '{}')[gameKey] || {};
-        const entries = Object.entries(patterns);
-        
-        if (!entries.length) {
-            container.innerHTML = '<p style="color:#888;text-align:center;">لا توجد أنماط مسجلة</p>';
-            return;
-        }
-        
-        container.innerHTML = `
-            <div style="overflow-x:auto;">
-                <table class="pattern-table">
-                    <thead>
-                        <tr><th>#</th><th>التسلسل</th><th>النتيجة</th><th>التكرار</th><th>الثقة</th></tr>
-                    </thead>
-                    <tbody>
-                        ${entries.map(([k, p], index) => {
-                            const seq = p.sequence.map(s => `<span style="font-size:14px;">${s}</span>`).join('<span style="color:#666;margin:0 2px;">→</span>');
-                            let best = null, bc = 0;
-                            for (const [s, ct] of Object.entries(p.results)) { if (ct > bc) { bc = ct; best = s; } }
-                            const conf = best ? Math.round((bc / p.totalCount) * 100) : 0;
-                            return `
-                                <tr>
-                                    <td>${index + 1}</td>
-                                    <td>${seq}</td>
-                                    <td style="font-size:14px;">${best || '?'}</td>
-                                    <td>${p.totalCount}</td>
-                                    <td>${conf}%</td>
-                                </tr>
-                            `;
-                        }).join('')}
-                    </tbody>
-                </table>
-            </div>
-        `;
-    }
-
-    // ==================== INITIALIZATION ====================
-    async function init() {
-        console.log('🚀 CRAZY starting...');
-        initFirebase();
-        
-        if (db) {
-            db.ref('ads').on('value', snap => {
-                const newAds = snap.val();
-                if (newAds) { ADS = newAds; ss('kf_ads', ADS); refreshAllAds(); }
+    // ==================== INIT ====================
+    function initFirebase() {
+        try {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            db = firebase.database();
+            firebase.database().ref('.info/connected').on('value', s => {
+                isOnline = s.val() === true;
+                const status = isOnline ? '🟢 متصل' : '🔴 غير متصل';
+                document.querySelectorAll('#connectionStatus, #adminConnStatus').forEach(el => {
+                    if (el) el.textContent = status;
+                });
             });
-            
-            db.ref('games').on('value', snap => {
-                const newGames = snap.val();
-                if (newGames && Object.keys(newGames).length > 0) {
-                    GAMES = newGames; ss('kf_games', GAMES);
-                    buildGameCards();
-                }
-            });
-            
-            db.ref('patterns').on('value', snap => {
-                const cloudPatterns = snap.val();
-                if (cloudPatterns) {
-                    const localPatterns = JSON.parse(localStorage.getItem('kf_patterns') || '{}');
-                    for (const [gk, patterns] of Object.entries(cloudPatterns)) {
-                        if (!localPatterns[gk]) localPatterns[gk] = patterns;
-                        else {
-                            for (const [pk, pd] of Object.entries(patterns)) {
-                                if (!localPatterns[gk][pk] || pd.totalCount > localPatterns[gk][pk].totalCount) {
-                                    localPatterns[gk][pk] = pd;
-                                }
-                            }
-                        }
+            db.ref('ads').on('value', s => { if (s.val()) { ADS = s.val(); ss('kf_ads', ADS); refreshAllAds(); } });
+            db.ref('games').on('value', s => { if (s.val()) { GAMES = s.val(); ss('kf_games', GAMES); buildGameCards(); } });
+            db.ref('patterns').on('value', s => {
+                if (s.val()) {
+                    const lp = JSON.parse(localStorage.getItem('kf_patterns') || '{}');
+                    for (const [gk, p] of Object.entries(s.val())) {
+                        if (!lp[gk]) lp[gk] = p;
+                        else { for (const [pk, pd] of Object.entries(p)) { if (!lp[gk][pk] || pd.total > lp[gk][pk].total) lp[gk][pk] = pd; } }
                     }
-                    localStorage.setItem('kf_patterns', JSON.stringify(localPatterns));
-                    if (document.getElementById('adminPatternsTab')?.style.display !== 'none') loadPatternsForGame();
+                    localStorage.setItem('kf_patterns', JSON.stringify(lp));
                 }
             });
-            
-            try {
-                const gamesSnap = await db.ref('games').once('value');
-                if (gamesSnap.val()) { GAMES = gamesSnap.val(); ss('kf_games', GAMES); }
-                
-                const adsSnap = await db.ref('ads').once('value');
-                if (adsSnap.val()) { ADS = adsSnap.val(); ss('kf_ads', ADS); }
-            } catch (e) {}
-        }
-        
+        } catch (e) { console.error('Firebase error:', e); }
+    }
+
+    async function init() {
+        initFirebase();
         await buildGameCards();
         refreshAllAds();
-        
-        const players = ls('kf_players', {});
-        if (!Object.keys(players).length) {
-            players['player01'] = {
-                id: 'player01', key: 'Khali2024', mode: 'fixed',
-                maxHours: 0, maxDays: 0, lockedDevice: null, createdAt: null
-            };
-            ss('kf_players', players);
-            if (isOnline && db) db.ref('players/player01').set(players['player01']);
-        }
-        
-        document.getElementById('passInput').addEventListener('keydown', e => {
-            if (e.key === 'Enter') cpw();
-        });
-        
-        console.log('✅ CRAZY ready!');
+        document.getElementById('passInput').addEventListener('keydown', e => { if (e.key === 'Enter') cpw(); });
+        console.log('✅ CRAZY ready - 30 symbol strip - Instant learner');
     }
 
     document.addEventListener('DOMContentLoaded', init);

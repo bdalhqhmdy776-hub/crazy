@@ -6,77 +6,33 @@
     <title>👑 CRAZY 👑</title>
     <style>
         :root {
-            --bg: #06060e;
-            --surface: #0f0f23;
-            --card: #16163a;
-            --border: #252550;
-            --gold: #f0a500;
-            --red: #e94560;
-            --green: #4e9f3d;
-            --purple: #8b5cf6;
-            --cyan: #06b6d4;
-            --orange: #f97316;
-            --text: #e2e2e2;
-            --muted: #888;
+            --bg: #06060e; --surface: #0f0f23; --card: #16163a; --border: #252550;
+            --gold: #f0a500; --red: #e94560; --green: #4e9f3d; --purple: #8b5cf6;
+            --cyan: #06b6d4; --orange: #f97316; --text: #e2e2e2; --muted: #888;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Cairo', 'Arial', sans-serif; touch-action: manipulation; user-select: none; -webkit-tap-highlight-color: transparent; color: var(--text); position: fixed; top: 0; left: 0; }
+        .app { width: 100vw; height: 100vh; max-width: 420px; margin: 0 auto; display: flex; flex-direction: column; overflow: hidden; }
 
-        html, body {
-            width: 100%; height: 100%; overflow: hidden; background: #000;
-            font-family: 'Cairo', 'Arial', sans-serif; touch-action: manipulation;
-            user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
-            color: var(--text); position: fixed; top: 0; left: 0;
-        }
+        .fullscreen-ad-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .fullscreen-ad-overlay.show { display: flex; }
+        .fullscreen-ad-overlay img, .fullscreen-ad-overlay video { width: 100%; height: 100%; object-fit: fill; position: absolute; top: 0; left: 0; }
+        .fullscreen-sound-hint { position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.85); color: #fff; padding: 15px 25px; border-radius: 30px; font-size: 14px; z-index: 11; font-weight: bold; border: 2px solid #f0a500; cursor: pointer; animation: pulse-hint 1.5s ease-in-out infinite; text-align: center; }
+        .fullscreen-sound-hint.hidden { display: none; }
+        @keyframes pulse-hint { 0%, 100% { box-shadow: 0 0 10px rgba(240,165,0,0.5); } 50% { box-shadow: 0 0 30px rgba(240,165,0,0.9); transform: translateX(-50%) scale(1.05); } }
+        .fullscreen-ad-skip { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.7); color: #fff; border: 2px solid #fff; padding: 10px 20px; border-radius: 25px; font-size: 14px; cursor: pointer; z-index: 10; font-weight: bold; opacity: 0; transition: opacity 0.5s; pointer-events: none; }
+        .fullscreen-ad-skip.visible { opacity: 1; pointer-events: auto; }
+        .fullscreen-ad-timer { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.7); color: #fff; padding: 10px 16px; border-radius: 25px; font-size: 14px; z-index: 10; font-weight: bold; }
 
-        .app {
-            width: 100vw; height: 100vh; height: 100dvh; max-width: 420px; margin: 0 auto;
-            background: transparent; display: flex; flex-direction: column; position: relative; overflow: hidden;
-        }
-
-        .screen {
-            display: none; flex-direction: column; width: 100%; height: 100%; flex: 1;
-            overflow-y: auto; padding: 4px; gap: 4px; -webkit-overflow-scrolling: touch;
-            position: relative; z-index: 1;
-        }
+        .screen { display: none; flex-direction: column; width: 100%; height: 100%; flex: 1; overflow-y: auto; padding: 4px; gap: 4px; position: relative; z-index: 1; }
         .screen.active { display: flex; }
-
-        .stars-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;
-            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-        }
-
-        .star {
-            position: absolute; background: #fff; border-radius: 50%;
-            animation: twinkle var(--dur) ease-in-out infinite; animation-delay: var(--delay); opacity: 0;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.2; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.5); }
-        }
-
-        .screen-bg-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-size: cover; background-position: center; background-repeat: no-repeat;
-            z-index: 0; opacity: 0.3; transition: background-image 1s ease-in-out; pointer-events: none;
-            display: none;
-        }
-
-        .header {
-            text-align: center; padding: 10px 6px; background: rgba(22,22,58,0.7);
-            backdrop-filter: blur(10px); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
-            flex-shrink: 0; position: relative; z-index: 1;
-        }
+        .screen-bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; z-index: 0; opacity: 0.3; display: none; }
+        .header { text-align: center; padding: 10px 6px; background: rgba(22,22,58,0.7); backdrop-filter: blur(10px); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; position: relative; z-index: 1; }
         .header h1 { font-size: 18px; color: var(--red); margin: 0; }
         .header.admin-h { border-color: var(--gold); box-shadow: 0 0 20px rgba(240,165,0,0.3); }
         .header.admin-h h1 { color: var(--gold); }
 
-        .btn {
-            background: var(--red); color: #fff; border: none; padding: 10px; border-radius: 20px;
-            font-size: 13px; font-weight: bold; cursor: pointer; width: 100%; font-family: inherit;
-            flex-shrink: 0; transition: all 0.2s; position: relative; z-index: 1;
-        }
+        .btn { background: var(--red); color: #fff; border: none; padding: 10px; border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer; width: 100%; flex-shrink: 0; transition: all 0.2s; position: relative; z-index: 1; }
         .btn:active { transform: scale(0.96); opacity: 0.85; }
         .btn.sm { padding: 7px 12px; font-size: 11px; width: auto; border-radius: 14px; }
         .btn.outline { background: transparent; border: 2px solid var(--gold); color: var(--gold); }
@@ -86,202 +42,94 @@
         .btn-row { display: flex; gap: 5px; flex-shrink: 0; position: relative; z-index: 1; }
         .btn-row .btn { flex: 1; }
 
-        input, select, textarea {
-            width: 100%; padding: 10px; font-size: 13px; background: rgba(22,22,58,0.7);
-            backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.1); color: #fff;
-            border-radius: 10px; text-align: center; outline: none; font-family: inherit;
-            flex-shrink: 0; position: relative; z-index: 1;
-        }
-
-        .status-msg {
-            text-align: center; font-size: 9px; padding: 3px; border-radius: 6px;
-            flex-shrink: 0; position: relative; z-index: 1;
-        }
+        input, select, textarea { width: 100%; padding: 10px; font-size: 13px; background: rgba(22,22,58,0.7); backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.1); color: #fff; border-radius: 10px; text-align: center; outline: none; flex-shrink: 0; position: relative; z-index: 1; }
+        textarea { text-align: right; min-height: 60px; resize: vertical; }
+        .status-msg { text-align: center; font-size: 9px; padding: 3px; border-radius: 6px; flex-shrink: 0; position: relative; z-index: 1; }
         .status-msg.online { color: #4e9f3d; background: rgba(5,26,5,0.7); }
-        .status-msg.offline { color: #ff6b6b; background: rgba(26,5,5,0.7); }
-
-        .ad-banner {
-            width: 100%; overflow: hidden; flex-shrink: 0; position: relative; border-radius: 8px;
-            background: rgba(22,22,58,0.4); border: 1px solid rgba(255,255,255,0.08);
-            display: flex; align-items: center; justify-content: center; z-index: 1;
-        }
+        .ad-banner { width: 100%; overflow: hidden; flex-shrink: 0; border-radius: 8px; background: rgba(22,22,58,0.4); border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; z-index: 1; }
         .ad-banner.image-ad { height: 200px; }
-        .ad-banner.text-ad { height: 25px; min-height: 25px; }
+        .ad-banner.text-ad { height: 25px; }
         .ad-banner.video-ad { height: 200px; background: #000; }
-        .ad-banner.video-ad video { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
-
+        .ad-banner.video-ad video { width: 100%; height: 100%; object-fit: fill; border-radius: 8px; }
         .ad-slide-image { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; }
-        .ad-slide-image img { height: 200px; width: 400px; object-fit: cover; border-radius: 8px; position: absolute; opacity: 0; transition: opacity 0.8s ease-in-out; }
+        .ad-slide-image img { height: 200px; width: 400px; object-fit: cover; border-radius: 8px; position: absolute; opacity: 0; transition: opacity 0.8s; }
         .ad-slide-image img.active { opacity: 1; }
+        .ad-slide-text { white-space: nowrap; animation: marqueeRTL 28s linear infinite; font-size: 12px; font-weight: bold; color: #fff; text-shadow: 0 0 8px rgba(240,165,0,0.8); padding: 0 10px; line-height: 25px; }
+        @keyframes marqueeRTL { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 
-        .ad-slide-text {
-            white-space: nowrap; animation: marqueeRTL 14s linear infinite;
-            font-size: 12px; font-weight: bold; color: #fff;
-            text-shadow: 0 0 8px rgba(240,165,0,0.8); padding: 0 10px; line-height: 25px;
-        }
-
-        @keyframes marqueeRTL {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        .gear-icon-btn {
-            position: absolute; top: 8px; right: 8px; width: 38px; height: 38px;
-            border-radius: 50%; background: var(--gold); color: #000; font-size: 20px;
-            border: none; cursor: pointer; z-index: 5; display: flex; align-items: center;
-            justify-content: center; box-shadow: 0 0 12px rgba(240,165,0,0.5); transition: all 0.2s;
-        }
-
-        .gear-popup-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); z-index: 99; display: none; align-items: center; justify-content: center;
-        }
+        .gear-icon-btn { position: absolute; top: 8px; right: 8px; width: 38px; height: 38px; border-radius: 50%; background: var(--gold); color: #000; font-size: 20px; border: none; cursor: pointer; z-index: 5; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 12px rgba(240,165,0,0.5); }
+        .gear-popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 99; display: none; align-items: center; justify-content: center; }
         .gear-popup-overlay.show { display: flex; }
-
-        .gear-popup {
-            background: rgba(22,22,58,0.95); backdrop-filter: blur(15px);
-            border: 2px solid var(--gold); border-radius: 16px; padding: 20px;
-            display: flex; flex-direction: column; gap: 15px; min-width: 180px; text-align: center;
-        }
-        .gear-popup h3 { color: var(--gold); font-size: 16px; margin: 0; }
+        .gear-popup { background: rgba(22,22,58,0.95); backdrop-filter: blur(15px); border: 2px solid var(--gold); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 15px; min-width: 180px; text-align: center; }
+        .gear-popup h3 { color: var(--gold); font-size: 16px; }
         .gear-popup-options { display: flex; gap: 12px; justify-content: center; }
-
-        .gear-popup-option {
-            width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold);
-            background: transparent; color: var(--gold); font-size: 18px; font-weight: bold;
-            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;
-        }
+        .gear-popup-option { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold); background: transparent; color: var(--gold); font-size: 18px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .gear-popup-option.active { background: var(--gold); color: #000; }
 
-        .wheel-container {
-            position: relative; width: 100%; max-width: 390px; aspect-ratio: 1;
-            margin: 0 auto; flex-shrink: 0; z-index: 1;
-        }
-        .wheel-center {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 22%; height: 22%; border-radius: 50%; background: rgba(240,165,0,0.9);
-            display: flex; align-items: center; justify-content: center; font-size: 200%;
-            font-weight: bold; color: #000; z-index: 2;
-            box-shadow: 0 0 25px rgba(240,165,0,0.7); overflow: hidden;
-        }
+        .wheel-container { position: relative; width: 100%; max-width: 390px; aspect-ratio: 1; margin: 0 auto; flex-shrink: 0; z-index: 1; }
+        .wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 22%; height: 22%; border-radius: 50%; background: rgba(240,165,0,0.9); display: flex; align-items: center; justify-content: center; font-size: 200%; font-weight: bold; color: #000; z-index: 2; box-shadow: 0 0 25px rgba(240,165,0,0.7); overflow: hidden; }
         .wheel-center img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-
-        .wheel-slot {
-            position: absolute; width: 18%; height: 18%; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; background: rgba(22,22,58,0.8); backdrop-filter: blur(5px);
-            transition: all 0.2s; z-index: 1; top: 50%; left: 50%;
-            transform: translate(-50%, -50%); flex-direction: column; gap: 1px;
-        }
+        .wheel-slot { position: absolute; width: 18%; height: 18%; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; background: rgba(22,22,58,0.8); backdrop-filter: blur(5px); transition: all 0.2s; z-index: 1; top: 50%; left: 50%; transform: translate(-50%, -50%); flex-direction: column; gap: 1px; pointer-events: auto; }
         .wheel-slot.veg { box-shadow: 0 0 12px rgba(78,159,61,0.4); }
         .wheel-slot.meat { box-shadow: 0 0 12px rgba(233,69,96,0.4); }
         .wheel-slot.pred-top { box-shadow: 0 0 25px rgba(255,0,0,0.9); animation: pulse-evil 0.8s infinite; background: rgba(40,10,10,0.9); }
         .wheel-slot.pred-mid { box-shadow: 0 0 18px rgba(255,140,0,0.7); background: rgba(40,25,5,0.85); }
         .wheel-slot.pred-none { opacity: 0.45; box-shadow: none; background: rgba(22,22,58,0.5); }
+        @keyframes pulse-evil { 0%, 100% { box-shadow: 0 0 18px rgba(255,0,0,0.7); } 50% { box-shadow: 0 0 35px rgba(255,0,0,1); } }
+        .slot-badge { font-size: 75%; }
+        .slot-prob { font-size: 32%; color: var(--gold); font-weight: bold; }
 
-        @keyframes pulse-evil {
-            0%, 100% { box-shadow: 0 0 18px rgba(255,0,0,0.7); }
-            50% { box-shadow: 0 0 35px rgba(255,0,0,1); }
-        }
-
-        .slot-badge { font-size: 55%; line-height: 1; margin-top: 1px; }
-        .slot-prob { font-size: 25%; color: var(--gold); font-weight: bold; }
-
-        .gear-strip {
-            background: rgba(2,2,8,0.7); backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 6px;
-            display: flex; gap: 2px; justify-content: center; flex-wrap: wrap;
-            min-height: 55px; align-items: center; flex-shrink: 0; margin-top: auto; z-index: 1;
-        }
-        .gear-slot {
-            width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center;
-            justify-content: center; font-size: 11px; background: rgba(10,10,34,0.7);
-            border: 1px solid rgba(42,42,74,0.5);
-        }
+        .gear-strip { background: rgba(2,2,8,0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 6px; display: flex; gap: 2px; justify-content: center; flex-wrap: wrap; min-height: 55px; align-items: center; flex-shrink: 0; margin-top: auto; z-index: 1; }
+        .gear-slot { width: 18px; height: 18px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; background: rgba(10,10,34,0.7); border: 1px solid rgba(42,42,74,0.5); }
         .gear-slot.newest { border-color: var(--gold); box-shadow: 0 0 10px var(--gold); }
+        .gear-slot.removed { border-color: #e94560; box-shadow: 0 0 8px rgba(233,69,96,0.6); background: rgba(40,10,10,0.6); }
 
-        .counter-box {
-            display: flex; justify-content: space-around; background: rgba(22,22,58,0.7);
-            backdrop-filter: blur(10px); border-radius: 10px; padding: 8px;
-            border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; text-align: center; z-index: 1;
-        }
+        .counter-box { display: flex; justify-content: space-around; background: rgba(22,22,58,0.7); backdrop-filter: blur(10px); border-radius: 10px; padding: 8px; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; text-align: center; z-index: 1; }
         .counter-value { font-size: 18px; font-weight: bold; }
         .counter-value.correct { color: var(--green); }
         .counter-value.wrong { color: var(--red); }
-        .counter-label { font-size: 9px; color: var(--muted); }
         .counter-percent { font-size: 13px; font-weight: bold; color: var(--gold); }
-
-        .game-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; position: relative; z-index: 1; }
-        .game-card {
-            background: rgba(22,22,58,0.7); backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 18px 8px;
-            text-align: center; cursor: pointer; display: flex; flex-direction: column;
-            align-items: center; gap: 8px; transition: all 0.2s;
-        }
-        .game-card h3 { font-size: 13px; color: var(--gold); margin: 0; }
-        .game-card .game-icon {
-            width: 55px; height: 55px; border-radius: 50%; object-fit: cover;
-            font-size: 35px; display: flex; align-items: center; justify-content: center;
-        }
-
-        .section {
-            background: rgba(22,22,58,0.7); backdrop-filter: blur(10px); border-radius: 10px;
-            padding: 8px; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; position: relative; z-index: 1;
-        }
+        .learn-log { font-size: 8px; color: var(--muted); font-family: monospace; background: rgba(2,2,8,0.7); padding: 6px; border-radius: 8px; flex-shrink: 0; max-height: 40px; overflow-y: auto; z-index: 1; }
+        .game-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; z-index: 1; }
+        .game-card { background: rgba(22,22,58,0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 18px 8px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: all 0.2s; }
+        .game-card:active { transform: scale(0.95); border-color: var(--gold); }
+        .game-card h3 { font-size: 13px; color: var(--gold); }
+        .game-card .game-icon { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; font-size: 35px; display: flex; align-items: center; justify-content: center; }
+        .section { background: rgba(22,22,58,0.7); backdrop-filter: blur(10px); border-radius: 10px; padding: 8px; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; z-index: 1; }
         .section h3 { font-size: 13px; color: var(--gold); margin-bottom: 6px; }
         .row { display: flex; gap: 5px; align-items: center; margin-bottom: 5px; flex-wrap: wrap; }
         .row label { font-size: 10px; color: var(--muted); min-width: 55px; }
         .row input, .row select { flex: 1; min-width: 60px; padding: 7px; font-size: 11px; }
-
         .pass-list { max-height: 200px; overflow-y: auto; font-size: 9px; }
-        .pass-item {
-            display: flex; justify-content: space-between; align-items: center; padding: 5px;
-            border-bottom: 1px solid rgba(26,26,58,0.5); gap: 3px; font-size: 9px;
-            background: rgba(10,10,40,0.5); border-radius: 6px; margin-bottom: 3px;
-        }
+        .pass-item { display: flex; justify-content: space-between; align-items: center; padding: 5px; border-bottom: 1px solid rgba(26,26,58,0.5); gap: 3px; font-size: 9px; background: rgba(10,10,40,0.5); border-radius: 6px; margin-bottom: 3px; }
         .pass-item button { background: #b91c1c; color: #fff; border: none; padding: 3px 7px; border-radius: 4px; font-size: 8px; cursor: pointer; }
         .pass-item button.unlock { background: var(--orange); }
-
-        .ad-list-item {
-            display: flex; justify-content: space-between; align-items: center; padding: 8px;
-            background: rgba(10,10,40,0.7); border-radius: 8px; margin-bottom: 4px; gap: 6px; font-size: 10px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .btn-delete-ad {
-            background: #dc2626 !important; color: white !important; border: none !important;
-            padding: 6px 10px !important; border-radius: 6px !important; cursor: pointer !important;
-            font-size: 10px !important; font-weight: bold !important;
-        }
-
-        .learn-log {
-            font-size: 8px; color: var(--muted); font-family: monospace; background: rgba(2,2,8,0.7);
-            padding: 6px; border-radius: 8px; line-height: 1.4; flex-shrink: 0;
-            max-height: 40px; overflow-y: auto; z-index: 1;
-        }
-        .learn-log div { padding: 1px 0; border-bottom: 1px solid rgba(17,17,17,0.5); }
-        .spacer { flex: 1; }
-        .error-msg { color: #ff6b6b; text-align: center; font-size: 11px; flex-shrink: 0; position: relative; z-index: 1; }
-
-        .admin-tabs { display: flex; gap: 3px; flex-shrink: 0; margin-bottom: 6px; position: relative; z-index: 1; }
-        .admin-tab {
-            flex: 1; padding: 8px; text-align: center; background: rgba(22,22,58,0.5);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer;
-            font-size: 10px; color: var(--muted); transition: all 0.2s;
-        }
+        .game-list-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; background: rgba(10,10,40,0.7); border-radius: 8px; margin-bottom: 4px; gap: 6px; font-size: 10px; border: 1px solid rgba(255,255,255,0.1); }
+        .game-list-item button { background: #b91c1c; color: #fff; border: none; padding: 3px 6px; border-radius: 4px; font-size: 8px; cursor: pointer; margin: 1px; }
+        .game-list-item button.edit { background: var(--purple); }
+        .ad-list-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; background: rgba(10,10,40,0.7); border-radius: 8px; margin-bottom: 4px; gap: 6px; font-size: 10px; border: 1px solid rgba(255,255,255,0.1); }
+        .btn-delete-ad { background: #dc2626 !important; color: white !important; border: none !important; padding: 6px 10px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 10px !important; font-weight: bold !important; }
+        .admin-tabs { display: flex; gap: 3px; flex-shrink: 0; margin-bottom: 6px; z-index: 1; }
+        .admin-tab { flex: 1; padding: 8px; text-align: center; background: rgba(22,22,58,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer; font-size: 10px; color: var(--muted); transition: all 0.2s; }
         .admin-tab.active { background: rgba(240,165,0,0.3); border-color: var(--gold); color: #fff; font-weight: bold; }
-
+        .tabs { display: flex; gap: 3px; flex-shrink: 0; z-index: 1; }
+        .tabs .tab { flex: 1; padding: 8px; text-align: center; background: rgba(22,22,58,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer; font-size: 10px; color: var(--muted); transition: all 0.2s; }
+        .tabs .tab.active { background: rgba(139,92,246,0.3); border-color: var(--purple); color: #fff; font-weight: bold; }
+        .spacer { flex: 1; }
+        .error-msg { color: #ff6b6b; text-align: center; font-size: 11px; flex-shrink: 0; z-index: 1; }
         ::-webkit-scrollbar { width: 3px; }
-        ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
-
         #gameScreen { gap: 2px; padding: 2px; }
     </style>
 </head>
 <body>
-    <div class="stars-bg" id="starsBg"></div>
-    <div class="app" id="appRoot">
+    <div class="fullscreen-ad-overlay" id="fullscreenAd">
+        <div class="fullscreen-ad-timer" id="fullscreenAdTimer">5</div>
+        <button class="fullscreen-ad-skip" id="fullscreenAdSkip" onclick="skipFullscreenAd()">تخطي ✕</button>
+        <div class="fullscreen-sound-hint" id="fullscreenSoundHint" onclick="unmuteFullscreenAd()">👆 المس لتشغيل الصوت 🔊</div>
+    </div>
 
-        <!-- LOGIN SCREEN -->
+    <div class="app" id="appRoot">
         <div class="screen active" id="loginScreen">
             <div class="screen-bg-overlay" id="loginScreenBg"></div>
             <div class="ad-banner image-ad" id="loginAd" style="display:none;"></div>
@@ -295,8 +143,6 @@
             </div>
             <div class="spacer"></div>
         </div>
-
-        <!-- GAME SELECT SCREEN -->
         <div class="screen" id="gameSelectScreen">
             <div class="screen-bg-overlay" id="gamesScreenBg"></div>
             <div class="ad-banner image-ad" id="gamesAd" style="display:none;"></div>
@@ -304,8 +150,6 @@
             <div class="game-cards" id="gameCardsContainer"></div>
             <div class="btn-row"><button class="btn sm outline" onclick="lo()">🚪 خروج</button></div>
         </div>
-
-        <!-- GAME SCREEN -->
         <div class="screen" id="gameScreen">
             <div class="screen-bg-overlay" id="predictScreenBg"></div>
             <div class="ad-banner text-ad" id="predictAd" style="display:none;"><div class="ad-slide-text" id="predictAdSlide"></div></div>
@@ -323,21 +167,17 @@
                 <button class="btn sm outline" onclick="backToGames()">🔙</button>
             </div>
         </div>
-
-        <!-- ADMIN SCREEN -->
         <div class="screen" id="adminScreen">
             <div class="header admin-h"><h1>👑 لوحة التحكم</h1></div>
             <div class="status-msg online" id="adminConnStatus">🟡</div>
             <div class="admin-tabs">
                 <div class="admin-tab active" onclick="switchAdminTab('players')">👥 المشتركين</div>
+                <div class="admin-tab" onclick="switchAdminTab('games')">🎮 البرامج</div>
                 <div class="admin-tab" onclick="switchAdminTab('ads')">📢 الإعلانات</div>
                 <div class="admin-tab" onclick="switchAdminTab('patterns')">📊 الأنماط</div>
             </div>
-
-            <!-- PLAYERS TAB -->
             <div id="adminPlayersTab">
-                <div class="section">
-                    <h3>➕ إضافة مشترك جديد</h3>
+                <div class="section"><h3>➕ إضافة مشترك جديد</h3>
                     <div class="row"><label>المعرف:</label><input type="text" id="newId" placeholder="اسم المشترك"></div>
                     <div class="row"><label>المفتاح:</label><input type="text" id="newKey" placeholder="المفتاح السري"></div>
                     <div class="row"><label>النمط:</label><select id="newMode"><option value="fixed">ثابت</option><option value="day">يومي</option><option value="hour">ساعي</option><option value="month">شهري</option></select></div>
@@ -345,52 +185,52 @@
                     <div class="row"><label>أيام:</label><input type="number" id="newDays" value="0" min="0"></div>
                     <button class="btn sm" style="background:#f97316;" onclick="addPlayer()">✅ إضافة</button>
                 </div>
-                <div class="section" style="flex:1;min-height:150px;">
-                    <h3>📋 المشتركين (<span id="passCount">0</span>)</h3>
-                    <div class="pass-list" id="passList"></div>
-                    <div class="btn-row" style="margin-top:6px;">
-                        <button class="btn sm danger" onclick="deleteAllPlayers()">🗑 حذف الكل</button>
-                        <button class="btn sm" style="background:#f97316;" onclick="unlockAllPlayers()">🔓 فك قفل الكل</button>
-                    </div>
+                <div class="section" style="flex:1;min-height:150px;"><h3>📋 المشتركين (<span id="passCount">0</span>)</h3><div class="pass-list" id="passList"></div>
+                    <div class="btn-row" style="margin-top:6px;"><button class="btn sm danger" onclick="deleteAllPlayers()">🗑 حذف الكل</button><button class="btn sm" style="background:#f97316;" onclick="unlockAllPlayers()">🔓 فك الكل</button></div>
                 </div>
             </div>
-
-            <!-- ADS TAB -->
+            <!-- ✨ GAMES TAB WITH ADD/EDIT/DELETE -->
+            <div id="adminGamesTab" style="display:none;">
+                <div class="tabs" id="gamesTabs">
+                    <div class="tab active" onclick="switchGamesTab('list')">📋 البرامج</div>
+                    <div class="tab" onclick="switchGamesTab('add')">➕ إضافة</div>
+                </div>
+                <div class="section" id="gamesListSection" style="flex:1;min-height:200px;"><h3>🎮 البرامج الحالية</h3><div id="gameListContainer" style="max-height:250px;overflow-y:auto;"></div></div>
+                <div class="section" id="gamesFormSection" style="display:none;flex:1;">
+                    <h3 id="gamesFormTitle">➕ إضافة برنامج جديد</h3>
+                    <input type="hidden" id="editGameKey" value="">
+                    <div class="row"><label>المفتاح:</label><input type="text" id="gameKey" placeholder="مثلاً: zena"></div>
+                    <div class="row"><label>الاسم:</label><input type="text" id="gameName" placeholder="مثلاً: 🎯 زينا لايف"></div>
+                    <div class="row"><label>صورة:</label><input type="text" id="gameImage" placeholder="رابط أو إيموجي"></div>
+                    <div class="row"><label>الخضار:</label><input type="text" id="gameVeg" placeholder="🥕,🌽,🍅,🌶"></div>
+                    <div class="row"><label>اللحوم:</label><input type="text" id="gameMeat" placeholder="🍤,🐮,🐟,🐤"></div>
+                    <div class="row"><label>الساعة:</label><textarea id="gameClock" placeholder="الساعة 12: 🥕&#10;الساعة 1:30: 🍤&#10;..."></textarea></div>
+                    <div class="row"><label>طول الشريط:</label><input type="number" id="gameStripLen" value="21" min="5" max="50"></div>
+                    <div class="btn-row"><button class="btn sm purple" onclick="saveGame()">💾 حفظ</button><button class="btn sm danger" onclick="cancelGameEdit()">❌ إلغاء</button></div>
+                </div>
+            </div>
             <div id="adminAdsTab" style="display:none;">
-                <div class="section">
-                    <h3>➕ إضافة إعلان</h3>
-                    <div class="row"><label>النوع:</label><select id="adType"><option value="image">🖼️ صورة</option><option value="text">📝 نص</option><option value="video">🎬 فيديو</option><option value="background">🎨 خلفية</option></select></div>
-                    <div class="row"><label>المكان:</label><select id="adPlace"><option value="login">🔐 تسجيل الدخول</option><option value="games">🎮 البرامج</option><option value="predict">🎯 التوقعات</option></select></div>
+                <div class="section"><h3>➕ إضافة إعلان</h3>
+                    <div class="row"><label>النوع:</label><select id="adType"><option value="image">🖼️ صورة</option><option value="text">📝 نص</option><option value="video">🎬 فيديو</option><option value="background">🎨 خلفية</option><option value="fullscreen">📱 ملء الشاشة</option></select></div>
+                    <div class="row"><label>المكان:</label><select id="adPlace"><option value="login">🔐 الدخول</option><option value="games">🎮 البرامج</option><option value="predict">🎯 التوقعات</option></select></div>
                     <div class="row"><label>المحتوى:</label><input type="text" id="adContent" placeholder="رابط أو نص"></div>
                     <button class="btn sm" style="background:#f97316;" onclick="addAd()">✅ إضافة</button>
                 </div>
-                <div class="section" style="flex:1;min-height:150px;">
-                    <h3>📋 الإعلانات (<span id="adCountDisplay">0</span>)</h3>
-                    <div id="adListContainer" style="max-height:250px;overflow-y:auto;"></div>
-                    <div class="btn-row" style="margin-top:6px;">
-                        <button class="btn sm danger" onclick="deleteAllAds()">🗑 مسح الكل</button>
-                        <button class="btn sm cyan" onclick="syncAdsFromCloud()">☁️ مزامنة</button>
-                    </div>
+                <div class="section" style="flex:1;min-height:150px;"><h3>📋 الإعلانات (<span id="adCountDisplay">0</span>)</h3><div id="adListContainer" style="max-height:250px;overflow-y:auto;"></div>
+                    <div class="btn-row" style="margin-top:6px;"><button class="btn sm danger" onclick="deleteAllAds()">🗑 مسح الكل</button></div>
                 </div>
             </div>
-
-            <!-- PATTERNS TAB -->
             <div id="adminPatternsTab" style="display:none;">
-                <div class="section">
-                    <h3>📊 أنماط البرامج</h3>
-                    <div class="row"><label>البرنامج:</label><select id="patternGameSelect" onchange="loadPatternsForGame()"><option value="">اختر برنامج</option></select></div>
+                <div class="section"><h3>📊 الأنماط</h3>
+                    <div class="row"><label>البرنامج:</label><select id="patternGameSelect" onchange="loadPatterns()"><option value="">اختر</option></select></div>
+                    <div class="row"><label>النوع:</label><select id="patternTypeSelect" onchange="loadPatterns()"><option value="all">كل التسجيلات</option><option value="normal">عادي</option><option value="vegOnly">خضار فقط</option></select></div>
                 </div>
-                <div class="section" style="flex:1;min-height:150px;">
-                    <div id="patternListContainer" style="max-height:300px;overflow-y:auto;"></div>
-                    <button class="btn sm danger" onclick="clearPatterns()" style="margin-top:6px;">🗑 مسح الأنماط</button>
-                </div>
+                <div class="section"><div id="patternListContainer" style="max-height:300px;overflow-y:auto;"></div><button class="btn sm danger" onclick="clearPatterns()" style="margin-top:6px;">🗑 مسح</button></div>
             </div>
-
             <button class="btn outline" onclick="goToLogin()">🚪 خروج</button>
         </div>
     </div>
 
-    <!-- GEAR POPUP -->
     <div class="gear-popup-overlay" id="gearPopupOverlay" onclick="closeGearPopup(event)">
         <div class="gear-popup" onclick="event.stopPropagation()">
             <h3>⚙️ عدد الاحتمالات</h3>
@@ -406,645 +246,96 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script>
-    // ==================== STARS ====================
-    (function() {
-        const bg = document.getElementById('starsBg');
-        for (let i = 0; i < 100; i++) {
-            const s = document.createElement('div'); s.className = 'star';
-            s.style.cssText = `width:${Math.random()*2+1}px;height:${Math.random()*2+1}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${Math.random()*3+2}s;--delay:${Math.random()*5}s`;
-            bg.appendChild(s);
-        }
-    })();
+    // ==================== FULLSCREEN AD ====================
+    let fsAdTimer = null, fsAdSec = 5, fsVideo = null;
+    function showFullscreenAd() { const fa = Object.values(ADS).filter(a => a.type === 'fullscreen'); if (!fa.length) return; const ad = fa[Math.floor(Math.random() * fa.length)]; const ov = document.getElementById('fullscreenAd'), ti = document.getElementById('fullscreenAdTimer'), sk = document.getElementById('fullscreenAdSkip'), sh = document.getElementById('fullscreenSoundHint'); ov.innerHTML = ''; ov.appendChild(ti); ov.appendChild(sk); ov.appendChild(sh); fsVideo = null; sh.classList.remove('hidden'); if (ad.content.match(/\.(mp4|webm|ogg)$/i)) { const v = document.createElement('video'); v.src = ad.content; v.autoplay = true; v.loop = true; v.muted = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.style.cssText = 'width:100%;height:100%;object-fit:fill;position:absolute;top:0;left:0;'; v.play().catch(() => {}); ov.appendChild(v); fsVideo = v; } else { const img = document.createElement('img'); img.src = ad.content; img.style.cssText = 'width:100%;height:100%;object-fit:fill;position:absolute;top:0;left:0;'; ov.appendChild(img); sh.classList.add('hidden'); } ov.classList.add('show'); fsAdSec = 5; ti.textContent = fsAdSec; sk.classList.remove('visible'); if (fsAdTimer) clearInterval(fsAdTimer); fsAdTimer = setInterval(() => { fsAdSec--; ti.textContent = fsAdSec; if (fsAdSec <= 0) { clearInterval(fsAdTimer); sk.classList.add('visible'); ti.textContent = '▶'; } }, 1000); }
+    function unmuteFullscreenAd() { if (fsVideo && fsVideo.muted) { fsVideo.muted = false; fsVideo.play().catch(() => {}); const sh = document.getElementById('fullscreenSoundHint'); sh.textContent = '🔊 الصوت شغال ✓'; sh.style.borderColor = '#4e9f3d'; setTimeout(() => sh.classList.add('hidden'), 1500); } }
+    function skipFullscreenAd() { if (fsAdSec > 0) return; if (fsAdTimer) clearInterval(fsAdTimer); if (fsVideo) { fsVideo.pause(); fsVideo = null; } document.getElementById('fullscreenAd').classList.remove('show'); }
 
     // ==================== FIREBASE ====================
-    const firebaseConfig = {
-        apiKey: "AIzaSyB9rN0N-0YlO5lW5l5l5l5l5l5l5l5l5l5",
-        authDomain: "hamdi-791e5.firebaseapp.com",
-        databaseURL: "https://hamdi-791e5-default-rtdb.firebaseio.com",
-        projectId: "hamdi-791e5",
-        storageBucket: "hamdi-791e5.appspot.com",
-        messagingSenderId: "123456789012",
-        appId: "1:123456789012:web:abcdef1234567890"
-    };
-
+    const fc = { apiKey: "AIzaSyB9rN0N-0YlO5lW5l5l5l5l5l5l5l5l5l5", authDomain: "hamdi-791e5.firebaseapp.com", databaseURL: "https://hamdi-791e5-default-rtdb.firebaseio.com", projectId: "hamdi-791e5", storageBucket: "hamdi-791e5.appspot.com", messagingSenderId: "123456789012", appId: "1:123456789012:web:abcdef1234567890" };
     let db = null, isOnline = false;
     const ls = (k, f = null) => { try { return JSON.parse(localStorage.getItem(k)) || f; } catch (e) { return f; } };
     const ss = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
-
-    // ==================== DATA ====================
-    const STRIP_MAX = 20; // ✨ الشريط 20 رمز
-    const ADMIN_PASS = 'Admin@Khal2024';
-    
-    const DEFAULT_GAMES = {
-        zena: { n: '🎯 زينا لايف', v: ['🥕','🌽','🍅','🌶'], m: ['🍤','🐮','🐟','🐤'], a: ['🥕','🌽','🌶','🍅','🍤','🐮','🐟','🐤'], clock: ['🐤','🍅','🐮','🌶','🐟','🌽','🍤','🥕'], img: '' },
-        yoho: { n: '🎯 يوهو لايف', v: ['🥕','🌽','🍅','🌶'], m: ['🍤','🐮','🐟','🐤'], a: ['🥕','🌽','🍅','🌶','🍤','🐮','🐟','🐤'], clock: ['🐤','🍅','🐮','🌶','🐟','🌽','🍤','🥕'], img: '' },
-        berti: { n: '🎯 برتي ستار', v: ['🥕','🌽','🍅','🥦'], m: ['🍤','🍗','🥩','🐟'], a: ['🥕','🌽','🍅','🥦','🍤','🍗','🥩','🐟'], clock: ['🥕','🍤','🍅','🍗','🌽','🥩','🥦','🐟'], img: '' },
-        majles: { n: '🎯 المجلس', v: ['🥕','🌽','🍅','🥦'], m: ['🍤','🍗','🥩','🐟'], a: ['🥕','🌽','🍅','🥦','🍤','🍗','🥩','🐟'], clock: ['🥕','🍤','🍅','🍗','🌽','🥩','🥦','🐟'], img: '' }
-    };
-
-    let GAMES = ls('kf_games', DEFAULT_GAMES);
+    const ADMIN = 'Admin@Khal2024';
+    const DEF_GAMES = { zena: { n: '🎯 زينا لايف', v: ['🥕','🌽','🍅','🌶'], m: ['🍤','🐮','🐟','🐤'], a: ['🥕','🌽','🌶','🍅','🍤','🐮','🐟','🐤'], clock: ['🐤','🍅','🐮','🌶','🐟','🌽','🍤','🥕'], img: '', sl: 21 }, yoho: { n: '🎯 يوهو لايف', v: ['🥕','🌽','🍅','🌶'], m: ['🍤','🐮','🐟','🐤'], a: ['🥕','🌽','🍅','🌶','🍤','🐮','🐟','🐤'], clock: ['🐤','🍅','🐮','🌶','🐟','🌽','🍤','🥕'], img: '', sl: 15 }, berti: { n: '🎯 برتي ستار', v: ['🥕','🌽','🍅','🥦'], m: ['🍤','🍗','🥩','🐟'], a: ['🥕','🌽','🍅','🥦','🍤','🍗','🥩','🐟'], clock: ['🥕','🍤','🍅','🍗','🌽','🥩','🥦','🐟'], img: '', sl: 25 }, majles: { n: '🎯 المجلس', v: ['🥕','🌽','🍅','🥦'], m: ['🍤','🍗','🥩','🐟'], a: ['🥕','🌽','🍅','🥦','🍤','🍗','🥩','🐟'], clock: ['🥕','🍤','🍅','🍗','🌽','🥩','🥦','🐟'], img: '', sl: 20 } };
+    let G = ls('kf_games', DEF_GAMES);
     let ADS = ls('kf_ads', {});
-    let currentUser = null, currentGame = null;
-    let gs = { strip: [], veg: [], meat: [], all: [], clock: [], correct: 0, wrong: 0, predCount: 5, patterns: {}, learnedPairs: {}, learnedTriplets: {}, learnedQuads: {}, vegToMeat: {}, meatToVeg: {}, symbolCount: {}, vegCount: 0, meatCount: 0 };
-    let adIntervals = {}, learnLog = [];
+    let cu = null, cg = null;
+    let gs = { strip: [], allH: [], v: [], m: [], a: [], ck: [], co: 0, wr: 0, pc: 5, sl: 21, lp: {}, lt: {}, lq: {}, vtm: {}, mtv: {}, am: {}, sc: {}, vc: 0, mc: 0, tf: {} };
+    let ll = [];
 
-    function getDeviceFingerprint() {
-        const data = [navigator.userAgent || '', screen.width + '', new Date().getTimezoneOffset() + ''].join('|');
-        let hash = 0;
-        for (let i = 0; i < data.length; i++) hash = ((hash << 5) - hash) + data.charCodeAt(i);
-        return 'D' + Math.abs(hash).toString(36).toUpperCase();
-    }
-    const deviceId = getDeviceFingerprint();
+    function gdf() { const d = [navigator.userAgent || '', screen.width + '', new Date().getTimezoneOffset() + ''].join('|'); let h = 0; for (let i = 0; i < d.length; i++) h = ((h << 5) - h) + d.charCodeAt(i); return 'D' + Math.abs(h).toString(36).toUpperCase(); }
+    const devId = gdf();
+    function gtk(b, m) { const n = new Date(), p = v => ('' + v).padStart(2, '0'); if (m === 'hour') return `${b}_${n.getFullYear()}${p(n.getMonth()+1)}${p(n.getDate())}${p(n.getHours())}`; if (m === 'day') return `${b}_${n.getFullYear()}${p(n.getMonth()+1)}${p(n.getDate())}`; if (m === 'month') return `${b}_${n.getFullYear()}${p(n.getMonth()+1)}`; return `${b}_static`; }
+    function cex(p) { if (!p.createdAt) return { ex: false, rm: 'غير محدود' }; const cr = new Date(p.createdAt), nw = new Date(); let mh = Infinity; if (p.maxHours > 0) mh = p.maxHours; if (p.maxDays > 0) mh = Math.min(mh, p.maxDays * 24); if (mh === Infinity) return { ex: false, rm: 'غير محدود' }; const rm = new Date(cr.getTime() + mh * 3600000) - nw; if (rm <= 0) return { ex: true, rm: 'منتهي' }; const rh = Math.floor(rm / 3600000); return { ex: false, rm: rh > 23 ? Math.floor(rh / 24) + ' يوم' : rh + ' ساعة' }; }
 
-    function generateTimeKey(base, mode) {
-        const now = new Date();
-        const pad = v => ('' + v).padStart(2, '0');
-        if (mode === 'hour') return `${base}_${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}${pad(now.getHours())}`;
-        if (mode === 'day') return `${base}_${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}`;
-        if (mode === 'month') return `${base}_${now.getFullYear()}${pad(now.getMonth()+1)}`;
-        return `${base}_static`;
-    }
+    function recPat(ws) { if (gs.strip.length < 4) return; const ap = JSON.parse(localStorage.getItem('kf_pat') || '{}'); if (!ap[cg]) ap[cg] = { n: {}, v: {} }; const l4 = gs.strip.slice(-4), pk = l4.join(','); if (!ap[cg].n[pk]) ap[cg].n[pk] = { s: l4, r: {}, t: 0, vc: 0, mc: 0 }; ap[cg].n[pk].r[ws] = (ap[cg].n[pk].r[ws] || 0) + 1; ap[cg].n[pk].t++; ap[cg].n[pk].vc = l4.filter(s => gs.v.includes(s)).length; ap[cg].n[pk].mc = l4.filter(s => gs.m.includes(s)).length; if (gs.v.includes(ws)) { const lv = []; for (let i = gs.strip.length - 1; i >= 0 && lv.length < 4; i--) { if (gs.v.includes(gs.strip[i])) lv.unshift(gs.strip[i]); } if (lv.length >= 4) { const pkv = lv.join(','); if (!ap[cg].v[pkv]) ap[cg].v[pkv] = { s: lv, r: {}, t: 0, tp: 'v' }; ap[cg].v[pkv].r[ws] = (ap[cg].v[pkv].r[ws] || 0) + 1; ap[cg].v[pkv].t++; ap[cg].v[pkv].hm = gs.strip.some(s => gs.m.includes(s)); ap[cg].v[pkv].vr = Math.round((gs.strip.filter(s => gs.v.includes(s)).length / gs.strip.length) * 100); } } localStorage.setItem('kf_pat', JSON.stringify(ap)); if (isOnline && db) db.ref('pat/' + cg).set(ap[cg]).catch(() => {}); }
 
-    function checkExpiry(player) {
-        if (!player.createdAt) return { ex: false, rm: 'غير محدود' };
-        const created = new Date(player.createdAt);
-        const now = new Date();
-        let maxHours = Infinity;
-        if (player.maxHours > 0) maxHours = player.maxHours;
-        if (player.maxDays > 0) maxHours = Math.min(maxHours, player.maxDays * 24);
-        if (maxHours === Infinity) return { ex: false, rm: 'غير محدود' };
-        const remaining = new Date(created.getTime() + maxHours * 3600000) - now;
-        if (remaining <= 0) return { ex: true, rm: 'منتهي' };
-        const rh = Math.floor(remaining / 3600000);
-        return { ex: false, rm: rh > 23 ? Math.floor(rh / 24) + ' يوم' : rh + ' ساعة' };
-    }
+    function svLrn() { const st = alyz(); const ld = { p: st.p || {}, t: st.t || {}, q: st.q || {}, vm: st.vm || {}, mv: st.mv || {}, am: st.am || {}, tf: st.tf || {}, sc: st.sc || {}, vc: st.vc || 0, mc: st.mc || 0 }; localStorage.setItem('kf_lrn_' + cg, JSON.stringify(ld)); Object.assign(gs, { lp: ld.p, lt: ld.t, lq: ld.q, vtm: ld.vm, mtv: ld.mv, am: ld.am, tf: ld.tf, sc: ld.sc, vc: ld.vc, mc: ld.mc }); }
+    function alyz() { const s = gs.strip, ah = gs.allH || []; const st = { sc: { ...gs.sc }, vc: gs.vc, mc: gs.mc, p: { ...gs.lp }, t: { ...gs.lt }, q: { ...gs.lq }, vm: { ...gs.vtm }, mv: { ...gs.mtv }, am: { ...gs.am }, tf: { ...gs.tf }, cs: {}, ra: {} }; if (ah.length > gs.sl) { const rm = ah[ah.length - gs.sl - 1]; if (rm && !s.includes(rm)) st.ra = { sym: rm, tp: gs.v.includes(rm) ? 'v' : 'm' }; } if (s.length < 2) return st; for (const x of s) { st.sc[x] = (st.sc[x] || 0) + 1; if (gs.v.includes(x)) st.vc++; if (gs.m.includes(x)) st.mc++; } for (let i = 1; i < s.length; i++) { const pk = s[i-1] + '>' + s[i]; st.p[pk] = (st.p[pk] || 0) + 1; if (gs.v.includes(s[i-1]) && gs.m.includes(s[i])) st.vm[pk] = (st.vm[pk] || 0) + 1; if (gs.m.includes(s[i-1]) && gs.v.includes(s[i])) st.mv[pk] = (st.mv[pk] || 0) + 1; if (gs.m.includes(s[i-1])) { const ak = s[i-1] + '>' + s[i]; if (!st.am[ak]) st.am[ak] = { c: 0, ns: {} }; st.am[ak].c++; if (i + 1 < s.length) { const na = s[i] + '→' + s[i+1]; st.am[ak].ns[na] = (st.am[ak].ns[na] || 0) + 1; } } if (i >= 2) { const tk = s[i-2] + ',' + s[i-1] + '>' + s[i]; st.t[tk] = (st.t[tk] || 0) + 1; } if (i >= 3) { const qk = s[i-3] + ',' + s[i-2] + ',' + s[i-1] + '>' + s[i]; st.q[qk] = (st.q[qk] || 0) + 1; } } for (const sym of gs.a) { if (st.sc[sym] >= 3) { const f = {}; for (let i = 1; i < s.length; i++) { if (s[i-1] === sym) f[s[i]] = (f[s[i]] || 0) + 1; } st.tf[sym] = Object.entries(f).sort((a, b) => b[1] - a[1]).slice(0, 3); } } let cc = 1; for (let i = 1; i < s.length; i++) { if (s[i] === s[i-1]) cc++; else { if (cc >= 2) st.cs[s[i-1]] = Math.max(st.cs[s[i-1]] || 0, cc); cc = 1; } } if (cc >= 2) st.cs[s[s.length-1]] = Math.max(st.cs[s[s.length-1]] || 0, cc); return st; }
 
-    // ==================== LEARNING ENGINE WITH PERSISTENCE ====================
-    function saveLearning(stats) {
-        const learningData = {
-            pairs: stats.pairs || {},
-            triplets: stats.triplets || {},
-            quads: stats.quads || {},
-            vegToMeat: stats.vegToMeat || {},
-            meatToVeg: stats.meatToVeg || {},
-            symbolCount: stats.symbolCount || {},
-            vegCount: stats.vegCount || 0,
-            meatCount: stats.meatCount || 0,
-            lastUpdate: new Date().toISOString()
-        };
-        
-        localStorage.setItem('kf_learning_' + currentGame, JSON.stringify(learningData));
-        
-        gs.learnedPairs = learningData.pairs;
-        gs.learnedTriplets = learningData.triplets;
-        gs.learnedQuads = learningData.quads;
-        gs.vegToMeat = learningData.vegToMeat;
-        gs.meatToVeg = learningData.meatToVeg;
-        gs.symbolCount = learningData.symbolCount;
-        gs.vegCount = learningData.vegCount;
-        gs.meatCount = learningData.meatCount;
-    }
+    function getPreds() { const hv = Math.ceil(gs.pc / 2), hm = gs.pc - hv; if (gs.strip.length === 0) { const d = []; for (let i = 0; i < hv; i++) d.push({ e: gs.v[i] || '🥕', p: 35 }); for (let i = 0; i < hm; i++) d.push({ e: gs.m[i] || '🍤', p: 25 }); return d; } const st = alyz(), l1 = gs.strip[gs.strip.length-1], l2 = gs.strip.length >= 2 ? gs.strip[gs.strip.length-2] : null, l3 = gs.strip.length >= 3 ? gs.strip[gs.strip.length-3] : null; const pr = [], u = new Set(); let vc = 0, mc = 0; const ap = (s, p) => { if (u.has(s) || !gs.a.includes(s)) return; const t = gs.v.includes(s) ? 'v' : 'm'; if (t === 'v' && vc >= hv) return; if (t === 'm' && mc >= hm) return; pr.push({ e: s, p: Math.round(Math.min(p, 99)) }); u.add(s); if (t === 'v') vc++; else mc++; }; if (st.ra.sym) { const rf = st.tf[st.ra.sym] || []; for (const [s, c] of rf) ap(s, 45 + c * 8); } const tg = st.tf[l1] || []; for (const [s, c] of tg) ap(s, 60 + c * 10); if (gs.m.includes(l1)) { const ad = st.am[l1 + '>']; if (ad?.ns) { for (const [k, c] of Object.entries(ad.ns).sort((a, b) => b[1] - a[1])) { const s = k.split('→')[1]; if (s) ap(s, 55 + c * 8); } } } if (l3 && l2) Object.entries(st.q).filter(([k]) => k.startsWith(l3 + ',' + l2 + ',' + l1 + '>')).sort((a, b) => b[1] - a[1]).forEach(([k, c]) => ap(k.split('>')[1], 75 + c * 5)); if (l2) Object.entries(st.t).filter(([k]) => k.startsWith(l2 + ',' + l1 + '>')).sort((a, b) => b[1] - a[1]).forEach(([k, c]) => ap(k.split('>')[1], 60 + c * 5)); Object.entries(st.p).filter(([k]) => k.startsWith(l1 + '>')).sort((a, b) => b[1] - a[1]).forEach(([k, c]) => ap(k.split('>')[1], 45 + c * 4)); if (gs.v.includes(l1)) Object.entries(st.vm).filter(([k]) => k.startsWith(l1 + '>')).sort((a, b) => b[1] - a[1]).forEach(([k, c]) => ap(k.split('>')[1], 40 + c * 5)); const cc2 = st.cs[l1] || 1; if (cc2 >= 2) { const ot = gs.v.includes(l1) ? gs.m : gs.v; for (const s of ot) ap(s, 45 + cc2 * 8); } if (st.vc > st.mc * 1.3) { for (const s of gs.m) ap(s, 35); } else if (st.mc > st.vc * 1.3) { for (const s of gs.v) ap(s, 35); } for (const s of gs.a) ap(s, 12); pr.sort((a, b) => b.p - a.p); return pr.slice(0, gs.pc); }
 
-    function analyzeFullStrip() {
-        const strip = gs.strip;
-        
-        // نبدأ بالتعلم المحفوظ
-        const stats = {
-            symbolCount: { ...gs.symbolCount },
-            vegCount: gs.vegCount,
-            meatCount: gs.meatCount,
-            pairs: { ...gs.learnedPairs },
-            triplets: { ...gs.learnedTriplets },
-            quads: { ...gs.learnedQuads },
-            vegToMeat: { ...gs.vegToMeat },
-            meatToVeg: { ...gs.meatToVeg },
-            consecutive: {}
-        };
-        
-        if (strip.length < 2) return stats;
-        
-        // إضافة رموز الشريط الحالي للإحصاء
-        for (const s of strip) {
-            stats.symbolCount[s] = (stats.symbolCount[s] || 0) + 1;
-            if (gs.veg.includes(s)) stats.vegCount++;
-            if (gs.meat.includes(s)) stats.meatCount++;
-        }
-        
-        // تحليل الشريط الحالي وإضافته للتعلم
-        for (let i = 1; i < strip.length; i++) {
-            const pairKey = strip[i-1] + '>' + strip[i];
-            stats.pairs[pairKey] = (stats.pairs[pairKey] || 0) + 1;
-            if (gs.veg.includes(strip[i-1]) && gs.meat.includes(strip[i])) stats.vegToMeat[pairKey] = (stats.vegToMeat[pairKey] || 0) + 1;
-            if (gs.meat.includes(strip[i-1]) && gs.veg.includes(strip[i])) stats.meatToVeg[pairKey] = (stats.meatToVeg[pairKey] || 0) + 1;
-            if (i >= 2) { const tripKey = strip[i-2] + ',' + strip[i-1] + '>' + strip[i]; stats.triplets[tripKey] = (stats.triplets[tripKey] || 0) + 1; }
-            if (i >= 3) { const quadKey = strip[i-3] + ',' + strip[i-2] + ',' + strip[i-1] + '>' + strip[i]; stats.quads[quadKey] = (stats.quads[quadKey] || 0) + 1; }
-        }
-        
-        let consCount = 1;
-        for (let i = 1; i < strip.length; i++) {
-            if (strip[i] === strip[i-1]) { consCount++; }
-            else { if (consCount >= 2) stats.consecutive[strip[i-1]] = Math.max(stats.consecutive[strip[i-1]] || 0, consCount); consCount = 1; }
-        }
-        if (consCount >= 2) stats.consecutive[strip[strip.length-1]] = Math.max(stats.consecutive[strip[strip.length-1]] || 0, consCount);
-        
-        return stats;
-    }
+    function clickSymbol(symbol) { if (gs.strip.length > 0) { const preds = getPreds(), pe = preds.map(p => p.e); if (pe.includes(symbol)) { gs.co++; alog('✅ ' + symbol); } else { gs.wr++; alog('❌ ' + symbol); recPat(symbol); } localStorage.setItem('kf_' + cg + '_c', gs.co); localStorage.setItem('kf_' + cg + '_w', gs.wr); } gs.strip.push(symbol); gs.allH.push(symbol); if (gs.strip.length > gs.sl) gs.strip.shift(); if (gs.allH.length > 500) gs.allH = gs.allH.slice(-250); svLrn(); renderWheel(); }
+    function alog(msg) { ll.unshift({ t: new Date().toLocaleTimeString('ar-EG'), m: msg }); if (ll.length > 20) ll = ll.slice(0, 20); const el = document.getElementById('learnLog'); if (el) el.innerHTML = ll.map(l => `<div>${l.t} ${l.m}</div>`).join(''); }
+    function renderWheel() { const ct = document.getElementById('wheelContainer'); ct.querySelectorAll('.wheel-slot').forEach(e => e.remove()); const gb = ct.querySelector('.gear-icon-btn'); if (gb) gb.remove(); const preds = getPreds(), pm = {}; preds.forEach((p, i) => { pm[p.e] = { p: p.p, r: i }; }); const w = ct.offsetWidth || 350, h = ct.offsetHeight || 350, rad = Math.min(w, h) * 0.37, cx = w / 2, cy = h / 2, as = 360 / gs.ck.length; gs.ck.forEach((emoji, i) => { const angle = -90 + (i * as), rd = (angle * Math.PI) / 180, x = cx + rad * Math.cos(rd), y = cy + rad * Math.sin(rd); const slot = document.createElement('div'); slot.className = 'wheel-slot ' + (gs.v.includes(emoji) ? 'veg' : 'meat'); const fs = Math.min(w * 0.097, 38); const pr = pm[emoji]; if (pr) { if (pr.r < 2) { slot.classList.add('pred-top'); slot.innerHTML = `<span style="font-size:${fs}px;">${emoji}</span><span class="slot-badge">👹</span><span class="slot-prob">${pr.p}%</span>`; } else { slot.classList.add('pred-mid'); slot.innerHTML = `<span style="font-size:${fs}px;">${emoji}</span><span class="slot-badge">😈</span><span class="slot-prob">${pr.p}%</span>`; } } else { slot.classList.add('pred-none'); slot.innerHTML = `<span style="font-size:${fs}px;">${emoji}</span>`; } slot.style.left = x + 'px'; slot.style.top = y + 'px'; slot.onclick = function(e) { e.preventDefault(); e.stopPropagation(); clickSymbol(emoji); }; ct.appendChild(slot); }); const center = document.getElementById('wheelCenter'); const game = G[cg]; if (game?.img?.startsWith('http')) center.innerHTML = `<img src="${game.img}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`; else center.textContent = gs.strip.length > 0 ? gs.strip[gs.strip.length - 1] : (game?.img || '🎯'); const gbtn = document.createElement('button'); gbtn.className = 'gear-icon-btn'; gbtn.textContent = '⚙️'; gbtn.onclick = () => document.getElementById('gearPopupOverlay').classList.add('show'); ct.appendChild(gbtn); document.getElementById('gearStrip').innerHTML = Array.from({ length: gs.sl }, (_, i) => { const sym = gs.strip[i] || ''; const isN = i === gs.strip.length - 1 && sym; const isR = i === 0 && gs.allH.length > gs.sl; let cls = 'gear-slot'; if (isN) cls += ' newest'; if (isR && gs.allH[gs.allH.length - gs.sl - 1]) cls += ' removed'; return `<div class="${cls}" title="${isR ? 'الرمز الخارج: ' + gs.allH[gs.allH.length - gs.sl - 1] : ''}">${sym || '·'}</div>`; }).join(''); document.getElementById('correctCount').textContent = gs.co; document.getElementById('wrongCount').textContent = gs.wr; const t = gs.co + gs.wr; document.getElementById('percentDisplay').textContent = t > 0 ? Math.round((gs.co / t) * 100) + '%' : '0%'; }
 
-    function getSmartPredictions() {
-        const hv = Math.ceil(gs.predCount / 2), hm = gs.predCount - hv;
-        if (gs.strip.length === 0) {
-            const d = [];
-            for (let i = 0; i < hv; i++) d.push({ emoji: gs.veg[i] || '🥕', prob: 35, type: 'veg' });
-            for (let i = 0; i < hm; i++) d.push({ emoji: gs.meat[i] || '🍤', prob: 25, type: 'meat' });
-            return d;
-        }
-        
-        const stats = analyzeFullStrip();
-        const last1 = gs.strip[gs.strip.length - 1];
-        const last2 = gs.strip.length >= 2 ? gs.strip[gs.strip.length - 2] : null;
-        const last3 = gs.strip.length >= 3 ? gs.strip[gs.strip.length - 3] : null;
-        
-        const preds = [], used = new Set();
-        let vc = 0, mc = 0;
-        
-        const addPred = (sym, prob) => {
-            if (used.has(sym) || !gs.all.includes(sym)) return;
-            const type = gs.veg.includes(sym) ? 'veg' : 'meat';
-            if (type === 'veg' && vc >= hv) return;
-            if (type === 'meat' && mc >= hm) return;
-            preds.push({ emoji: sym, prob: Math.round(Math.min(prob, 98)), type });
-            used.add(sym);
-            if (type === 'veg') vc++; else mc++;
-        };
-        
-        if (last3 && last2) {
-            const quadKey = last3 + ',' + last2 + ',' + last1 + '>';
-            Object.entries(stats.quads).filter(([k]) => k.startsWith(quadKey)).sort((a, b) => b[1] - a[1]).forEach(([key, count]) => addPred(key.split('>')[1], 70 + count * 5));
-        }
-        if (last2) {
-            const tripKey = last2 + ',' + last1 + '>';
-            Object.entries(stats.triplets).filter(([k]) => k.startsWith(tripKey)).sort((a, b) => b[1] - a[1]).forEach(([key, count]) => addPred(key.split('>')[1], 55 + count * 5));
-        }
-        const pairKey = last1 + '>';
-        Object.entries(stats.pairs).filter(([k]) => k.startsWith(pairKey)).sort((a, b) => b[1] - a[1]).forEach(([key, count]) => addPred(key.split('>')[1], 40 + count * 5));
-        
-        if (gs.veg.includes(last1)) {
-            Object.entries(stats.vegToMeat).filter(([k]) => k.startsWith(last1 + '>')).sort((a, b) => b[1] - a[1]).forEach(([key, count]) => addPred(key.split('>')[1], 35 + count * 5));
-        } else {
-            Object.entries(stats.meatToVeg).filter(([k]) => k.startsWith(last1 + '>')).sort((a, b) => b[1] - a[1]).forEach(([key, count]) => addPred(key.split('>')[1], 35 + count * 5));
-        }
-        
-        const consCount = stats.consecutive[last1] || 1;
-        if (consCount >= 3) {
-            const otherType = gs.veg.includes(last1) ? gs.meat : gs.veg;
-            for (const sym of otherType) addPred(sym, 40 + consCount * 5);
-        }
-        
-        if (stats.vegCount > stats.meatCount * 1.5) { for (const sym of gs.meat) addPred(sym, 30); }
-        else if (stats.meatCount > stats.vegCount * 1.5) { for (const sym of gs.veg) addPred(sym, 30); }
-        
-        for (const sym of gs.all) addPred(sym, 15);
-        
-        preds.sort((a, b) => b.prob - a.prob);
-        return preds.slice(0, gs.predCount);
-    }
+    function startGame(gk) { cg = gk; const game = G[gk]; if (!game) return alert('اللعبة غير موجودة'); const sl = JSON.parse(localStorage.getItem('kf_lrn_' + gk) || '{}'); gs = { strip: [], allH: [], v: game.v, m: game.m, a: game.a, ck: game.clock || [...game.a.slice(0, 8)], co: parseInt(localStorage.getItem('kf_' + gk + '_c') || '0'), wr: parseInt(localStorage.getItem('kf_' + gk + '_w') || '0'), pc: parseInt(localStorage.getItem('kf_' + gk + '_pc') || '5'), sl: game.sl || 21, lp: sl.p || {}, lt: sl.t || {}, lq: sl.q || {}, vtm: sl.vm || {}, mtv: sl.mv || {}, am: sl.am || {}, tf: sl.tf || {}, sc: sl.sc || {}, vc: sl.vc || 0, mc: sl.mc || 0 }; ll = []; const fs = gs.v[Math.floor(Math.random() * gs.v.length)]; gs.strip.push(fs); gs.allH.push(fs); showScreen('gameScreen'); renderWheel(); alog('🟢 ' + game.n + ' | شريط:' + gs.sl); }
+    function resetGame() { gs.strip = []; gs.allH = []; gs.co = 0; gs.wr = 0; localStorage.setItem('kf_' + cg + '_c', '0'); localStorage.setItem('kf_' + cg + '_w', '0'); const fs = gs.v[Math.floor(Math.random() * gs.v.length)]; gs.strip.push(fs); gs.allH.push(fs); alog('🔄'); renderWheel(); }
+    function exportData() { const d = { game: cg, strip: [...gs.strip], co: gs.co, wr: gs.wr, stats: alyz(), preds: getPreds() }; const b = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'khal_' + cg + '.json'; a.click(); }
+    function setPredCount(c) { gs.pc = c; localStorage.setItem('kf_' + cg + '_pc', c); document.getElementById('gearPopupOverlay').classList.remove('show'); document.querySelectorAll('.gear-popup-option').forEach(o => o.classList.remove('active')); document.querySelector(`.gear-popup-option[data-count="${c}"]`)?.classList.add('active'); renderWheel(); }
+    function closeGearPopup(e) { if (e.target === document.getElementById('gearPopupOverlay')) document.getElementById('gearPopupOverlay').classList.remove('show'); }
 
-    // ==================== GAME ====================
-    function addSymbol(symbol) {
-        if (gs.strip.length > 0) {
-            const predictions = getSmartPredictions();
-            const predEmojis = predictions.map(p => p.emoji);
-            if (predEmojis.includes(symbol)) { gs.correct++; addLog('✅ ' + symbol); }
-            else { gs.wrong++; addLog('❌ ' + symbol); }
-            localStorage.setItem('kf_' + currentGame + '_c', gs.correct);
-            localStorage.setItem('kf_' + currentGame + '_w', gs.wrong);
-            if (gs.strip.length >= 4) {
-                const last4 = gs.strip.slice(-4);
-                const pk = last4.join(',');
-                if (!gs.patterns[pk]) gs.patterns[pk] = { sequence: last4, results: {}, total: 0 };
-                gs.patterns[pk].results[symbol] = (gs.patterns[pk].results[symbol] || 0) + 1;
-                gs.patterns[pk].total++;
-                if (isOnline && db) db.ref('patterns/' + currentGame).set(gs.patterns).catch(()=>{});
-            }
-        }
-        gs.strip.push(symbol);
-        if (gs.strip.length > STRIP_MAX) gs.strip.shift();
-        
-        // حفظ التعلم
-        const stats = analyzeFullStrip();
-        saveLearning(stats);
-        
-        addLog('➕ ' + symbol + ' | 📊 ' + Object.keys(stats.pairs).length + ' نمط');
-        renderWheel();
-    }
-
-    function addLog(msg) {
-        learnLog.unshift({ t: new Date().toLocaleTimeString('ar-EG'), m: msg });
-        if (learnLog.length > 20) learnLog = learnLog.slice(0, 20);
-        const el = document.getElementById('learnLog');
-        if (el) el.innerHTML = learnLog.map(l => `<div>${l.t} ${l.m}</div>`).join('');
-    }
-
-    function renderWheel() {
-        const container = document.getElementById('wheelContainer');
-        container.querySelectorAll('.wheel-slot').forEach(e => e.remove());
-        const gearBtn = container.querySelector('.gear-icon-btn');
-        if (gearBtn) gearBtn.remove();
-        
-        const predictions = getSmartPredictions();
-        const predMap = {};
-        predictions.forEach((p, i) => { predMap[p.emoji] = { prob: p.prob, rank: i }; });
-        
-        const w = container.offsetWidth, h = container.offsetHeight;
-        const radius = Math.min(w, h) * 0.37, cx = w / 2, cy = h / 2;
-        const angleStep = 360 / gs.clock.length;
-        
-        gs.clock.forEach((emoji, i) => {
-            const angle = -90 + (i * angleStep);
-            const rad = (angle * Math.PI) / 180;
-            const x = cx + radius * Math.cos(rad), y = cy + radius * Math.sin(rad);
-            
-            const slot = document.createElement('div');
-            slot.className = 'wheel-slot ' + (gs.veg.includes(emoji) ? 'veg' : 'meat');
-            const fontSize = Math.min(w * 0.097, 38);
-            const pred = predMap[emoji];
-            
-            if (pred) {
-                if (pred.rank < 2) {
-                    slot.classList.add('pred-top');
-                    slot.innerHTML = `<span style="font-size:${fontSize}px;">${emoji}</span><span class="slot-badge">👹</span><span class="slot-prob">${pred.prob}%</span>`;
-                } else {
-                    slot.classList.add('pred-mid');
-                    slot.innerHTML = `<span style="font-size:${fontSize}px;">${emoji}</span><span class="slot-badge">😈</span><span class="slot-prob">${pred.prob}%</span>`;
-                }
-            } else {
-                slot.classList.add('pred-none');
-                slot.innerHTML = `<span style="font-size:${fontSize}px;">${emoji}</span>`;
-            }
-            slot.style.left = x + 'px'; slot.style.top = y + 'px';
-            slot.onclick = () => addSymbol(emoji);
-            container.appendChild(slot);
-        });
-        
-        const center = document.getElementById('wheelCenter');
-        const game = GAMES[currentGame];
-        if (game?.img?.startsWith('http')) center.innerHTML = `<img src="${game.img}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
-        else center.textContent = gs.strip.length > 0 ? gs.strip[gs.strip.length - 1] : (game?.img || '🎯');
-        
-        const gb = document.createElement('button');
-        gb.className = 'gear-icon-btn'; gb.textContent = '⚙️';
-        gb.onclick = () => document.getElementById('gearPopupOverlay').classList.add('show');
-        container.appendChild(gb);
-        
-        // ✨ شريط 20 رمز
-        document.getElementById('gearStrip').innerHTML = Array.from({ length: STRIP_MAX }, (_, i) => {
-            const sym = gs.strip[i] || '';
-            return `<div class="gear-slot${i === gs.strip.length - 1 && sym ? ' newest' : ''}">${sym || '·'}</div>`;
-        }).join('');
-        
-        document.getElementById('correctCount').textContent = gs.correct;
-        document.getElementById('wrongCount').textContent = gs.wrong;
-        const total = gs.correct + gs.wrong;
-        document.getElementById('percentDisplay').textContent = total > 0 ? Math.round((gs.correct / total) * 100) + '%' : '0%';
-    }
-
-    function startGame(gameKey) {
-        currentGame = gameKey;
-        const game = GAMES[gameKey];
-        if (!game) return alert('اللعبة غير موجودة');
-        
-        // ✨ تحميل التعلم المحفوظ
-        const savedLearning = JSON.parse(localStorage.getItem('kf_learning_' + gameKey) || '{}');
-        
-        gs = {
-            strip: [], veg: game.v, meat: game.m, all: game.a, clock: game.clock || [...game.a.slice(0, 8)],
-            correct: parseInt(localStorage.getItem('kf_' + gameKey + '_c') || '0'),
-            wrong: parseInt(localStorage.getItem('kf_' + gameKey + '_w') || '0'),
-            predCount: parseInt(localStorage.getItem('kf_' + gameKey + '_pc') || '5'),
-            patterns: JSON.parse(localStorage.getItem('kf_patterns') || '{}')[gameKey] || {},
-            learnedPairs: savedLearning.pairs || {},
-            learnedTriplets: savedLearning.triplets || {},
-            learnedQuads: savedLearning.quads || {},
-            vegToMeat: savedLearning.vegToMeat || {},
-            meatToVeg: savedLearning.meatToVeg || {},
-            symbolCount: savedLearning.symbolCount || {},
-            vegCount: savedLearning.vegCount || 0,
-            meatCount: savedLearning.meatCount || 0
-        };
-        
-        learnLog = [];
-        gs.strip.push(gs.veg[Math.floor(Math.random() * gs.veg.length)]);
-        showScreen('gameScreen'); renderWheel();
-        addLog('🟢 ' + game.n + ' | 20 رمز | تعلم: ' + Object.keys(gs.learnedPairs).length + ' نمط');
-    }
-
-    function resetGame() {
-        gs.strip = []; gs.correct = 0; gs.wrong = 0; gs.patterns = {};
-        localStorage.setItem('kf_' + currentGame + '_c', '0');
-        localStorage.setItem('kf_' + currentGame + '_w', '0');
-        gs.strip.push(gs.veg[Math.floor(Math.random() * gs.veg.length)]);
-        addLog('🔄 إعادة تعيين'); renderWheel();
-    }
-
-    function exportData() {
-        const data = { game: currentGame, strip: [...gs.strip], correct: gs.correct, wrong: gs.wrong, stats: analyzeFullStrip(), predictions: getSmartPredictions(), patterns: gs.patterns };
-        const b = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        const a = document.createElement('a'); a.href = URL.createObjectURL(b);
-        a.download = 'khal_' + currentGame + '.json'; a.click();
-    }
-
-    function setPredCount(count) {
-        gs.predCount = count;
-        localStorage.setItem('kf_' + currentGame + '_pc', count);
-        document.getElementById('gearPopupOverlay').classList.remove('show');
-        document.querySelectorAll('.gear-popup-option').forEach(o => o.classList.remove('active'));
-        document.querySelector(`.gear-popup-option[data-count="${count}"]`)?.classList.add('active');
-        renderWheel();
-    }
-
-    function closeGearPopup(e) {
-        if (e.target === document.getElementById('gearPopupOverlay')) document.getElementById('gearPopupOverlay').classList.remove('show');
-    }
-
-    // ==================== SCREENS ====================
-    function showScreen(id) {
-        Object.keys(adIntervals).forEach(k => { clearInterval(adIntervals[k]); delete adIntervals[k]; });
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        const sc = document.getElementById(id);
-        if (sc) { sc.classList.add('active'); if (id === 'gameSelectScreen') buildGameCards(); if (id === 'adminScreen') { refreshPlayerList(); refreshAdList(); loadPatternGamesList(); } }
-        refreshAllAds();
-    }
-
-    function lo() { currentUser = null; currentGame = null; showScreen('loginScreen'); }
+    function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); const sc = document.getElementById(id); if (sc) { sc.classList.add('active'); if (id === 'gameSelectScreen') buildGC(); if (id === 'adminScreen') { rpl(); ral(); loadPGL(); refreshGameList(); } } refAds(); if (id === 'loginScreen') showFullscreenAd(); }
+    function lo() { cu = null; cg = null; showScreen('loginScreen'); }
     function goToLogin() { showScreen('loginScreen'); }
     function backToGames() { showScreen('gameSelectScreen'); }
+    function switchAdminTab(tab) { const tabs = ['players', 'games', 'ads', 'patterns']; document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.admin-tab')[tabs.indexOf(tab)].classList.add('active'); document.getElementById('adminPlayersTab').style.display = tab === 'players' ? 'block' : 'none'; document.getElementById('adminGamesTab').style.display = tab === 'games' ? 'block' : 'none'; document.getElementById('adminAdsTab').style.display = tab === 'ads' ? 'block' : 'none'; document.getElementById('adminPatternsTab').style.display = tab === 'patterns' ? 'block' : 'none'; if (tab === 'players') rpl(); if (tab === 'games') refreshGameList(); if (tab === 'ads') ral(); if (tab === 'patterns') loadPatterns(); }
 
-    function switchAdminTab(tab) {
-        const tabs = ['players', 'ads', 'patterns'];
-        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.admin-tab')[tabs.indexOf(tab)].classList.add('active');
-        document.getElementById('adminPlayersTab').style.display = tab === 'players' ? 'block' : 'none';
-        document.getElementById('adminAdsTab').style.display = tab === 'ads' ? 'block' : 'none';
-        document.getElementById('adminPatternsTab').style.display = tab === 'patterns' ? 'block' : 'none';
-        if (tab === 'players') refreshPlayerList();
-        if (tab === 'ads') refreshAdList();
-        if (tab === 'patterns') loadPatternsForGame();
+    // ✨ GAMES MANAGEMENT
+    function switchGamesTab(tab) {
+        document.querySelectorAll('#gamesTabs .tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('#gamesTabs .tab')[tab === 'list' ? 0 : 1].classList.add('active');
+        document.getElementById('gamesListSection').style.display = tab === 'list' ? 'block' : 'none';
+        document.getElementById('gamesFormSection').style.display = tab === 'add' ? 'block' : 'none';
+        if (tab === 'list') refreshGameList();
+        if (tab === 'add') { document.getElementById('gamesFormTitle').textContent = '➕ إضافة برنامج جديد'; clearGameForm(); }
     }
+    function clearGameForm() { ['editGameKey','gameKey','gameName','gameImage','gameVeg','gameMeat','gameClock','gameStripLen'].forEach(id => document.getElementById(id).value = ''); document.getElementById('gameStripLen').value = '21'; }
+    function refreshGameList() { const c = document.getElementById('gameListContainer'); if (!c) return; c.innerHTML = Object.entries(G).map(([k, g]) => `<div class="game-list-item"><div><strong style="color:var(--gold);">${g.n}</strong><br><small>${k} | 🟢${g.v.length} 🥩${g.m.length} | شريط:${g.sl||21}</small></div><div><button class="edit" onclick="editGame('${k}')">✏️</button><button onclick="deleteGame('${k}')">🗑</button></div></div>`).join(''); }
+    function editGame(key) { const g = G[key]; if (!g) return; document.getElementById('editGameKey').value = key; document.getElementById('gameKey').value = key; document.getElementById('gameName').value = g.n; document.getElementById('gameImage').value = g.img || ''; document.getElementById('gameVeg').value = g.v.join(','); document.getElementById('gameMeat').value = g.m.join(','); document.getElementById('gameClock').value = (g.clock || []).map((s, i) => `الساعة ${['12','1:30','3','4:30','6','7:30','9','10:30'][i]||(i+1)}: ${s}`).join('\n'); document.getElementById('gameStripLen').value = g.sl || 21; document.getElementById('gamesFormTitle').textContent = '✏️ تعديل: ' + g.n; document.getElementById('gamesListSection').style.display = 'none'; document.getElementById('gamesFormSection').style.display = 'block'; }
+    async function saveGame() { const ek = document.getElementById('editGameKey').value, key = document.getElementById('gameKey').value.trim().toLowerCase(); const name = document.getElementById('gameName').value.trim(), img = document.getElementById('gameImage').value.trim(); const veg = document.getElementById('gameVeg').value.split(/[,،\s]+/).filter(Boolean); const meat = document.getElementById('gameMeat').value.split(/[,،\s]+/).filter(Boolean); const sl = parseInt(document.getElementById('gameStripLen').value) || 21; if (!key || !name) return alert('المفتاح والاسم مطلوبين'); if (veg.length < 2 || meat.length < 2) return alert('رموز الخضار واللحوم (2 على الأقل)'); let clock = []; const cl = document.getElementById('gameClock').value.trim().split('\n').filter(Boolean); if (cl.length === 8) clock = cl.map(l => l.split(/[:：]\s*/).pop().trim()); else clock = [...veg, ...meat].slice(0, 8); if (ek && ek !== key) delete G[ek]; G[key] = { n: name, v: veg, m: meat, a: [...veg, ...meat], clock, img, sl }; ss('kf_games', G); if (isOnline && db) db.ref('games').set(G).catch(() => {}); await buildGC(); switchGamesTab('list'); alert('✅ تم حفظ ' + name); }
+    async function deleteGame(key) { if (!confirm('حذف ' + (G[key]?.n || key) + '؟')) return; delete G[key]; ss('kf_games', G); if (isOnline && db) db.ref('games').set(G).catch(() => {}); await buildGC(); refreshGameList(); }
+    function cancelGameEdit() { switchGamesTab('list'); }
 
-    async function buildGameCards() {
-        const c = document.getElementById('gameCardsContainer');
-        if (!c) return;
-        c.innerHTML = Object.entries(GAMES).map(([k, g]) => {
-            const icon = g.img ? `<img class="game-icon" src="${g.img}" style="width:55px;height:55px;border-radius:50%;object-fit:cover;">` : `<span class="game-icon">${g.n.split(' ')[0]||'🎯'}</span>`;
-            return `<div class="game-card" onclick="startGame('${k}')">${icon}<h3>${g.n}</h3></div>`;
-        }).join('');
-    }
+    async function buildGC() { const c = document.getElementById('gameCardsContainer'); if (!c) return; c.innerHTML = Object.entries(G).map(([k, g]) => { const icon = g.img && g.img.startsWith('http') ? `<img class="game-icon" src="${g.img}" style="width:55px;height:55px;border-radius:50%;object-fit:cover;">` : `<span class="game-icon">${g.img || g.n.split(' ')[0] || '🎯'}</span>`; return `<div class="game-card" onclick="startGame('${k}')">${icon}<h3>${g.n}</h3><small style="color:var(--muted);">شريط: ${g.sl || 21}</small></div>`; }).join(''); }
 
-    // ==================== PLAYERS MANAGEMENT ====================
-    async function addPlayer() {
-        const id = document.getElementById('newId').value.trim();
-        const key = document.getElementById('newKey').value.trim();
-        const mode = document.getElementById('newMode').value;
-        const hrs = parseInt(document.getElementById('newHours').value) || 0;
-        const dys = parseInt(document.getElementById('newDays').value) || 0;
-        if (!id || !key) return alert('املأ البيانات');
-        
-        let players = {};
-        if (isOnline && db) { try { const snap = await db.ref('players').once('value'); players = snap.val() || {}; } catch (e) {} }
-        if (!Object.keys(players).length) players = ls('kf_players', {});
-        
-        if (Object.keys(players).length >= 200) return alert('الحد الأقصى 200 مشترك');
-        if (players[id]) return alert('المشترك موجود مسبقاً');
-        
-        const newPlayer = { id, key, mode, maxHours: hrs, maxDays: dys, lockedDevice: null, createdAt: null };
-        players[id] = newPlayer;
-        
-        ss('kf_players', players);
-        if (isOnline && db) db.ref('players').set(players).catch(()=>{});
-        
-        ['newId', 'newKey'].forEach(d => document.getElementById(d).value = '');
-        document.getElementById('newHours').value = '0';
-        document.getElementById('newDays').value = '0';
-        
-        refreshPlayerList();
-        alert('✅ تم إضافة ' + id);
-    }
-
-    async function deletePlayer(id) {
-        if (!confirm('⚠️ حذف المشترك: ' + id + ' ؟')) return;
-        let players = ls('kf_players', {});
-        delete players[id];
-        ss('kf_players', players);
-        if (isOnline && db) db.ref('players').set(players).catch(()=>{});
-        refreshPlayerList();
-        alert('✅ تم حذف ' + id);
-    }
-
-    async function deleteAllPlayers() {
-        if (!confirm('⚠️ حذف جميع المشتركين؟ لا يمكن التراجع!')) return;
-        ss('kf_players', {});
-        if (isOnline && db) db.ref('players').set({}).catch(()=>{});
-        refreshPlayerList();
-        alert('✅ تم حذف جميع المشتركين');
-    }
-
-    async function unlockAllPlayers() {
-        if (!confirm('🔓 فك قفل جميع الأجهزة؟')) return;
-        let players = ls('kf_players', {});
-        for (const p of Object.values(players)) { p.lockedDevice = null; p.createdAt = null; }
-        ss('kf_players', players);
-        if (isOnline && db) db.ref('players').set(players).catch(()=>{});
-        refreshPlayerList();
-        alert('✅ تم فك قفل جميع الأجهزة');
-    }
-
-    async function unlockPlayer(id) {
-        let players = ls('kf_players', {});
-        if (players[id]) {
-            players[id].lockedDevice = null; players[id].createdAt = null;
-            ss('kf_players', players);
-            if (isOnline && db) db.ref('players').set(players).catch(()=>{});
-            refreshPlayerList();
-            alert('✅ تم فك قفل ' + id);
-        }
-    }
-
-    function refreshPlayerList() {
-        const players = ls('kf_players', {});
-        const arr = Object.values(players);
-        document.getElementById('passCount').textContent = arr.length;
-        const container = document.getElementById('passList');
-        if (!container) return;
-        if (!arr.length) { container.innerHTML = '<p style="color:#888;text-align:center;padding:20px;">📭 لا يوجد مشتركين</p>'; return; }
-        container.innerHTML = arr.map(p => {
-            const token = generateTimeKey(p.key, p.mode);
-            const expiry = p.createdAt ? checkExpiry(p).rm : 'غير مفعل';
-            const locked = p.lockedDevice ? '🔒' : '🔓';
-            const expired = p.createdAt && checkExpiry(p).ex ? '⏰' : '';
-            return `<div class="pass-item"><strong>${p.id}</strong><span style="color:var(--gold);">${token}</span><small>[${p.mode}]</small><span>${locked}${expired}</span><small>${expiry}</small><button class="unlock" onclick="unlockPlayer('${p.id}')">🔓</button><button onclick="deletePlayer('${p.id}')">🗑</button></div>`;
-        }).join('');
-    }
+    // ==================== PLAYERS ====================
+    async function addPlayer() { const id = document.getElementById('newId').value.trim(), key = document.getElementById('newKey').value.trim(); const mode = document.getElementById('newMode').value, hrs = parseInt(document.getElementById('newHours').value) || 0, dys = parseInt(document.getElementById('newDays').value) || 0; if (!id || !key) return alert('املأ'); let pl = ls('kf_pl', {}); if (Object.keys(pl).length >= 200) return alert('200 حد أقصى'); if (pl[id]) return alert('موجود'); pl[id] = { id, key, mode, maxHours: hrs, maxDays: dys, ld: null, ca: null }; ss('kf_pl', pl); if (isOnline && db) db.ref('players').set(pl).catch(() => {}); ['newId', 'newKey'].forEach(d => document.getElementById(d).value = ''); document.getElementById('newHours').value = '0'; document.getElementById('newDays').value = '0'; rpl(); alert('✅ ' + id); }
+    async function dp(id) { if (!confirm('⚠️ حذف: ' + id + '؟')) return; let pl = ls('kf_pl', {}); delete pl[id]; ss('kf_pl', pl); if (isOnline && db) db.ref('players').set(pl).catch(() => {}); rpl(); }
+    async function dap() { if (!confirm('⚠️ حذف الكل؟')) return; ss('kf_pl', {}); if (isOnline && db) db.ref('players').set({}).catch(() => {}); rpl(); }
+    async function uap() { if (!confirm('🔓 فك الكل؟')) return; let pl = ls('kf_pl', {}); for (const p of Object.values(pl)) { p.ld = null; p.ca = null; } ss('kf_pl', pl); if (isOnline && db) db.ref('players').set(pl).catch(() => {}); rpl(); }
+    async function up(id) { let pl = ls('kf_pl', {}); if (pl[id]) { pl[id].ld = null; pl[id].ca = null; ss('kf_pl', pl); if (isOnline && db) db.ref('players').set(pl).catch(() => {}); rpl(); } }
+    function rpl() { const pl = ls('kf_pl', {}), arr = Object.values(pl); document.getElementById('passCount').textContent = arr.length; const c = document.getElementById('passList'); if (!c) return; if (!arr.length) { c.innerHTML = '<p style="color:#888;text-align:center;">📭 لا يوجد</p>'; return; } c.innerHTML = arr.map(p => { const token = gtk(p.key, p.mode), exp = p.ca ? cex(p).rm : 'غير مفعل'; const locked = p.ld ? '🔒' : '🔓'; return `<div class="pass-item"><strong>${p.id}</strong><span style="color:var(--gold);">${token}</span><small>[${p.mode}]</small><span>${locked}</span><small>${exp}</small><button class="unlock" onclick="up('${p.id}')">🔓</button><button onclick="dp('${p.id}')">🗑</button></div>`; }).join(''); }
 
     // ==================== ADS ====================
-    function refreshAllAds() {
-        ADS = ls('kf_ads', {});
-        ['login', 'games', 'predict'].forEach(place => {
-            const bg = Object.values(ADS).filter(a => a.place === place && a.type === 'background');
-            const bgEl = document.getElementById((place === 'login' ? 'loginScreenBg' : place === 'games' ? 'gamesScreenBg' : 'predictScreenBg'));
-            if (bgEl) { if (bg.length > 0) { bgEl.style.display = 'block'; bgEl.style.backgroundImage = `url(${bg[bg.length-1].content})`; } else { bgEl.style.display = 'none'; } }
-            
-            const container = document.getElementById(place === 'login' ? 'loginAd' : place === 'games' ? 'gamesAd' : 'predictAd');
-            if (!container) return;
-            container.innerHTML = '';
-            
-            const video = Object.values(ADS).filter(a => a.place === place && a.type === 'video')[0];
-            if (video) {
-                container.style.display = 'flex'; container.className = 'ad-banner video-ad';
-                const v = document.createElement('video');
-                v.src = video.content; v.autoplay = true; v.loop = true; v.muted = true; v.playsInline = true;
-                v.setAttribute('playsinline', ''); v.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:8px;';
-                v.play().catch(() => document.addEventListener('click', function p() { v.play(); document.removeEventListener('click', p); }, { once: true }));
-                container.appendChild(v);
-            } else {
-                const images = Object.values(ADS).filter(a => a.place === place && a.type === 'image');
-                if (images.length > 0) {
-                    container.style.display = 'flex'; container.className = 'ad-banner image-ad';
-                    images.forEach((a, i) => { const img = document.createElement('img'); img.src = a.content; img.style.cssText = 'height:200px;width:400px;object-fit:cover;border-radius:8px;position:absolute;opacity:' + (i===0?'1':'0') + ';transition:opacity 0.8s;'; container.appendChild(img); });
-                } else if (place === 'predict') {
-                    const texts = Object.values(ADS).filter(a => a.place === 'predict' && a.type === 'text');
-                    if (texts.length > 0) { container.style.display = 'flex'; container.className = 'ad-banner text-ad'; container.innerHTML = `<div class="ad-slide-text">${texts.map(a=>a.content).join(' ★★★ ')}</div>`; }
-                    else { container.style.display = 'none'; }
-                } else { container.style.display = 'none'; }
-            }
-        });
-    }
-
-    async function addAd() {
-        const type = document.getElementById('adType').value;
-        const place = document.getElementById('adPlace').value;
-        const content = document.getElementById('adContent').value.trim();
-        if (!content) return alert('أدخل المحتوى');
-        ADS['ad_'+Date.now()] = { id: 'ad_'+Date.now(), type, place, content };
-        ss('kf_ads', ADS);
-        if (isOnline && db) db.ref('ads').set(ADS).catch(()=>{});
-        document.getElementById('adContent').value = '';
-        refreshAdList(); refreshAllAds();
-        alert('✅ تم الإضافة');
-    }
-
-    async function deleteAd(id) {
-        if (!confirm('حذف الإعلان؟')) return;
-        delete ADS[id]; ss('kf_ads', ADS);
-        if (isOnline && db) db.ref('ads').set(ADS).catch(()=>{});
-        refreshAdList(); refreshAllAds();
-    }
-
-    async function deleteAllAds() {
-        if (!confirm('حذف الكل؟')) return;
-        ADS = {}; ss('kf_ads', ADS);
-        if (isOnline && db) db.ref('ads').set({}).catch(()=>{});
-        refreshAdList(); refreshAllAds();
-    }
-
-    async function syncAdsFromCloud() {
-        if (!isOnline || !db) return alert('لا يوجد اتصال');
-        const snap = await db.ref('ads').once('value');
-        ADS = snap.val() || {}; ss('kf_ads', ADS);
-        refreshAdList(); refreshAllAds();
-        alert('✅ تمت المزامنة');
-    }
-
-    function refreshAdList() {
-        const container = document.getElementById('adListContainer');
-        const countDisplay = document.getElementById('adCountDisplay');
-        if (!container) return;
-        ADS = ls('kf_ads', {});
-        const arr = Object.values(ADS);
-        if (countDisplay) countDisplay.textContent = arr.length;
-        if (!arr.length) { container.innerHTML = '<p style="color:#888;text-align:center;">📭 لا توجد إعلانات</p>'; return; }
-        const typeNames = { image: '🖼️ صورة', text: '📝 نص', video: '🎬 فيديو', background: '🎨 خلفية' };
-        const placeNames = { login: '🔐 تسجيل الدخول', games: '🎮 البرامج', predict: '🎯 التوقعات' };
-        container.innerHTML = arr.map(a => `<div class="ad-list-item"><div class="ad-list-info"><div style="color:var(--gold);font-weight:bold;">${typeNames[a.type]}</div><div style="font-size:9px;color:var(--muted);">${placeNames[a.place]}</div><div style="font-size:10px;">${a.content.substring(0,40)}</div></div><button onclick="deleteAd('${a.id}')" class="btn-delete-ad">🗑️</button></div>`).join('');
-    }
+    function refAds() { ADS = ls('kf_ads', {}); ['login', 'games', 'predict'].forEach(pl => { const bg = Object.values(ADS).filter(a => a.place === pl && a.type === 'background'); const bEl = document.getElementById((pl === 'login' ? 'loginScreenBg' : pl === 'games' ? 'gamesScreenBg' : 'predictScreenBg')); if (bEl) { if (bg.length > 0) { bEl.style.display = 'block'; bEl.style.backgroundImage = `url(${bg[bg.length-1].content})`; } else { bEl.style.display = 'none'; } } const ct = document.getElementById(pl === 'login' ? 'loginAd' : pl === 'games' ? 'gamesAd' : 'predictAd'); if (!ct) return; ct.innerHTML = ''; const vid = Object.values(ADS).filter(a => a.place === pl && a.type === 'video')[0]; if (vid) { ct.style.display = 'flex'; ct.className = 'ad-banner video-ad'; const v = document.createElement('video'); v.src = vid.content; v.autoplay = true; v.loop = true; v.muted = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.style.cssText = 'width:100%;height:100%;object-fit:fill;border-radius:8px;'; v.play().catch(() => {}); ct.appendChild(v); } else { const imgs = Object.values(ADS).filter(a => a.place === pl && a.type === 'image'); if (imgs.length > 0) { ct.style.display = 'flex'; ct.className = 'ad-banner image-ad'; imgs.forEach((a, i) => { const img = document.createElement('img'); img.src = a.content; img.style.cssText = 'height:200px;width:400px;object-fit:cover;border-radius:8px;position:absolute;opacity:' + (i === 0 ? '1' : '0') + ';transition:opacity 0.8s;'; ct.appendChild(img); }); } else if (pl === 'predict') { const txts = Object.values(ADS).filter(a => a.place === 'predict' && a.type === 'text'); if (txts.length > 0) { ct.style.display = 'flex'; ct.className = 'ad-banner text-ad'; ct.innerHTML = `<div class="ad-slide-text">${txts.map(a => a.content).join(' ★★★ ')}</div>`; } else { ct.style.display = 'none'; } } else { ct.style.display = 'none'; } } }); if (document.getElementById('loginScreen').classList.contains('active')) showFullscreenAd(); }
+    async function addAd() { const type = document.getElementById('adType').value, place = document.getElementById('adPlace').value, content = document.getElementById('adContent').value.trim(); if (!content) return alert('أدخل المحتوى'); ADS['ad_' + Date.now()] = { id: 'ad_' + Date.now(), type, place, content }; ss('kf_ads', ADS); if (isOnline && db) db.ref('ads').set(ADS).catch(() => {}); document.getElementById('adContent').value = ''; ral(); refAds(); alert('✅'); }
+    async function dad(id) { if (!confirm('حذف؟')) return; delete ADS[id]; ss('kf_ads', ADS); if (isOnline && db) db.ref('ads').set(ADS).catch(() => {}); ral(); refAds(); }
+    async function daa() { if (!confirm('حذف الكل؟')) return; ADS = {}; ss('kf_ads', ADS); if (isOnline && db) db.ref('ads').set({}).catch(() => {}); ral(); refAds(); }
+    function ral() { const c = document.getElementById('adListContainer'), cd = document.getElementById('adCountDisplay'); if (!c) return; ADS = ls('kf_ads', {}); const arr = Object.values(ADS); if (cd) cd.textContent = arr.length; if (!arr.length) { c.innerHTML = '<p style="color:#888;text-align:center;">📭 لا توجد</p>'; return; } const tn = { image: '🖼️ صورة', text: '📝 نص', video: '🎬 فيديو', background: '🎨 خلفية', fullscreen: '📱 ملء الشاشة' }, pn = { login: '🔐 الدخول', games: '🎮 البرامج', predict: '🎯 التوقعات' }; c.innerHTML = arr.map(a => `<div class="ad-list-item"><div><b style="color:var(--gold)">${tn[a.type]}</b><br><small>${pn[a.place]}</small><br>${a.content.substring(0,30)}</div><button onclick="dad('${a.id}')" class="btn-delete-ad">🗑️</button></div>`).join(''); }
 
     // ==================== PATTERNS ====================
-    function loadPatternGamesList() {
-        const s = document.getElementById('patternGameSelect');
-        if (!s) return;
-        s.innerHTML = '<option value="">اختر برنامج</option>' + Object.entries(GAMES).map(([k,g]) => `<option value="${k}">${g.n}</option>`).join('');
-    }
-
-    function loadPatternsForGame() {
-        const gk = document.getElementById('patternGameSelect').value;
-        const c = document.getElementById('patternListContainer');
-        if (!c) return;
-        if (!gk) { c.innerHTML = '<p style="color:#888;text-align:center;">اختر برنامج</p>'; return; }
-        const patterns = JSON.parse(localStorage.getItem('kf_patterns') || '{}')[gk] || {};
-        const entries = Object.entries(patterns);
-        if (!entries.length) { c.innerHTML = '<p style="color:#888;text-align:center;">لا توجد أنماط</p>'; return; }
-        c.innerHTML = `<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:10px;"><thead><tr style="background:rgba(240,165,0,0.2);color:var(--gold);"><th>#</th><th>التسلسل</th><th>النتيجة</th><th>التكرار</th><th>الثقة</th></tr></thead><tbody>${entries.map(([k,p],i)=>{let best=null,bc=0;for(const[s,ct]of Object.entries(p.results)){if(ct>bc){bc=ct;best=s;}}const conf=best?Math.round((bc/p.total)*100):0;return`<tr><td>${i+1}</td><td>${p.sequence.map(s=>`<span style="font-size:14px;">${s}</span>`).join('→')}</td><td style="font-size:14px;">${best||'?'}</td><td>${p.total}</td><td>${conf}%</td></tr>`;}).join('')}</tbody></table></div>`;
-    }
-
-    async function clearPatterns() {
-        const gk = document.getElementById('patternGameSelect').value;
-        if (!gk) return alert('اختر برنامج');
-        if (!confirm('مسح أنماط ' + (GAMES[gk]?.n||gk) + '؟')) return;
-        const ap = JSON.parse(localStorage.getItem('kf_patterns') || '{}');
-        ap[gk] = {};
-        localStorage.setItem('kf_patterns', JSON.stringify(ap));
-        if (isOnline && db) db.ref('patterns/' + gk).remove().catch(()=>{});
-        loadPatternsForGame();
-    }
+    function loadPGL() { const s = document.getElementById('patternGameSelect'); if (s) s.innerHTML = '<option value="">اختر</option>' + Object.entries(G).map(([k, g]) => `<option value="${k}">${g.n}</option>`).join(''); }
+    function loadPatterns() { const gk = document.getElementById('patternGameSelect').value, tp = document.getElementById('patternTypeSelect').value, c = document.getElementById('patternListContainer'); if (!c) return; if (!gk) { c.innerHTML = '<p style="color:#888">اختر</p>'; return; } const ap = JSON.parse(localStorage.getItem('kf_pat') || '{}')[gk] || { n: {}, v: {} }; let p = {}, t = ''; if (tp === 'normal') { p = ap.n || {}; t = '📋 عادي'; } else if (tp === 'vegOnly') { p = ap.v || {}; t = '🥬 خضار فقط'; } else { p = { ...(ap.n || {}), ...(ap.v || {}) }; t = '📊 الكل'; } const entries = Object.entries(p); if (!entries.length) { c.innerHTML = '<p style="color:#888">لا توجد</p>'; return; } c.innerHTML = `<h4 style="color:var(--gold)">${t} (${entries.length})</h4><table style="width:100%;font-size:9px;border-collapse:collapse"><tr style="color:var(--gold)"><th>#</th><th>تسلسل</th><th>نتيجة</th><th>تكرار</th><th>خضار/لحوم</th></tr>${entries.map(([k, pd], i) => { let b = null, bc = 0; for (const [s, ct] of Object.entries(pd.r || {})) { if (ct > bc) { bc = ct; b = s; } } const vc2 = pd.vc || pd.s.filter(s => gs.v.includes(s)).length; const mc2 = pd.mc || pd.s.filter(s => gs.m.includes(s)).length; const ei = pd.hm !== undefined ? (pd.hm ? '🥩' : '🥬') + ' ' + (pd.vr || '') + '%' : ''; return `<tr><td>${i+1}</td><td>${pd.s.join('→')}</td><td style="font-size:14px;">${b||'?'}</td><td>${pd.t}</td><td>🟢${vc2} 🔴${mc2} ${ei}</td></tr>`; }).join('')}</table>`; }
+    async function clearPatterns() { const gk = document.getElementById('patternGameSelect').value; if (!gk) return alert('اختر'); if (!confirm('مسح؟')) return; const ap = JSON.parse(localStorage.getItem('kf_pat') || '{}'); ap[gk] = { n: {}, v: {} }; localStorage.setItem('kf_pat', JSON.stringify(ap)); if (isOnline && db) db.ref('pat/' + gk).set({ n: {}, v: {} }).catch(() => {}); loadPatterns(); }
 
     // ==================== AUTH ====================
-    async function cpw() {
-        const inp = document.getElementById('passInput').value.trim();
-        if (!inp) return;
-        document.getElementById('loginError').textContent = '';
-        if (inp === ADMIN_PASS) { document.getElementById('passInput').value = ''; showScreen('adminScreen'); refreshPlayerList(); return; }
-        let players = ls('kf_players', {});
-        if (!Object.keys(players).length) { players['player01'] = { id: 'player01', key: 'Khali2024', mode: 'fixed', maxHours: 0, maxDays: 0, lockedDevice: null, createdAt: null }; ss('kf_players', players); }
-        let found = null;
-        for (const p of Object.values(players)) { if ([p.key+'_master', p.key+'_static', generateTimeKey(p.key, p.mode), p.key].includes(inp)) { found = p; break; } }
-        if (!found) { document.getElementById('loginError').textContent = '❌ كلمة مرور غير صحيحة'; return; }
-        if (checkExpiry(found).ex) { document.getElementById('loginError').textContent = '⏰ منتهي الصلاحية'; return; }
-        if (found.lockedDevice && found.lockedDevice !== deviceId) { document.getElementById('loginError').textContent = '🚫 هذا الحساب مقفل على جهاز آخر'; return; }
-        if (!found.lockedDevice) { found.lockedDevice = deviceId; found.createdAt = found.createdAt || new Date().toISOString(); players[found.id] = found; ss('kf_players', players); if (isOnline && db) db.ref('players/' + found.id).set(found).catch(()=>{}); }
-        currentUser = found;
-        document.getElementById('selectUser').textContent = '👤 ' + found.id;
-        document.getElementById('passInput').value = '';
-        showScreen('gameSelectScreen');
-    }
+    async function cpw() { const inp = document.getElementById('passInput').value.trim(); if (!inp) return; document.getElementById('loginError').textContent = ''; if (inp === ADMIN) { document.getElementById('passInput').value = ''; showScreen('adminScreen'); return; } let pl = ls('kf_pl', {}); if (!Object.keys(pl).length) { pl['player01'] = { id: 'player01', key: 'Khali2024', mode: 'fixed', maxHours: 0, maxDays: 0, ld: null, ca: null }; ss('kf_pl', pl); } let found = null; for (const p of Object.values(pl)) { if ([p.key + '_master', p.key + '_static', gtk(p.key, p.mode), p.key].includes(inp)) { found = p; break; } } if (!found) { document.getElementById('loginError').textContent = '❌ خطأ'; return; } if (cex(found).ex) { document.getElementById('loginError').textContent = '⏰ منتهي'; return; } if (found.ld && found.ld !== devId) { document.getElementById('loginError').textContent = '🚫 جهاز آخر'; return; } if (!found.ld) { found.ld = devId; found.ca = found.ca || new Date().toISOString(); pl[found.id] = found; ss('kf_pl', pl); if (isOnline && db) db.ref('players/' + found.id).set(found).catch(() => {}); } cu = found; document.getElementById('selectUser').textContent = '👤 ' + found.id; document.getElementById('passInput').value = ''; showScreen('gameSelectScreen'); }
 
-    // ==================== INIT ====================
-    function initFirebase() {
-        try {
-            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-            db = firebase.database();
-            firebase.database().ref('.info/connected').on('value', s => {
-                isOnline = s.val() === true;
-                const st = isOnline ? '🟢 متصل' : '🔴 غير متصل';
-                document.querySelectorAll('#connectionStatus, #adminConnStatus').forEach(el => { if (el) el.textContent = st; });
-            });
-            db.ref('ads').on('value', s => { if (s.val()) { ADS = s.val(); ss('kf_ads', ADS); refreshAllAds(); } });
-            db.ref('players').on('value', s => { if (s.val()) { ss('kf_players', s.val()); refreshPlayerList(); } });
-            db.ref('patterns').on('value', s => {
-                if (s.val()) {
-                    const lp = JSON.parse(localStorage.getItem('kf_patterns') || '{}');
-                    for (const [gk, p] of Object.entries(s.val())) { if (!lp[gk]) lp[gk] = p; else { for (const [pk, pd] of Object.entries(p)) { if (!lp[gk][pk] || pd.total > lp[gk][pk].total) lp[gk][pk] = pd; } } }
-                    localStorage.setItem('kf_patterns', JSON.stringify(lp));
-                }
-            });
-        } catch (e) {}
-    }
-
-    async function init() {
-        initFirebase();
-        await buildGameCards();
-        refreshAllAds();
-        document.getElementById('passInput').addEventListener('keydown', e => { if (e.key === 'Enter') cpw(); });
-    }
-
+    function initFB() { try { if (!firebase.apps.length) firebase.initializeApp(fc); db = firebase.database(); firebase.database().ref('.info/connected').on('value', s => { isOnline = s.val() === true; document.querySelectorAll('#connectionStatus,#adminConnStatus').forEach(el => { if (el) el.textContent = isOnline ? '🟢 متصل' : '🔴 غير متصل'; }); }); db.ref('ads').on('value', s => { if (s.val()) { ADS = s.val(); ss('kf_ads', ADS); refAds(); } }); db.ref('games').on('value', s => { if (s.val()) { G = s.val(); ss('kf_games', G); buildGC(); } }); db.ref('players').on('value', s => { if (s.val()) { ss('kf_pl', s.val()); rpl(); } }); } catch (e) {} }
+    async function init() { initFB(); await buildGC(); refAds(); showFullscreenAd(); document.getElementById('passInput').addEventListener('keydown', e => { if (e.key === 'Enter') cpw(); }); }
     document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>

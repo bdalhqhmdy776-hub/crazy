@@ -52,6 +52,14 @@
         .ad-slide-image img.active { opacity: 1; }
         .ad-slide-text { white-space: nowrap; animation: marqueeLTR 28s linear infinite; font-size: 12px; font-weight: bold; color: #fff; text-shadow: 0 0 8px rgba(240,165,0,0.8); padding: 0 10px; line-height: 25px; direction: ltr; }
         @keyframes marqueeLTR { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        .gear-icon-btn { position: absolute; top: 8px; right: 8px; width: 38px; height: 38px; border-radius: 50%; background: var(--gold); color: #000; font-size: 20px; border: none; cursor: pointer; z-index: 5; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 12px rgba(240,165,0,0.5); }
+        .gear-popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 99; display: none; align-items: center; justify-content: center; }
+        .gear-popup-overlay.show { display: flex; }
+        .gear-popup { background: rgba(22,22,58,0.95); backdrop-filter: blur(15px); border: 2px solid var(--gold); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 15px; min-width: 280px; text-align: center; }
+        .gear-popup h3 { color: var(--gold); font-size: 16px; }
+        .gear-popup-options { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .gear-popup-option { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold); background: transparent; color: var(--gold); font-size: 18px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .gear-popup-option.active { background: var(--gold); color: #000; }
         .wheel-container { position: relative; width: 100%; max-width: 390px; aspect-ratio: 1; margin: 0 auto; flex-shrink: 0; z-index: 1; overflow: hidden; }
         .wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 22%; height: 22%; border-radius: 50%; background: rgba(240,165,0,0.9); display: flex; align-items: center; justify-content: center; font-size: 200%; font-weight: bold; color: #000; z-index: 2; box-shadow: 0 0 25px rgba(240,165,0,0.7); overflow: hidden; }
         .wheel-center img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
@@ -244,6 +252,21 @@
         </div>
     </div>
 
+    <!-- بوب أب عدد الاحتمالات -->
+    <div class="gear-popup-overlay" id="gearPopupOverlay" onclick="closeGearPopup(event)">
+        <div class="gear-popup" onclick="event.stopPropagation()">
+            <h3>⚙️ عدد الاحتمالات</h3>
+            <div class="gear-popup-options">
+                <button class="gear-popup-option" data-count="4" onclick="setPredCount(4)">4</button>
+                <button class="gear-popup-option active" data-count="5" onclick="setPredCount(5)">5</button>
+                <button class="gear-popup-option" data-count="6" onclick="setPredCount(6)">6</button>
+                <button class="gear-popup-option" data-count="7" onclick="setPredCount(7)">7</button>
+                <button class="gear-popup-option" data-count="8" onclick="setPredCount(8)">8</button>
+            </div>
+            <button class="btn sm outline" onclick="document.getElementById('gearPopupOverlay').classList.remove('show')">إغلاق</button>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script>
@@ -385,6 +408,7 @@
     function renderWheel() {
         const ct = document.getElementById('wheelContainer');
         ct.querySelectorAll('.wheel-slot').forEach(e => e.remove());
+        const gb = ct.querySelector('.gear-icon-btn'); if (gb) gb.remove();
         const preds = getPreds(); currentPredictions = preds;
         const pm = {}; preds.forEach((p, i) => { pm[p.e] = { p: p.p, r: i, c: p.c || 50, agree: p.agree || 0 }; });
         const w = ct.offsetWidth || 350, h = ct.offsetHeight || 350;
@@ -408,12 +432,29 @@
         const center = document.getElementById('wheelCenter');
         const game = G[cg];
         center.innerHTML = game?.img?.startsWith('http') ? `<img src="${game.img}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` : (mergedHistory.length ? mergedHistory[mergedHistory.length - 1] : (game?.img || '🎯'));
+        
+        // ✅ إضافة زر ⚙️ عدد الاحتمالات
+        const gbtn = document.createElement('button');
+        gbtn.className = 'gear-icon-btn';
+        gbtn.textContent = '⚙️';
+        gbtn.onclick = () => document.getElementById('gearPopupOverlay').classList.add('show');
+        ct.appendChild(gbtn);
+        
+        // ✅ تحديث نشاط الأزرار في البوب أب
+        document.querySelectorAll('.gear-popup-option').forEach(o => {
+            o.classList.remove('active');
+            if (parseInt(o.dataset.count) === gs.pc) o.classList.add('active');
+        });
+        
         document.getElementById('gearStrip').innerHTML = Array.from({ length: gs.sl }, (_, i) => { const sym = gs.strip[i] || ''; return `<div class="gear-slot${i === gs.strip.length - 1 && sym ? ' newest' : ''}">${sym || '·'}</div>`; }).join('');
         document.getElementById('correctCount').textContent = gs.co;
         document.getElementById('wrongCount').textContent = gs.wr;
         const t = gs.co + gs.wr;
         document.getElementById('percentDisplay').textContent = t > 0 ? Math.round((gs.co / t) * 100) + '%' : '0%';
     }
+
+    function setPredCount(c) { gs.pc = c; saveLearningData(); document.getElementById('gearPopupOverlay').classList.remove('show'); renderWheel(); }
+    function closeGearPopup(e) { if (e.target === document.getElementById('gearPopupOverlay')) document.getElementById('gearPopupOverlay').classList.remove('show'); }
 
     function startGame(gk) {
         cg = gk; const game = G[gk]; if (!game) return alert('اللعبة غير موجودة');
@@ -428,18 +469,7 @@
         addAdminLog('بدء لعبة', game.n);
     }
 
-    // ✅ تم تعديل دالة resetGame - تمسح العداد والشريط فقط مع الحفاظ على البيانات المخزنة
-    function resetGame() { 
-        gs.strip = []; 
-        gs.co = 0; 
-        gs.wr = 0; 
-        currentPredictions = []; 
-        // إعادة تعبئة الشريط من آخر البيانات المحفوظة
-        if (bigHistory.length) gs.strip = bigHistory.slice(-gs.sl); 
-        saveLearningData(); 
-        renderWheel(); 
-    }
-
+    function resetGame() { gs.strip = []; gs.co = 0; gs.wr = 0; currentPredictions = []; if (bigHistory.length) gs.strip = bigHistory.slice(-gs.sl); saveLearningData(); renderWheel(); }
     function exportData() { const d = { game: cg, localHistory: bigHistory, cloudHistory, mergedHistory, co: gs.co, wr: gs.wr, weights: algoWeights, exportDate: new Date().toISOString() }; const b = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'crazy_pro_' + cg + '_' + new Date().toISOString().slice(0,10) + '.json'; a.click(); }
     function exportCSV() { let csv = 'index,symbol\n'; bigHistory.forEach((s, i) => { csv += `${i+1},${s}\n`; }); const b = new Blob([csv], { type: 'text/csv' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'crazy_pro_' + cg + '.csv'; a.click(); }
     function importData(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(e) { try { const data = JSON.parse(e.target.result); if (data.localHistory) { bigHistory = data.localHistory.slice(-gs.learnWindow); if (data.co !== undefined) gs.co = data.co; if (data.wr !== undefined) gs.wr = data.wr; if (data.weights) algoWeights = data.weights; mergedHistory = [...bigHistory]; saveLearningData(); renderWheel(); } else alert('ملف غير متوافق'); } catch(err) { alert('ملف غير صالح'); } }; reader.readAsText(file); }

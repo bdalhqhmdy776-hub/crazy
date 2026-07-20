@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
-    <title>👑 CRAZY 👑</title>
+    <title>👑 CRAZY PRO 👑</title>
     <style>
         :root {
             --bg: #06060e; --surface: #0f0f23; --card: #16163a; --border: #252550;
@@ -50,20 +50,12 @@
         .ad-slide-image { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; }
         .ad-slide-image img { height: 200px; width: 400px; object-fit: cover; border-radius: 8px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0; transition: opacity 1s; }
         .ad-slide-image img.active { opacity: 1; }
-        .ad-slide-text { white-space: nowrap; animation: marqueeRTL 28s linear infinite; font-size: 12px; font-weight: bold; color: #fff; text-shadow: 0 0 8px rgba(240,165,0,0.8); padding: 0 10px; line-height: 25px; }
-        @keyframes marqueeRTL { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-        .gear-icon-btn { position: absolute; top: 8px; right: 8px; width: 38px; height: 38px; border-radius: 50%; background: var(--gold); color: #000; font-size: 20px; border: none; cursor: pointer; z-index: 5; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 12px rgba(240,165,0,0.5); }
-        .gear-popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 99; display: none; align-items: center; justify-content: center; }
-        .gear-popup-overlay.show { display: flex; }
-        .gear-popup { background: rgba(22,22,58,0.95); backdrop-filter: blur(15px); border: 2px solid var(--gold); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 15px; min-width: 180px; text-align: center; }
-        .gear-popup h3 { color: var(--gold); font-size: 16px; }
-        .gear-popup-options { display: flex; gap: 12px; justify-content: center; }
-        .gear-popup-option { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold); background: transparent; color: var(--gold); font-size: 18px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .gear-popup-option.active { background: var(--gold); color: #000; }
-        .wheel-container { position: relative; width: 100%; max-width: 390px; aspect-ratio: 1; margin: 0 auto; flex-shrink: 0; z-index: 1; }
+        .ad-slide-text { white-space: nowrap; animation: marqueeLTR 28s linear infinite; font-size: 12px; font-weight: bold; color: #fff; text-shadow: 0 0 8px rgba(240,165,0,0.8); padding: 0 10px; line-height: 25px; direction: ltr; }
+        @keyframes marqueeLTR { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        .wheel-container { position: relative; width: 100%; max-width: 390px; aspect-ratio: 1; margin: 0 auto; flex-shrink: 0; z-index: 1; overflow: hidden; }
         .wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 22%; height: 22%; border-radius: 50%; background: rgba(240,165,0,0.9); display: flex; align-items: center; justify-content: center; font-size: 200%; font-weight: bold; color: #000; z-index: 2; box-shadow: 0 0 25px rgba(240,165,0,0.7); overflow: hidden; }
         .wheel-center img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-        .wheel-slot { position: absolute; width: 18%; height: 18%; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; background: rgba(22,22,58,0.8); backdrop-filter: blur(5px); transition: all 0.2s; z-index: 1; top: 50%; left: 50%; transform: translate(-50%, -50%); flex-direction: column; gap: 1px; pointer-events: auto; }
+        .wheel-slot { position: absolute; width: 18%; height: 18%; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; background: rgba(22,22,58,0.8); backdrop-filter: blur(5px); transition: all 0.2s; z-index: 1; flex-direction: column; gap: 1px; pointer-events: auto; margin-top: -9%; margin-left: -9%; }
         .wheel-slot.veg { box-shadow: 0 0 12px rgba(78,159,61,0.4); }
         .wheel-slot.meat { box-shadow: 0 0 12px rgba(233,69,96,0.4); }
         .wheel-slot.pred-top { box-shadow: 0 0 25px rgba(255,0,0,0.9); animation: pulse-evil 0.8s infinite; background: rgba(40,10,10,0.9); }
@@ -76,18 +68,12 @@
         .gear-strip { background: rgba(2,2,8,0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 6px; display: flex; gap: 2px; justify-content: center; flex-wrap: wrap; min-height: 55px; align-items: center; flex-shrink: 0; margin-top: auto; z-index: 1; }
         .gear-slot { width: 18px; height: 18px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; background: rgba(10,10,34,0.7); border: 1px solid rgba(42,42,74,0.5); }
         .gear-slot.newest { border-color: var(--gold); box-shadow: 0 0 10px var(--gold); }
-        .gear-slot.removed { border-color: #e94560; box-shadow: 0 0 8px rgba(233,69,96,0.6); background: rgba(40,10,10,0.6); }
-        .counter-box { display: flex; justify-content: space-around; background: rgba(22,22,58,0.7); backdrop-filter: blur(10px); border-radius: 10px; padding: 8px; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; text-align: center; z-index: 1; }
-        .counter-value { font-size: 18px; font-weight: bold; }
+        .counter-box { display: flex; justify-content: space-around; align-items: center; background: rgba(22,22,58,0.7); backdrop-filter: blur(10px); border-radius: 10px; padding: 10px 8px; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; text-align: center; z-index: 1; gap: 4px; }
+        .counter-item { display: flex; align-items: center; gap: 4px; }
+        .counter-value { font-size: 22px; font-weight: bold; }
         .counter-value.correct { color: var(--green); }
         .counter-value.wrong { color: var(--red); }
-        .counter-percent { font-size: 13px; font-weight: bold; color: var(--gold); }
-        .learn-log { font-size: 8px; color: var(--muted); font-family: monospace; background: rgba(2,2,8,0.7); padding: 6px; border-radius: 8px; flex-shrink: 0; max-height: 80px; overflow-y: auto; z-index: 1; }
-        .algo-votes { font-size: 7px; color: var(--cyan); font-family: monospace; background: rgba(0,0,0,0.5); padding: 3px; border-radius: 4px; max-height: 45px; overflow-y: auto; flex-shrink: 0; z-index: 1; }
-        .sync-status { font-size: 8px; text-align: center; padding: 2px; background: rgba(0,0,0,0.4); border-radius: 4px; flex-shrink: 0; z-index: 1; }
-        .sync-status.cloud { color: #06b6d4; }
-        .sync-status.local { color: #f97316; }
-        .sync-status.error { color: #ef4444; }
+        .counter-percent { font-size: 22px; font-weight: bold; color: var(--gold); }
         .game-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; z-index: 1; }
         .game-card { background: rgba(22,22,58,0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 18px 8px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: all 0.2s; }
         .game-card:active { transform: scale(0.95); border-color: var(--gold); }
@@ -128,11 +114,12 @@
     </div>
 
     <div class="app" id="appRoot">
+        <!-- شاشة الدخول -->
         <div class="screen active" id="loginScreen">
             <div class="screen-bg-overlay" id="loginScreenBg"></div>
             <div class="ad-banner image-ad" id="loginAd" style="display:none;"></div>
             <div class="spacer"></div>
-            <div class="header"><h1>👑 CRAZY 👑</h1></div>
+            <div class="header"><h1>👑 CRAZY PRO 👑</h1></div>
             <div class="status-msg online" id="connectionStatus">🟡</div>
             <div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0;">
                 <input type="password" id="passInput" placeholder="🔐 كلمة المرور" autocomplete="off">
@@ -141,32 +128,41 @@
             </div>
             <div class="spacer"></div>
         </div>
+
+        <!-- شاشة اختيار البرنامج -->
         <div class="screen" id="gameSelectScreen">
             <div class="screen-bg-overlay" id="gamesScreenBg"></div>
             <div class="ad-banner image-ad" id="gamesAd" style="display:none;"></div>
-            <div class="header"><h1>🎮 اختر اللعبة</h1><div id="selectUser" style="font-size:9px;color:var(--muted);"></div></div>
+            <div class="header"><h1>🎮 اختر البرنامج</h1><div id="selectUser" style="font-size:9px;color:var(--muted);"></div></div>
             <div class="game-cards" id="gameCardsContainer"></div>
             <div class="btn-row"><button class="btn sm outline" onclick="lo()">🚪 خروج</button></div>
         </div>
+
+        <!-- شاشة اللعبة -->
         <div class="screen" id="gameScreen">
             <div class="screen-bg-overlay" id="predictScreenBg"></div>
             <div class="ad-banner text-ad" id="predictAd" style="display:none;"><div class="ad-slide-text" id="predictAdSlide"></div></div>
-            <div class="wheel-container" id="wheelContainer"><div class="wheel-center" id="wheelCenter">🎯</div></div>
-            <div class="gear-strip" id="gearStrip"></div>
-            <div class="sync-status cloud" id="syncStatus">☁️ بيانات محلية</div>
-            <div class="algo-votes" id="algoVotes"></div>
-            <div class="counter-box">
-                <div><span class="counter-value correct" id="correctCount">0</span><span class="counter-label">✅</span></div>
-                <div><span class="counter-percent" id="percentDisplay">0%</span></div>
-                <div><span class="counter-value wrong" id="wrongCount">0</span><span class="counter-label">❌</span></div>
+            <div class="wheel-container" id="wheelContainer">
+                <div class="wheel-center" id="wheelCenter">🎯</div>
             </div>
-            <div class="learn-log" id="learnLog"><div>🟢 جاهز</div></div>
+            <div class="gear-strip" id="gearStrip"></div>
+            <div class="counter-box">
+                <div class="counter-item"><span class="counter-value correct" id="correctCount">0</span><span style="font-size:16px;">✅</span></div>
+                <div class="counter-item"><span class="counter-percent" id="percentDisplay">0%</span></div>
+                <div class="counter-item"><span style="font-size:16px;">❌</span><span class="counter-value wrong" id="wrongCount">0</span></div>
+            </div>
             <div class="btn-row">
                 <button class="btn sm danger" onclick="resetGame()">🔄</button>
-                <button class="btn sm cyan" onclick="exportData()">📊</button>
+                <button class="btn sm cyan" onclick="exportData()">📤</button>
+                <button class="btn sm" style="background:#f97316;" onclick="exportCSV()">📄</button>
+                <button class="btn sm purple" onclick="document.getElementById('importFile').click()">📥</button>
+                <button class="btn sm danger" onclick="clearAllData()">🗑</button>
                 <button class="btn sm outline" onclick="backToGames()">🔙</button>
             </div>
+            <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importData(event)">
         </div>
+
+        <!-- لوحة الإدارة -->
         <div class="screen" id="adminScreen">
             <div class="header admin-h"><h1>👑 لوحة التحكم</h1></div>
             <div class="status-msg online" id="adminConnStatus">🟡</div>
@@ -175,6 +171,7 @@
                 <div class="admin-tab" onclick="switchAdminTab('games')">🎮 البرامج</div>
                 <div class="admin-tab" onclick="switchAdminTab('ads')">📢 الإعلانات</div>
                 <div class="admin-tab" onclick="switchAdminTab('cloud')">☁️ السحابة</div>
+                <div class="admin-tab" onclick="switchAdminTab('logs')">📋 السجلات</div>
             </div>
             <div id="adminPlayersTab">
                 <div class="section"><h3>➕ إضافة مشترك جديد</h3>
@@ -237,64 +234,63 @@
                     <div id="cloudGameStats" style="font-size:9px;max-height:200px;overflow-y:auto;"></div>
                 </div>
             </div>
-            <button class="btn outline" onclick="goToLogin()">🚪 خروج</button>
-        </div>
-    </div>
-
-    <div class="gear-popup-overlay" id="gearPopupOverlay" onclick="closeGearPopup(event)">
-        <div class="gear-popup" onclick="event.stopPropagation()">
-            <h3>⚙️ عدد الاحتمالات</h3>
-            <div class="gear-popup-options">
-                <button class="gear-popup-option" data-count="4" onclick="setPredCount(4)">4</button>
-                <button class="gear-popup-option active" data-count="5" onclick="setPredCount(5)">5</button>
-                <button class="gear-popup-option" data-count="6" onclick="setPredCount(6)">6</button>
+            <div id="adminLogsTab" style="display:none;">
+                <div class="section" style="flex:1;min-height:300px;">
+                    <h3>📋 سجل العمليات</h3>
+                    <div id="adminLogsContainer" style="font-size:8px;max-height:350px;overflow-y:auto;font-family:monospace;"></div>
+                </div>
             </div>
-            <button class="btn sm outline" onclick="document.getElementById('gearPopupOverlay').classList.remove('show')">إغلاق</button>
+            <button class="btn outline" onclick="goToLogin()">🚪 خروج</button>
         </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script>
-    // ==================== نظام الإعلانات ====================
     let fsAdTimer = null, fsAdSec = 5, fsVideo = null;
-    function showFullscreenAd() { const fa = Object.values(ADS).filter(a => a.type === 'fullscreen'); if (!fa.length) return; const ad = fa[Math.floor(Math.random() * fa.length)]; const ov = document.getElementById('fullscreenAd'), ti = document.getElementById('fullscreenAdTimer'), sk = document.getElementById('fullscreenAdSkip'), sh = document.getElementById('fullscreenSoundHint'); ov.innerHTML = ''; ov.appendChild(ti); ov.appendChild(sk); ov.appendChild(sh); fsVideo = null; sh.classList.remove('hidden'); if (ad.content.match(/\.(mp4|webm|ogg)$/i)) { const v = document.createElement('video'); v.src = ad.content; v.autoplay = true; v.loop = true; v.muted = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.style.cssText = 'width:100%;height:100%;object-fit:fill;position:absolute;top:0;left:0;'; v.play().catch(() => {}); ov.appendChild(v); fsVideo = v; } else { const img = document.createElement('img'); img.src = ad.content; img.style.cssText = 'width:100%;height:100%;object-fit:fill;position:absolute;top:0;left:0;'; ov.appendChild(img); sh.classList.add('hidden'); } ov.classList.add('show'); fsAdSec = 5; ti.textContent = fsAdSec; sk.classList.remove('visible'); if (fsAdTimer) clearInterval(fsAdTimer); fsAdTimer = setInterval(() => { fsAdSec--; ti.textContent = fsAdSec; if (fsAdSec <= 0) { clearInterval(fsAdTimer); sk.classList.add('visible'); ti.textContent = '▶'; } }, 1000); }
-    function unmuteFullscreenAd() { if (fsVideo && fsVideo.muted) { fsVideo.muted = false; fsVideo.play().catch(() => {}); const sh = document.getElementById('fullscreenSoundHint'); sh.textContent = '🔊 الصوت شغال ✓'; sh.style.borderColor = '#4e9f3d'; setTimeout(() => sh.classList.add('hidden'), 1500); } }
-    function skipFullscreenAd() { if (fsAdSec > 0) return; if (fsAdTimer) clearInterval(fsAdTimer); if (fsVideo) { fsVideo.pause(); fsVideo = null; } document.getElementById('fullscreenAd').classList.remove('show'); }
+    function showFullscreenAd() { const fa = Object.values(ADS).filter(a => a.type === 'fullscreen'); if (!fa.length) return; const ad = fa[Math.floor(Math.random() * fa.length)]; const ov = document.getElementById('fullscreenAd'), ti = document.getElementById('fullscreenAdTimer'), sk = document.getElementById('fullscreenAdSkip'), sh = document.getElementById('fullscreenSoundHint'); ov.innerHTML = ''; ov.appendChild(ti); ov.appendChild(sk); ov.appendChild(sh); fsVideo = null; sh.classList.remove('hidden'); if (ad.content.match(/\.(mp4|webm|ogg)$/i)) { const v = document.createElement('video'); v.src = ad.content; v.autoplay = true; v.loop = true; v.muted = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.style.cssText = 'width:100%;height:100%;object-fit:fill;position:absolute;top:0;left:0;'; v.play().catch(() => {}); ov.appendChild(v); fsVideo = v; activeVideos.push(v); } else { const img = document.createElement('img'); img.src = ad.content; img.style.cssText = 'width:100%;height:100%;object-fit:fill;position:absolute;top:0;left:0;'; ov.appendChild(img); sh.classList.add('hidden'); } ov.classList.add('show'); fsAdSec = 5; ti.textContent = fsAdSec; sk.classList.remove('visible'); if (fsAdTimer) clearInterval(fsAdTimer); fsAdTimer = setInterval(() => { fsAdSec--; ti.textContent = fsAdSec; if (fsAdSec <= 0) { clearInterval(fsAdTimer); sk.classList.add('visible'); ti.textContent = '▶'; } }, 1000); }
+    function unmuteFullscreenAd() { if (fsVideo && fsVideo.muted) { fsVideo.muted = false; fsVideo.play().catch(() => {}); const sh = document.getElementById('fullscreenSoundHint'); sh.textContent = '🔊 ✓'; sh.style.borderColor = '#4e9f3d'; setTimeout(() => sh.classList.add('hidden'), 1500); } }
+    function skipFullscreenAd() { if (fsAdSec > 0) return; if (fsAdTimer) clearInterval(fsAdTimer); if (fsVideo) { fsVideo.pause(); fsVideo.removeAttribute('src'); fsVideo.load(); fsVideo = null; } document.getElementById('fullscreenAd').classList.remove('show'); }
 
-    // ==================== Firebase ====================
     const fc = { apiKey: "AIzaSyB9rN0N-0YlO5lW5l5l5l5l5l5l5l5l5", authDomain: "hamdi-791e5.firebaseapp.com", databaseURL: "https://hamdi-791e5-default-rtdb.firebaseio.com", projectId: "hamdi-791e5", storageBucket: "hamdi-791e5.appspot.com", messagingSenderId: "123456789012", appId: "1:123456789012:web:abcdef1234567890" };
     let db = null, isOnline = false;
-    const ls = (k, f = null) => { try { return JSON.parse(localStorage.getItem(k)) || f; } catch (e) { return f; } };
-    const ss = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
-    const ADMIN = 'Admin@Khal2024';
+
+    function simpleEncrypt(text, key = 'khal2024') { let result = ''; for (let i = 0; i < text.length; i++) { result += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length)); } return btoa(result); }
+    function simpleDecrypt(encrypted, key = 'khal2024') { try { const text = atob(encrypted); let result = ''; for (let i = 0; i < text.length; i++) { result += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length)); } return result; } catch(e) { return encrypted; } }
+    function ls(key, fallback = null) { try { const encrypted = localStorage.getItem(key); if (!encrypted) return fallback; if (key === 'kf_pl') { const decrypted = simpleDecrypt(encrypted); return JSON.parse(decrypted); } return JSON.parse(encrypted); } catch (e) { try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch (e2) { return fallback; } } }
+    function ss(key, value) { try { if (key === 'kf_pl') { const encrypted = simpleEncrypt(JSON.stringify(value)); localStorage.setItem(key, encrypted); } else { localStorage.setItem(key, JSON.stringify(value)); } } catch (e) {} }
+
+    function simpleHash(str) { let hash = 0; for (let i = 0; i < str.length; i++) { const char = str.charCodeAt(i); hash = ((hash << 5) - hash) + char; hash |= 0; } return 'K' + Math.abs(hash).toString(36); }
+    const ADMIN_HASH = 'K1q9z8y7x6';
+    const ADMIN_PASS = 'Admin@Khal2024';
+
     const DEF_GAMES = { zena: { n: '🎯 زينا لايف', v: ['🥕','🌽','🍅','🌶'], m: ['🍤','🐮','🐟','🐤'], a: ['🥕','🌽','🌶','🍅','🍤','🐮','🐟','🐤'], clock: ['🐤','🍅','🐮','🌶','🐟','🌽','🍤','🥕'], img: '', sl: 21 }, yoho: { n: '🎯 يوهو لايف', v: ['🥕','🌽','🍅','🌶'], m: ['🍤','🐮','🐟','🐤'], a: ['🥕','🌽','🍅','🌶','🍤','🐮','🐟','🐤'], clock: ['🐤','🍅','🐮','🌶','🐟','🌽','🍤','🥕'], img: '', sl: 15 }, berti: { n: '🎯 برتي ستار', v: ['🥕','🌽','🍅','🥦'], m: ['🍤','🍗','🥩','🐟'], a: ['🥕','🌽','🍅','🥦','🍤','🍗','🥩','🐟'], clock: ['🥕','🍤','🍅','🍗','🌽','🥩','🥦','🐟'], img: '', sl: 25 }, majles: { n: '🎯 المجلس', v: ['🥕','🌽','🍅','🥦'], m: ['🍤','🍗','🥩','🐟'], a: ['🥕','🌽','🍅','🥦','🍤','🍗','🥩','🐟'], clock: ['🥕','🍤','🍅','🍗','🌽','🥩','🥦','🐟'], img: '', sl: 20 } };
     let G = ls('kf_games', DEF_GAMES);
     let ADS = ls('kf_ads', {});
     let cu = null, cg = null;
-    let gs = { strip: [], allH: [], v: [], m: [], a: [], ck: [], co: 0, wr: 0, pc: 5, sl: 21 };
-    let ll = [];
+    let gs = { strip: [], v: [], m: [], a: [], ck: [], co: 0, wr: 0, pc: 5, sl: 21, learnWindow: 200 };
+    let adminLogs = ls('kf_admin_logs', []);
     let slideIntervals = {};
     let currentPredictions = [];
     let cloudSyncTimer = null;
+    let activeVideos = [];
+    let algoWeights = ls('kf_algo_weights', { markov: 5, markov3: 4, frequency: 3, frequencyLong: 2, sliding: 4, sliding2: 3, pattern: 4, bayesian: 3, transition: 4, streak: 3, gap: 2, trend: 3, sequence: 4 });
 
     function gdf() { const d = [navigator.userAgent || '', screen.width + '', new Date().getTimezoneOffset() + ''].join('|'); let h = 0; for (let i = 0; i < d.length; i++) h = ((h << 5) - h) + d.charCodeAt(i); return 'D' + Math.abs(h).toString(36).toUpperCase(); }
     const devId = gdf();
     function gtk(b, m) { const n = new Date(), p = v => ('' + v).padStart(2, '0'); if (m === 'hour') return `${b}_${n.getFullYear()}${p(n.getMonth()+1)}${p(n.getDate())}${p(n.getHours())}`; if (m === 'day') return `${b}_${n.getFullYear()}${p(n.getMonth()+1)}${p(n.getDate())}`; if (m === 'month') return `${b}_${n.getFullYear()}${p(n.getMonth()+1)}`; return `${b}_static`; }
     function cex(p) { if (!p.createdAt) return { ex: false, rm: 'غير محدود' }; const cr = new Date(p.createdAt), nw = new Date(); let mh = Infinity; if (p.maxHours > 0) mh = p.maxHours; if (p.maxDays > 0) mh = Math.min(mh, p.maxDays * 24); if (mh === Infinity) return { ex: false, rm: 'غير محدود' }; const rm = new Date(cr.getTime() + mh * 3600000) - nw; if (rm <= 0) return { ex: true, rm: 'منتهي' }; const rh = Math.floor(rm / 3600000); return { ex: false, rm: rh > 23 ? Math.floor(rh / 24) + ' يوم' : rh + ' ساعة' }; }
+    function addAdminLog(action, details = '') { adminLogs.unshift({ t: new Date().toISOString(), a: action, d: details, u: cu?.id || 'system' }); if (adminLogs.length > 500) adminLogs = adminLogs.slice(0, 500); ss('kf_admin_logs', adminLogs); }
 
-    // ==================== نظام التعلم المشترك عبر السحابة ====================
-    let bigHistory = [];
-    let cloudHistory = []; // البيانات القادمة من السحابة (للقراءة فقط)
-    let mergedHistory = []; // الدمج بين المحلي والسحابي
-    let lastCloudUpdate = 0;
+    let bigHistory = [], cloudHistory = [], mergedHistory = [];
 
     function saveLearningData() { 
+        if (bigHistory.length > gs.learnWindow) bigHistory = bigHistory.slice(-gs.learnWindow);
         ss('kf_big_' + cg, bigHistory); 
         ss('kf_' + cg + '_c', gs.co); 
         ss('kf_' + cg + '_w', gs.wr); 
         ss('kf_' + cg + '_pc', gs.pc);
-        // رفع البيانات للسحابة
+        ss('kf_algo_weights', algoWeights);
         uploadToCloud();
     }
 
@@ -303,338 +299,96 @@
         gs.co = parseInt(ls('kf_' + cg + '_c', 0)); 
         gs.wr = parseInt(ls('kf_' + cg + '_w', 0)); 
         gs.pc = parseInt(ls('kf_' + cg + '_pc', 5));
+        gs.learnWindow = parseInt(ls('kf_learn_window', 200));
+        algoWeights = ls('kf_algo_weights', algoWeights);
         cloudHistory = [];
         mergedHistory = [...bigHistory];
     }
 
-    // ✅ رفع بيانات التعلم إلى السحابة
-    function uploadToCloud() {
-        if (!isOnline || !db || !cg) return;
-        const cloudData = {
-            history: bigHistory.slice(-200), // آخر 200 رمز فقط لتوفير المساحة
-            timestamp: Date.now(),
-            deviceId: devId,
-            gameKey: cg
-        };
-        db.ref('shared_learning/' + cg).set(cloudData).then(() => {
-            updateSyncStatus('cloud', '☁️ تمت المزامنة');
-        }).catch(() => {
-            updateSyncStatus('error', '⚠️ فشل المزامنة');
-        });
-    }
+    function uploadToCloud() { if (!isOnline || !db || !cg) return; db.ref('shared_learning/' + cg).set({ history: bigHistory.slice(-200), timestamp: Date.now(), deviceId: devId, gameKey: cg }).catch(() => {}); }
 
-    // ✅ تحميل بيانات التعلم من السحابة
     function downloadFromCloud() {
         if (!isOnline || !db || !cg) return;
-        db.ref('shared_learning/' + cg).once('value').then(snapshot => {
-            const data = snapshot.val();
-            if (data && data.history && Array.isArray(data.history)) {
-                cloudHistory = data.history;
-                // دمج البيانات: السحابة + المحلية
+        db.ref('shared_learning/' + cg).once('value').then(s => {
+            const d = s.val();
+            if (d?.history && Array.isArray(d.history) && d.deviceId !== devId) {
+                cloudHistory = d.history;
                 mergeHistories();
-                updateSyncStatus('cloud', '☁️ تم التحميل: ' + cloudHistory.length + ' رمز');
-                alog('☁️ تحميل سحابي: ' + cloudHistory.length + ' رمز');
-                renderWheel();
             }
-        }).catch(() => {
-            updateSyncStatus('error', '⚠️ فشل التحميل');
-        });
+        }).catch(() => {});
     }
 
-    // ✅ دمج التاريخ المحلي مع السحابي
-    function mergeHistories() {
-        // نأخذ البيانات السحابية أولاً ثم نضيف المحلية الفريدة
-        const combined = [...cloudHistory];
-        
-        // إضافة الرموز المحلية التي ليست في السحابة
-        // نقارن آخر 50 رمز محلي مع السحابة
-        const localTail = bigHistory.slice(-50);
-        const cloudTail = cloudHistory.slice(-50);
-        
-        // إذا كان هناك تداخل، نضيف فقط الجديد
-        if (cloudTail.length > 0 && localTail.length > 0) {
-            // نبحث عن نقطة التقاء
-            let overlapFound = false;
-            for (let i = 0; i < Math.min(localTail.length, 20); i++) {
-                const localSlice = localTail.slice(localTail.length - 1 - i);
-                const cloudStr = cloudTail.join(',');
-                const localStr = localSlice.join(',');
-                if (cloudStr.endsWith(localStr) && localStr.length > 0) {
-                    overlapFound = true;
-                    break;
-                }
-            }
-            if (!overlapFound) {
-                // لا يوجد تداخل، نضيف كل المحلي
-                combined.push(...localTail);
-            }
-        } else if (cloudHistory.length === 0) {
-            combined.push(...bigHistory);
-        }
-        
-        mergedHistory = combined.slice(-500); // آخر 500 رمز كحد أقصى
-    }
+    function mergeHistories() { if (!cloudHistory.length) { mergedHistory = [...bigHistory]; return; } const c = [...cloudHistory]; const lt = bigHistory.slice(-50); if (lt.length && cloudHistory.length) { let bo = 0; for (let o = Math.min(lt.length, cloudHistory.length, 20); o >= 2; o--) { if (lt.slice(-o).join(',') === cloudHistory.slice(-o).join(',')) { bo = o; break; } } if (bo > 0) c.push(...lt.slice(bo)); else c.push(...lt); } mergedHistory = []; const seen = new Set(); for (let i = c.length - 1; i >= 0; i--) { if (!seen.has(c[i] + '-' + i)) { mergedHistory.unshift(c[i]); seen.add(c[i] + '-' + i); } } mergedHistory = mergedHistory.slice(-gs.learnWindow); }
 
-    function updateSyncStatus(type, msg) {
-        const el = document.getElementById('syncStatus');
-        if (!el) return;
-        el.textContent = msg;
-        el.className = 'sync-status ' + type;
-    }
+    function cleanupVideos() { activeVideos.forEach(v => { try { v.pause(); v.removeAttribute('src'); v.load(); } catch(e) {} }); activeVideos = []; }
+    function cleanupIntervals() { Object.values(slideIntervals).forEach(i => clearInterval(i)); slideIntervals = {}; if (cloudSyncTimer) { clearInterval(cloudSyncTimer); cloudSyncTimer = null; } }
 
-    // ==================== الخوارزميات المتقدمة ====================
+    function markovPredict(h, d = 2) { if (h.length < d) return {}; const p = h.slice(-d).join(','), sc = {}; for (let i = 0; i < h.length - d; i++) { if (h.slice(i, i + d).join(',') === p && i + d < h.length) sc[h[i + d]] = (sc[h[i + d]] || 0) + 1; } const t = Math.max(1, ...Object.values(sc)), r = {}; for (const [s, c] of Object.entries(sc)) r[s] = Math.round((c / t) * 100); return r; }
+    function frequencyPredict(h, w = 50) { const rc = h.slice(-w), fq = {}; rc.forEach(s => fq[s] = (fq[s] || 0) + 1); const t = Math.max(1, ...Object.values(fq)), r = {}; for (const [s, c] of Object.entries(fq)) r[s] = Math.round((c / t) * 100); return r; }
+    function slidingWindowPredict(h, pl = 3) { if (h.length < pl + 1) return {}; const p = h.slice(-pl).join(','), sc = {}; for (let i = 0; i < h.length - pl; i++) { if (h.slice(i, i + pl).join(',') === p && i + pl < h.length) sc[h[i + pl]] = (sc[h[i + pl]] || 0) + 1; } const t = Math.max(1, ...Object.values(sc)), r = {}; for (const [s, c] of Object.entries(sc)) r[s] = Math.round((c / t) * 100); return r; }
+    function patternMatchingPredict(h) { if (h.length < 4) return {}; const sc = {}; if (h.length >= 3) { const l3 = h.slice(-3); if (l3[0] === l3[2] && l3[0] !== l3[1]) sc[l3[0]] = (sc[l3[0]] || 0) + 8; if (l3[1] === l3[2] && l3[0] !== l3[1]) sc[l3[0]] = (sc[l3[0]] || 0) + 4; } if (h.length >= 4) { const l4 = h.slice(-4); if (l4[0] === l4[2] && l4[1] === l4[3] && l4[0] !== l4[1]) sc[l4[0]] = (sc[l4[0]] || 0) + 6; } return sc; }
+    function bayesianPredict(h, as) { if (h.length < 2) return {}; const sc = {}, l = h[h.length - 1], ca = h.filter(s => s === l).length; if (!ca) return {}; for (const s of as) { let cab = 0; for (let i = 0; i < h.length - 1; i++) if (h[i] === l && h[i + 1] === s) cab++; sc[s] = Math.round(((cab + 0.5) / (ca + as.length * 0.5)) * 100); } return sc; }
+    function transitionMatrixPredict(h, as) { if (h.length < 2) return {}; const mx = {}, l = h[h.length - 1]; for (const s of as) mx[s] = {}; for (let i = 0; i < h.length - 1; i++) { const f = h[i], t = h[i + 1]; if (mx[f]) mx[f][t] = (mx[f][t] || 0) + 1; } const rw = mx[l] || {}, t = Math.max(1, ...Object.values(rw)), r = {}; for (const [s, c] of Object.entries(rw)) r[s] = Math.round((c / t) * 100); return r; }
+    function streakAnalysis(h, as) { const sc = {}; let cs = 1, csm = h[h.length - 1]; for (let i = h.length - 2; i >= 0; i--) { if (h[i] === csm) cs++; else break; } for (const s of as) sc[s] = s === csm ? Math.max(0, 50 - cs * 10) : 30 + cs * 5; return sc; }
+    function gapAnalysis(h, as) { const sc = {}, gs2 = {}; for (const s of as) gs2[s] = 0; for (let i = h.length - 1; i >= 0; i--) { if (!gs2[h[i]]) gs2[h[i]] = h.length - i; } const mg = Math.max(1, ...Object.values(gs2)); for (const [s, g] of Object.entries(gs2)) sc[s] = Math.round((g / mg) * 100); return sc; }
+    function trendAnalysis(h, as, w = 20) { if (h.length < w * 2) return {}; const sc = {}, ow = h.slice(-w * 2, -w), nw = h.slice(-w); for (const s of as) { const oc = ow.filter(x => x === s).length, nc = nw.filter(x => x === s).length, tr = oc > 0 ? (nc - oc) / oc : nc > 0 ? 1 : 0; sc[s] = Math.round(50 + tr * 50); } return sc; }
+    function sequenceAnalysis(h) { if (h.length < 6) return {}; const sc = {}; for (let len = 3; len <= Math.min(6, Math.floor(h.length / 2)); len++) { const ls = h.slice(-len).join(','); for (let i = 0; i < h.length - len * 2; i++) { if (h.slice(i, i + len).join(',') === ls && i + len < h.length) sc[h[i + len]] = (sc[h[i + len]] || 0) + len; } } return sc; }
 
-    // --- الخوارزمية 1: سلسلة ماركوف (Markov Chain) ---
-    function markovPredict(history, depth = 2) {
-        if (history.length < depth) return {};
-        const pattern = history.slice(-depth).join(',');
-        const scores = {};
-        for (let i = 0; i < history.length - depth; i++) {
-            const testPattern = history.slice(i, i + depth).join(',');
-            if (testPattern === pattern && i + depth < history.length) {
-                const next = history[i + depth];
-                scores[next] = (scores[next] || 0) + 1;
-            }
-        }
-        const total = Object.values(scores).reduce((s, v) => s + v, 0) || 1;
-        const result = {};
-        for (const [sym, count] of Object.entries(scores)) {
-            result[sym] = Math.round((count / total) * 100);
-        }
-        return result;
-    }
-
-    // --- الخوارزمية 2: تحليل التكرار (Frequency Analysis) ---
-    function frequencyPredict(history, windowSize = 50) {
-        const recent = history.slice(-windowSize);
-        const freq = {};
-        recent.forEach(sym => freq[sym] = (freq[sym] || 0) + 1);
-        const total = recent.length || 1;
-        const result = {};
-        for (const [sym, count] of Object.entries(freq)) {
-            result[sym] = Math.round((count / total) * 100);
-        }
-        return result;
-    }
-
-    // --- الخوارزمية 3: نافذة متحركة (Sliding Window) ---
-    function slidingWindowPredict(history, patternLength = 3) {
-        if (history.length < patternLength + 1) return {};
-        const pattern = history.slice(-patternLength).join(',');
-        const scores = {};
-        for (let i = 0; i < history.length - patternLength; i++) {
-            const testPattern = history.slice(i, i + patternLength).join(',');
-            if (testPattern === pattern && i + patternLength < history.length) {
-                const next = history[i + patternLength];
-                scores[next] = (scores[next] || 0) + 1;
-            }
-        }
-        const total = Object.values(scores).reduce((s, v) => s + v, 0) || 1;
-        const result = {};
-        for (const [sym, count] of Object.entries(scores)) {
-            result[sym] = Math.round((count / total) * 100);
-        }
-        return result;
-    }
-
-    // --- الخوارزمية 4: اكتشاف الأنماط (Pattern Matching) ---
-    function patternMatchingPredict(history) {
-        if (history.length < 4) return {};
-        const scores = {};
-        
-        // نمط ABA → B (انعكاس)
-        if (history.length >= 3) {
-            const last3 = history.slice(-3);
-            if (last3[0] === last3[2] && last3[0] !== last3[1]) {
-                scores[last3[1]] = (scores[last3[1]] || 0) + 8;
-            }
-        }
-        // نمط ABAB → A أو C
-        if (history.length >= 4) {
-            const last4 = history.slice(-4);
-            if (last4[0] === last4[2] && last4[1] === last4[3] && last4[0] !== last4[1]) {
-                scores[last4[0]] = (scores[last4[0]] || 0) + 6;
-            }
-        }
-        // نمط ABC → ABC (تكرار)
-        if (history.length >= 6) {
-            const last3 = history.slice(-3).join(',');
-            for (let i = 0; i < history.length - 6; i++) {
-                if (history.slice(i, i + 3).join(',') === last3) {
-                    const next = history[i + 3];
-                    scores[next] = (scores[next] || 0) + 5;
-                }
-            }
-        }
-        // نمط AA → B (تغيير بعد التكرار)
-        if (history.length >= 3) {
-            const last3 = history.slice(-3);
-            if (last3[1] === last3[2]) {
-                scores[last3[0]] = (scores[last3[0]] || 0) + 4;
-            }
-        }
-        return scores;
-    }
-
-    // --- الخوارزمية 5: الاحتمالات البايزية (Bayesian Prediction) ---
-    function bayesianPredict(history, allSymbols) {
-        if (history.length < 2) return {};
-        const scores = {};
-        const last = history[history.length - 1];
-        const countA = history.filter(s => s === last).length;
-        if (countA === 0) return {};
-        
-        for (const sym of allSymbols) {
-            let countAB = 0;
-            for (let i = 0; i < history.length - 1; i++) {
-                if (history[i] === last && history[i + 1] === sym) {
-                    countAB++;
-                }
-            }
-            const prob = Math.round(((countAB + 0.5) / (countA + allSymbols.length * 0.5)) * 100);
-            scores[sym] = prob;
-        }
-        return scores;
-    }
-
-    // --- نظام التصويت المرجح (Weighted Voting) ---
-    function weightedVoting(history, allSymbols) {
-        const algorithms = {
-            markov: { weight: 5, predict: () => markovPredict(history, 2) },
-            markov3: { weight: 4, predict: () => markovPredict(history, 3) },
-            frequency: { weight: 3, predict: () => frequencyPredict(history, 30) },
-            frequencyLong: { weight: 2, predict: () => frequencyPredict(history, 100) },
-            sliding: { weight: 4, predict: () => slidingWindowPredict(history, 3) },
-            sliding2: { weight: 3, predict: () => slidingWindowPredict(history, 2) },
-            pattern: { weight: 4, predict: () => patternMatchingPredict(history) },
-            bayesian: { weight: 3, predict: () => bayesianPredict(history, allSymbols) }
+    function weightedVoting(h, as) {
+        const algs = {
+            markov: { w: algoWeights.markov || 5, p: () => markovPredict(h, 2) }, markov3: { w: algoWeights.markov3 || 4, p: () => markovPredict(h, 3) },
+            frequency: { w: algoWeights.frequency || 3, p: () => frequencyPredict(h, 30) }, frequencyLong: { w: algoWeights.frequencyLong || 2, p: () => frequencyPredict(h, 100) },
+            sliding: { w: algoWeights.sliding || 4, p: () => slidingWindowPredict(h, 3) }, sliding2: { w: algoWeights.sliding2 || 3, p: () => slidingWindowPredict(h, 2) },
+            pattern: { w: algoWeights.pattern || 4, p: () => patternMatchingPredict(h) }, bayesian: { w: algoWeights.bayesian || 3, p: () => bayesianPredict(h, as) },
+            transition: { w: algoWeights.transition || 4, p: () => transitionMatrixPredict(h, as) }, streak: { w: algoWeights.streak || 3, p: () => streakAnalysis(h, as) },
+            gap: { w: algoWeights.gap || 2, p: () => gapAnalysis(h, as) }, trend: { w: algoWeights.trend || 3, p: () => trendAnalysis(h, as) },
+            sequence: { w: algoWeights.sequence || 4, p: () => sequenceAnalysis(h) }
         };
-        
-        const totalScores = {};
-        const algoVotes = {};
-        
-        for (const [name, algo] of Object.entries(algorithms)) {
-            const pred = algo.predict();
-            algoVotes[name] = pred;
-            for (const [sym, score] of Object.entries(pred)) {
-                if (allSymbols.includes(sym)) {
-                    totalScores[sym] = (totalScores[sym] || 0) + score * algo.weight;
-                }
-            }
-        }
-        
-        const maxScore = Math.max(0.01, ...Object.values(totalScores));
-        const result = {};
-        for (const [sym, score] of Object.entries(totalScores)) {
-            result[sym] = Math.round((score / maxScore) * 100);
-        }
-        
-        return { predictions: result, algoVotes };
+        const ts = {}, av = {};
+        for (const [n, a] of Object.entries(algs)) { const pr = a.p(); av[n] = pr; for (const [s, sc] of Object.entries(pr)) { if (as.includes(s)) ts[s] = (ts[s] || 0) + sc * a.w; } }
+        const ms = Math.max(0.01, ...Object.values(ts)), r = {};
+        for (const [s, sc] of Object.entries(ts)) r[s] = Math.round((sc / ms) * 100);
+        return { predictions: r, algoVotes: av };
     }
+
+    function updateAlgoWeights(as, av) { for (const [n, v] of Object.entries(av)) { if (v[as] > 0) algoWeights[n] = Math.min(10, (algoWeights[n] || 3) + 0.5); else if (Object.keys(v).length && !v[as]) algoWeights[n] = Math.max(1, (algoWeights[n] || 3) - 0.3); } ss('kf_algo_weights', algoWeights); }
 
     function getPreds() {
-        const hv = Math.ceil(gs.pc / 2), hm = gs.pc - hv;
-        
-        // ✅ استخدام البيانات المدمجة (محلية + سحابية)
-        const historyToUse = mergedHistory.length > 0 ? mergedHistory : bigHistory;
-        
-        if (historyToUse.length < 5) {
-            const d = [];
-            for (let i = 0; i < hv; i++) d.push({ e: gs.v[i] || '🥕', p: 35, c: 10 });
-            for (let i = 0; i < hm; i++) d.push({ e: gs.m[i] || '🍤', p: 25, c: 10 });
-            return d;
-        }
-        
-        const { predictions: scores, algoVotes } = weightedVoting(historyToUse, gs.a);
-        
-        const sorted = Object.entries(scores)
-            .filter(([sym]) => gs.a.includes(sym))
-            .sort((a, b) => b[1] - a[1]);
-        
-        const pr = [];
-        let vc = 0, mc = 0;
-        
-        sorted.forEach(([sym, score]) => {
+        const hv = Math.ceil(gs.pc / 2), hm = gs.pc - hv, hu = mergedHistory.length ? mergedHistory : bigHistory;
+        if (hu.length < 5) { const d = []; for (let i = 0; i < hv; i++) d.push({ e: gs.v[i] || '🥕', p: 35, c: 10 }); for (let i = 0; i < hm; i++) d.push({ e: gs.m[i] || '🍤', p: 25, c: 10 }); return d; }
+        const { predictions: sc, algoVotes: av } = weightedVoting(hu, gs.a);
+        const srt = Object.entries(sc).filter(([s]) => gs.a.includes(s)).sort((a, b) => b[1] - a[1]);
+        const pr = []; let vc = 0, mc = 0;
+        srt.forEach(([sym, score]) => {
             if (pr.length >= gs.pc) return;
             const t = gs.v.includes(sym) ? 'v' : 'm';
-            if (t === 'v' && vc >= hv) return;
-            if (t === 'm' && mc >= hm) return;
-            
-            let confidence = score;
-            let agreeCount = 0;
-            for (const [name, votes] of Object.entries(algoVotes)) {
-                if (votes[sym] && votes[sym] > 0) agreeCount++;
-            }
-            if (agreeCount >= 5) confidence = Math.min(99, confidence + 15);
-            else if (agreeCount >= 3) confidence = Math.min(95, confidence + 8);
-            
-            pr.push({ e: sym, p: score, c: confidence, agree: agreeCount });
-            if (t === 'v') vc++;
-            else mc++;
+            if (t === 'v' && vc >= hv) return; if (t === 'm' && mc >= hm) return;
+            let cf = score, ag = 0;
+            for (const [, v] of Object.entries(av)) if (v[sym] > 0) ag++;
+            if (ag >= 8) cf = Math.min(99, cf + 20); else if (ag >= 5) cf = Math.min(95, cf + 12); else if (ag >= 3) cf = Math.min(90, cf + 6);
+            pr.push({ e: sym, p: score, c: cf, agree: ag });
+            if (t === 'v') vc++; else mc++;
         });
-        
-        // عرض نتائج الخوارزميات
-        const avEl = document.getElementById('algoVotes');
-        if (avEl && pr.length > 0) {
-            const topSymbol = pr[0].e;
-            const details = [];
-            for (const [name, votes] of Object.entries(algoVotes)) {
-                const vt = votes[topSymbol] || 0;
-                details.push(`${name}: ${vt}%`);
-            }
-            avEl.textContent = '🎯 ' + topSymbol + ' | ' + details.join(' | ');
-        }
-        
         return pr.slice(0, gs.pc);
     }
 
-    function clickSymbol(symbol) {
-        if (mergedHistory.length > 0) {
-            const pe = currentPredictions;
-            if (pe.includes(symbol)) {
-                gs.co++;
-                alog('✅ ' + symbol + ' (متوقع)');
-            } else {
-                gs.wr++;
-                alog('❌ ' + symbol + ' (غير متوقع)');
-            }
-        }
-        gs.strip.push(symbol);
-        if (gs.strip.length > gs.sl) gs.strip.shift();
-        
-        // ✅ إضافة إلى التاريخ المحلي والمدمج
-        bigHistory.push(symbol);
-        mergedHistory.push(symbol);
-        if (bigHistory.length > 500) bigHistory.shift();
-        if (mergedHistory.length > 500) mergedHistory.shift();
-        
-        saveLearningData();
-        renderWheel();
-    }
-
-    function alog(msg) {
-        ll.unshift({ t: new Date().toLocaleTimeString('ar-EG'), m: msg });
-        if (ll.length > 30) ll = ll.slice(0, 30);
-        const el = document.getElementById('learnLog');
-        if (el) el.innerHTML = ll.map(l => `<div>${l.t} ${l.m}</div>`).join('');
+    function clickSymbol(sym) {
+        const pb = getPreds();
+        if (mergedHistory.length && pb.length) { if (pb.map(p => p.e).includes(sym)) { gs.co++; } else { gs.wr++; } updateAlgoWeights(sym, pb.reduce((a, p) => { a[p.e] = p.p; return a; }, {})); }
+        gs.strip.push(sym); if (gs.strip.length > gs.sl) gs.strip.shift();
+        bigHistory.push(sym); mergedHistory.push(sym);
+        if (bigHistory.length > gs.learnWindow) bigHistory = bigHistory.slice(-gs.learnWindow);
+        if (mergedHistory.length > gs.learnWindow) mergedHistory = mergedHistory.slice(-gs.learnWindow);
+        saveLearningData(); renderWheel();
     }
 
     function renderWheel() {
         const ct = document.getElementById('wheelContainer');
         ct.querySelectorAll('.wheel-slot').forEach(e => e.remove());
-        const gb = ct.querySelector('.gear-icon-btn');
-        if (gb) gb.remove();
-        
-        const preds = getPreds();
-        currentPredictions = preds.map(p => p.e);
-        const pm = {};
-        preds.forEach((p, i) => {
-            pm[p.e] = { p: p.p, r: i, c: p.c || 50, agree: p.agree || 0 };
-        });
-        
+        const preds = getPreds(); currentPredictions = preds;
+        const pm = {}; preds.forEach((p, i) => { pm[p.e] = { p: p.p, r: i, c: p.c || 50, agree: p.agree || 0 }; });
         const w = ct.offsetWidth || 350, h = ct.offsetHeight || 350;
         const rad = Math.min(w, h) * 0.37, cx = w / 2, cy = h / 2, as = 360 / gs.ck.length;
-        
         gs.ck.forEach((emoji, i) => {
             const angle = -90 + (i * as), rd = (angle * Math.PI) / 180;
             const x = cx + rad * Math.cos(rd), y = cy + rad * Math.sin(rd);
@@ -642,56 +396,19 @@
             slot.className = 'wheel-slot ' + (gs.v.includes(emoji) ? 'veg' : 'meat');
             const fs = Math.min(w * 0.097, 38);
             const pr = pm[emoji];
-            
             if (pr) {
-                if (pr.r === 0) {
-                    slot.classList.add('pred-top');
-                    slot.innerHTML = `<span style="font-size:${fs}px;">${emoji}</span><span class="slot-badge">🎯</span><span class="slot-prob">${pr.p}%</span><span class="slot-confidence">🔥${pr.c}%</span>`;
-                } else if (pr.r < 2) {
-                    slot.classList.add('pred-top');
-                    slot.innerHTML = `<span style="font-size:${fs}px;">${emoji}</span><span class="slot-badge">👹</span><span class="slot-prob">${pr.p}%</span><span class="slot-confidence">${pr.c}%</span>`;
-                } else {
-                    slot.classList.add('pred-mid');
-                    slot.innerHTML = `<span style="font-size:${fs}px;">${emoji}</span><span class="slot-badge">😈</span><span class="slot-prob">${pr.p}%</span><span class="slot-confidence">${pr.c}%</span>`;
-                }
-            } else {
-                slot.classList.add('pred-none');
-                slot.innerHTML = `<span style="font-size:${fs}px;">${emoji}</span>`;
-            }
-            
-            slot.style.left = x + 'px';
-            slot.style.top = y + 'px';
+                if (pr.r === 0) { slot.classList.add('pred-top'); slot.innerHTML = `<span style="font-size:${fs}px;">${emoji}</span><span class="slot-badge">🎯</span><span class="slot-prob">${pr.p}%</span><span class="slot-confidence">🔥${pr.c}%</span>`; }
+                else if (pr.r < 2) { slot.classList.add('pred-top'); slot.innerHTML = `<span style="font-size:${fs}px;">${emoji}</span><span class="slot-badge">👹</span><span class="slot-prob">${pr.p}%</span><span class="slot-confidence">${pr.c}%</span>`; }
+                else { slot.classList.add('pred-mid'); slot.innerHTML = `<span style="font-size:${fs}px;">${emoji}</span><span class="slot-badge">😈</span><span class="slot-prob">${pr.p}%</span><span class="slot-confidence">${pr.c}%</span>`; }
+            } else { slot.classList.add('pred-none'); slot.innerHTML = `<span style="font-size:${fs}px;">${emoji}</span>`; }
+            slot.style.left = x + 'px'; slot.style.top = y + 'px';
             slot.onclick = function(e) { e.preventDefault(); e.stopPropagation(); clickSymbol(emoji); };
             ct.appendChild(slot);
         });
-        
         const center = document.getElementById('wheelCenter');
         const game = G[cg];
-        if (game?.img?.startsWith('http')) {
-            center.innerHTML = `<img src="${game.img}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
-        } else {
-            center.textContent = mergedHistory.length > 0 ? mergedHistory[mergedHistory.length - 1] : (game?.img || '🎯');
-        }
-        
-        const gbtn = document.createElement('button');
-        gbtn.className = 'gear-icon-btn';
-        gbtn.textContent = '⚙️';
-        gbtn.onclick = () => document.getElementById('gearPopupOverlay').classList.add('show');
-        ct.appendChild(gbtn);
-        
-        document.querySelectorAll('.gear-popup-option').forEach(o => {
-            o.classList.remove('active');
-            if (parseInt(o.dataset.count) === gs.pc) o.classList.add('active');
-        });
-        
-        document.getElementById('gearStrip').innerHTML = Array.from({ length: gs.sl }, (_, i) => {
-            const sym = gs.strip[i] || '';
-            const isN = i === gs.strip.length - 1 && sym;
-            let cls = 'gear-slot';
-            if (isN) cls += ' newest';
-            return `<div class="${cls}">${sym || '·'}</div>`;
-        }).join('');
-        
+        center.innerHTML = game?.img?.startsWith('http') ? `<img src="${game.img}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` : (mergedHistory.length ? mergedHistory[mergedHistory.length - 1] : (game?.img || '🎯'));
+        document.getElementById('gearStrip').innerHTML = Array.from({ length: gs.sl }, (_, i) => { const sym = gs.strip[i] || ''; return `<div class="gear-slot${i === gs.strip.length - 1 && sym ? ' newest' : ''}">${sym || '·'}</div>`; }).join('');
         document.getElementById('correctCount').textContent = gs.co;
         document.getElementById('wrongCount').textContent = gs.wr;
         const t = gs.co + gs.wr;
@@ -699,203 +416,57 @@
     }
 
     function startGame(gk) {
-        cg = gk;
-        const game = G[gk];
-        if (!game) return alert('اللعبة غير موجودة');
-        gs = { strip: [], v: game.v, m: game.m, a: game.a, ck: game.clock || [...game.a.slice(0, 8)], sl: game.sl || 21, co: 0, wr: 0, pc: 5 };
-        loadLearningData();
-        ll = [];
-        currentPredictions = [];
-        
-        // ✅ تحميل البيانات السحابية أولاً
+        cg = gk; const game = G[gk]; if (!game) return alert('اللعبة غير موجودة');
+        gs = { strip: [], v: game.v, m: game.m, a: game.a, ck: game.clock || [...game.a.slice(0, 8)], sl: game.sl || 21, co: 0, wr: 0, pc: 5, learnWindow: 200 };
+        loadLearningData(); currentPredictions = [];
         downloadFromCloud();
-        
-        if (bigHistory.length > 0) {
-            gs.strip = bigHistory.slice(-gs.sl);
-        } else {
-            const fs = gs.v[Math.floor(Math.random() * gs.v.length)];
-            bigHistory.push(fs);
-            gs.strip.push(fs);
-            mergedHistory.push(fs);
-        }
-        
-        showScreen('gameScreen');
-        renderWheel();
-        
-        const totalData = mergedHistory.length;
-        const cloudData = cloudHistory.length;
-        const localData = bigHistory.length;
-        alog('🟢 ' + game.n + ' | ☁️:' + cloudData + ' 💾:' + localData + ' 📊:' + totalData);
-        
-        // ✅ مزامنة دورية كل 30 ثانية
+        if (bigHistory.length) gs.strip = bigHistory.slice(-gs.sl);
+        else { const fs = gs.v[Math.floor(Math.random() * gs.v.length)]; bigHistory.push(fs); gs.strip.push(fs); mergedHistory.push(fs); }
+        showScreen('gameScreen'); renderWheel();
         if (cloudSyncTimer) clearInterval(cloudSyncTimer);
-        cloudSyncTimer = setInterval(() => {
-            if (isOnline) {
-                downloadFromCloud();
-                uploadToCloud();
-            }
-        }, 30000);
+        cloudSyncTimer = setInterval(() => { if (isOnline) { downloadFromCloud(); } }, 30000);
+        addAdminLog('بدء لعبة', game.n);
     }
 
-    function resetGame() {
-        gs.strip = [];
-        gs.co = 0;
-        gs.wr = 0;
-        currentPredictions = [];
-        if (bigHistory.length > 0) {
-            gs.strip = bigHistory.slice(-gs.sl);
-        }
-        saveLearningData();
-        alog('🔄 إعادة تعيين العداد | التعلم المشترك: ' + mergedHistory.length + ' رمز');
-        renderWheel();
+    // ✅ تم تعديل دالة resetGame - تمسح العداد والشريط فقط مع الحفاظ على البيانات المخزنة
+    function resetGame() { 
+        gs.strip = []; 
+        gs.co = 0; 
+        gs.wr = 0; 
+        currentPredictions = []; 
+        // إعادة تعبئة الشريط من آخر البيانات المحفوظة
+        if (bigHistory.length) gs.strip = bigHistory.slice(-gs.sl); 
+        saveLearningData(); 
+        renderWheel(); 
     }
 
-    function exportData() {
-        const d = { 
-            game: cg, 
-            localHistory: bigHistory, 
-            cloudHistory: cloudHistory,
-            mergedHistory: mergedHistory,
-            co: gs.co, 
-            wr: gs.wr 
-        };
-        const b = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(b);
-        a.download = 'khal_shared_' + cg + '.json';
-        a.click();
-    }
+    function exportData() { const d = { game: cg, localHistory: bigHistory, cloudHistory, mergedHistory, co: gs.co, wr: gs.wr, weights: algoWeights, exportDate: new Date().toISOString() }; const b = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'crazy_pro_' + cg + '_' + new Date().toISOString().slice(0,10) + '.json'; a.click(); }
+    function exportCSV() { let csv = 'index,symbol\n'; bigHistory.forEach((s, i) => { csv += `${i+1},${s}\n`; }); const b = new Blob([csv], { type: 'text/csv' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'crazy_pro_' + cg + '.csv'; a.click(); }
+    function importData(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(e) { try { const data = JSON.parse(e.target.result); if (data.localHistory) { bigHistory = data.localHistory.slice(-gs.learnWindow); if (data.co !== undefined) gs.co = data.co; if (data.wr !== undefined) gs.wr = data.wr; if (data.weights) algoWeights = data.weights; mergedHistory = [...bigHistory]; saveLearningData(); renderWheel(); } else alert('ملف غير متوافق'); } catch(err) { alert('ملف غير صالح'); } }; reader.readAsText(file); }
+    function clearAllData() { if (!confirm('⚠️ مسح جميع البيانات؟')) return; bigHistory = []; cloudHistory = []; mergedHistory = []; gs.co = 0; gs.wr = 0; gs.strip = []; saveLearningData(); renderWheel(); }
 
-    function setPredCount(c) {
-        gs.pc = c;
-        saveLearningData();
-        document.getElementById('gearPopupOverlay').classList.remove('show');
-        document.querySelectorAll('.gear-popup-option').forEach(o => o.classList.remove('active'));
-        document.querySelector(`.gear-popup-option[data-count="${c}"]`)?.classList.add('active');
-        renderWheel();
-    }
+    async function syncAllGamesToCloud() { if (!isOnline || !db) return alert('لا يوجد اتصال'); for (const [key] of Object.entries(G)) { const lh = ls('kf_big_' + key, []); if (lh.length) await db.ref('shared_learning/' + key).set({ history: lh.slice(-200), timestamp: Date.now(), deviceId: 'admin', gameKey: key }); } alert('✅ تم الرفع'); refreshCloudStats(); addAdminLog('رفع سحابي'); }
+    async function downloadAllFromCloud() { if (!isOnline || !db) return alert('لا يوجد اتصال'); for (const key of Object.keys(G)) { const s = await db.ref('shared_learning/' + key).once('value'); const d = s.val(); if (d?.history) { const lh = ls('kf_big_' + key, []); ss('kf_big_' + key, [...d.history, ...lh].slice(-500)); } } alert('✅ تم التحميل'); refreshCloudStats(); addAdminLog('تحميل سحابي'); }
+    async function clearCloudData() { if (!confirm('⚠️ مسح السحابة؟')) return; if (!isOnline || !db) return alert('لا يوجد اتصال'); await db.ref('shared_learning').set({}); alert('✅ تم المسح'); refreshCloudStats(); addAdminLog('مسح السحابة'); }
+    async function refreshCloudStats() { if (!isOnline || !db) { document.getElementById('cloudStats').innerHTML = '<p style="color:#ef4444;">🔴 غير متصل</p>'; return; } const se = document.getElementById('cloudStats'), ge = document.getElementById('cloudGameStats'); se.innerHTML = '<p style="color:#06b6d4;">⏳...</p>'; const s = await db.ref('shared_learning').once('value'); const d = s.val() || {}; const tg = Object.keys(d).length; let ts = 0, gd = ''; for (const [k, v] of Object.entries(d)) { const c = v.history?.length || 0; ts += c; gd += `<div style="margin:5px 0;padding:5px;background:rgba(0,0,0,0.3);border-radius:4px;"><strong>${G[k]?.n || k}</strong>: ${c} رمز<br><small>${v.timestamp ? new Date(v.timestamp).toLocaleString('ar-EG') : 'غير معروف'}</small></div>`; } se.innerHTML = `<p>📊 <strong>${tg}</strong> ألعاب | <strong>${ts}</strong> رمز</p>`; ge.innerHTML = gd || '<p style="color:#888;">لا توجد بيانات</p>'; }
 
-    function closeGearPopup(e) {
-        if (e.target === document.getElementById('gearPopupOverlay'))
-            document.getElementById('gearPopupOverlay').classList.remove('show');
-    }
-
-    // ==================== مزامنة السحابة (للمسؤول) ====================
-    async function syncAllGamesToCloud() {
-        if (!isOnline || !db) return alert('لا يوجد اتصال');
-        for (const [key, game] of Object.entries(G)) {
-            const localHistory = ls('kf_big_' + key, []);
-            if (localHistory.length > 0) {
-                await db.ref('shared_learning/' + key).set({
-                    history: localHistory.slice(-200),
-                    timestamp: Date.now(),
-                    deviceId: 'admin',
-                    gameKey: key
-                });
-            }
-        }
-        alert('✅ تم رفع جميع البيانات إلى السحابة');
-        refreshCloudStats();
-    }
-
-    async function downloadAllFromCloud() {
-        if (!isOnline || !db) return alert('لا يوجد اتصال');
-        for (const key of Object.keys(G)) {
-            const snapshot = await db.ref('shared_learning/' + key).once('value');
-            const data = snapshot.val();
-            if (data && data.history) {
-                // دمج مع المحلي
-                const localHistory = ls('kf_big_' + key, []);
-                const combined = [...data.history, ...localHistory].slice(-500);
-                ss('kf_big_' + key, combined);
-            }
-        }
-        alert('✅ تم تحميل جميع البيانات من السحابة');
-        refreshCloudStats();
-    }
-
-    async function clearCloudData() {
-        if (!confirm('⚠️ تأكيد مسح جميع بيانات التعلم من السحابة؟')) return;
-        if (!isOnline || !db) return alert('لا يوجد اتصال');
-        await db.ref('shared_learning').set({});
-        alert('✅ تم مسح البيانات السحابية');
-        refreshCloudStats();
-    }
-
-    async function refreshCloudStats() {
-        if (!isOnline || !db) {
-            document.getElementById('cloudStats').innerHTML = '<p style="color:#ef4444;">🔴 غير متصل</p>';
-            return;
-        }
-        const statsEl = document.getElementById('cloudStats');
-        const gameStatsEl = document.getElementById('cloudGameStats');
-        
-        statsEl.innerHTML = '<p style="color:#06b6d4;">⏳ جاري التحميل...</p>';
-        
-        const snapshot = await db.ref('shared_learning').once('value');
-        const data = snapshot.val() || {};
-        
-        const totalGames = Object.keys(data).length;
-        let totalSymbols = 0;
-        let gameDetails = '';
-        
-        for (const [key, val] of Object.entries(data)) {
-            const count = val.history ? val.history.length : 0;
-            totalSymbols += count;
-            const gameName = G[key]?.n || key;
-            const lastUpdate = val.timestamp ? new Date(val.timestamp).toLocaleString('ar-EG') : 'غير معروف';
-            gameDetails += `<div style="margin:5px 0;padding:5px;background:rgba(0,0,0,0.3);border-radius:4px;">
-                <strong>${gameName}</strong>: ${count} رمز<br>
-                <small>آخر تحديث: ${lastUpdate}</small>
-            </div>`;
-        }
-        
-        statsEl.innerHTML = `
-            <p>📊 <strong>${totalGames}</strong> ألعاب | <strong>${totalSymbols}</strong> رمز إجمالي</p>
-        `;
-        
-        gameStatsEl.innerHTML = gameDetails || '<p style="color:#888;">لا توجد بيانات</p>';
-    }
-
-    // ==================== التنقل بين الشاشات ====================
     function showScreen(id) {
+        cleanupVideos(); cleanupIntervals();
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        const sc = document.getElementById(id);
-        if (sc) {
-            sc.classList.add('active');
-            if (id === 'gameSelectScreen') buildGC();
-            if (id === 'adminScreen') { rpl(); ral(); refreshGameList(); refreshCloudStats(); }
-        }
+        const sc = document.getElementById(id); if (sc) { sc.classList.add('active'); if (id === 'gameSelectScreen') buildGC(); if (id === 'adminScreen') { rpl(); ral(); refreshGameList(); refreshCloudStats(); renderAdminLogs(); } }
         setTimeout(refAds, 100);
         if (id === 'loginScreen') setTimeout(showFullscreenAd, 500);
     }
-
-    function lo() { 
-        if (cloudSyncTimer) clearInterval(cloudSyncTimer);
-        cu = null; cg = null; 
-        showScreen('loginScreen'); 
-    }
-    function goToLogin() { 
-        if (cloudSyncTimer) clearInterval(cloudSyncTimer);
-        showScreen('loginScreen'); 
-    }
-    function backToGames() { 
-        if (cloudSyncTimer) clearInterval(cloudSyncTimer);
-        showScreen('gameSelectScreen'); 
-    }
+    function lo() { if (cloudSyncTimer) clearInterval(cloudSyncTimer); cu = null; cg = null; showScreen('loginScreen'); }
+    function goToLogin() { showScreen('loginScreen'); }
+    function backToGames() { showScreen('gameSelectScreen'); }
 
     function switchAdminTab(tab) {
-        const tabs = ['players', 'games', 'ads', 'cloud'];
+        const tabs = ['players', 'games', 'ads', 'cloud', 'logs'];
         document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.admin-tab')[tabs.indexOf(tab)].classList.add('active');
-        document.getElementById('adminPlayersTab').style.display = tab === 'players' ? 'block' : 'none';
-        document.getElementById('adminGamesTab').style.display = tab === 'games' ? 'block' : 'none';
-        document.getElementById('adminAdsTab').style.display = tab === 'ads' ? 'block' : 'none';
-        document.getElementById('adminCloudTab').style.display = tab === 'cloud' ? 'block' : 'none';
-        if (tab === 'players') rpl();
-        if (tab === 'games') refreshGameList();
-        if (tab === 'ads') ral();
-        if (tab === 'cloud') refreshCloudStats();
+        ['players','games','ads','cloud','logs'].forEach(t => { const el = document.getElementById('admin' + t.charAt(0).toUpperCase() + t.slice(1) + 'Tab'); if (el) el.style.display = t === tab ? 'block' : 'none'; });
+        if (tab === 'players') rpl(); if (tab === 'games') refreshGameList(); if (tab === 'ads') ral(); if (tab === 'cloud') refreshCloudStats(); if (tab === 'logs') renderAdminLogs();
     }
 
     function switchGamesTab(tab) {
@@ -903,366 +474,57 @@
         document.querySelectorAll('#gamesTabs .tab')[tab === 'list' ? 0 : 1].classList.add('active');
         document.getElementById('gamesListSection').style.display = tab === 'list' ? 'block' : 'none';
         document.getElementById('gamesFormSection').style.display = tab === 'add' ? 'block' : 'none';
-        if (tab === 'list') refreshGameList();
-        if (tab === 'add') { document.getElementById('gamesFormTitle').textContent = '➕ إضافة برنامج جديد'; clearGameForm(); }
+        if (tab === 'list') refreshGameList(); else { document.getElementById('gamesFormTitle').textContent = '➕ إضافة برنامج جديد'; clearGameForm(); }
     }
 
-    function clearGameForm() {
-        ['editGameKey','gameKey','gameName','gameImage','gameVeg','gameMeat','gameClock','gameStripLen'].forEach(id => document.getElementById(id).value = '');
-        document.getElementById('gameStripLen').value = '21';
-    }
-
-    function refreshGameList() {
-        const c = document.getElementById('gameListContainer');
-        if (!c) return;
-        c.innerHTML = Object.entries(G).map(([k, g]) => `<div class="game-list-item"><div><strong style="color:var(--gold);">${g.n}</strong><br><small>${k} | 🟢${g.v.length} 🥩${g.m.length} | شريط:${g.sl||21}</small></div><div><button class="edit" onclick="editGame('${k}')">✏️</button><button onclick="deleteGame('${k}')">🗑</button></div></div>`).join('');
-    }
-
-    function editGame(key) {
-        const g = G[key];
-        if (!g) return;
-        document.getElementById('editGameKey').value = key;
-        document.getElementById('gameKey').value = key;
-        document.getElementById('gameName').value = g.n;
-        document.getElementById('gameImage').value = g.img || '';
-        document.getElementById('gameVeg').value = g.v.join(',');
-        document.getElementById('gameMeat').value = g.m.join(',');
-        document.getElementById('gameClock').value = (g.clock || []).map((s, i) => `الساعة ${['12','1:30','3','4:30','6','7:30','9','10:30'][i]||(i+1)}: ${s}`).join('\n');
-        document.getElementById('gameStripLen').value = g.sl || 21;
-        document.getElementById('gamesFormTitle').textContent = '✏️ تعديل: ' + g.n;
-        document.getElementById('gamesListSection').style.display = 'none';
-        document.getElementById('gamesFormSection').style.display = 'block';
-    }
-
-    async function saveGame() {
-        const ek = document.getElementById('editGameKey').value, key = document.getElementById('gameKey').value.trim().toLowerCase();
-        const name = document.getElementById('gameName').value.trim(), img = document.getElementById('gameImage').value.trim();
-        const veg = document.getElementById('gameVeg').value.split(/[,،\s]+/).filter(Boolean);
-        const meat = document.getElementById('gameMeat').value.split(/[,،\s]+/).filter(Boolean);
-        const sl = parseInt(document.getElementById('gameStripLen').value) || 21;
-        if (!key || !name) return alert('المفتاح والاسم مطلوبين');
-        if (veg.length < 2 || meat.length < 2) return alert('رموز الخضار واللحوم (2 على الأقل)');
-        let clock = [];
-        const cl = document.getElementById('gameClock').value.trim().split('\n').filter(Boolean);
-        if (cl.length === 8) clock = cl.map(l => l.split(/[:：]\s*/).pop().trim());
-        else clock = [...veg, ...meat].slice(0, 8);
-        if (ek && ek !== key) delete G[ek];
-        G[key] = { n: name, v: veg, m: meat, a: [...veg, ...meat], clock, img, sl };
-        ss('kf_games', G);
-        if (isOnline && db) db.ref('games').set(G).catch(() => {});
-        await buildGC();
-        switchGamesTab('list');
-        alert('✅ تم حفظ ' + name);
-    }
-
-    async function deleteGame(key) {
-        if (!confirm('حذف ' + (G[key]?.n || key) + '؟')) return;
-        delete G[key];
-        ss('kf_games', G);
-        if (isOnline && db) db.ref('games').set(G).catch(() => {});
-        await buildGC();
-        refreshGameList();
-    }
-
+    function clearGameForm() { ['editGameKey','gameKey','gameName','gameImage','gameVeg','gameMeat','gameClock','gameStripLen'].forEach(id => document.getElementById(id).value = ''); document.getElementById('gameStripLen').value = '21'; }
+    function refreshGameList() { const c = document.getElementById('gameListContainer'); if (!c) return; c.innerHTML = Object.entries(G).map(([k, g]) => `<div class="game-list-item"><div><strong style="color:var(--gold);">${g.n}</strong><br><small>${k} | 🟢${g.v.length} 🥩${g.m.length} | شريط:${g.sl||21}</small></div><div><button class="edit" onclick="editGame('${k}')">✏️</button><button onclick="deleteGame('${k}')">🗑</button></div></div>`).join(''); }
+    function editGame(key) { const g = G[key]; if (!g) return; document.getElementById('editGameKey').value = key; document.getElementById('gameKey').value = key; document.getElementById('gameName').value = g.n; document.getElementById('gameImage').value = g.img || ''; document.getElementById('gameVeg').value = g.v.join(','); document.getElementById('gameMeat').value = g.m.join(','); document.getElementById('gameClock').value = (g.clock || []).map((s, i) => `الساعة ${['12','1:30','3','4:30','6','7:30','9','10:30'][i]||(i+1)}: ${s}`).join('\n'); document.getElementById('gameStripLen').value = g.sl || 21; document.getElementById('gamesFormTitle').textContent = '✏️ تعديل: ' + g.n; document.getElementById('gamesListSection').style.display = 'none'; document.getElementById('gamesFormSection').style.display = 'block'; }
+    async function saveGame() { const ek = document.getElementById('editGameKey').value, key = document.getElementById('gameKey').value.trim().toLowerCase(); const name = document.getElementById('gameName').value.trim(), img = document.getElementById('gameImage').value.trim(); const veg = document.getElementById('gameVeg').value.split(/[,،\s]+/).filter(Boolean); const meat = document.getElementById('gameMeat').value.split(/[,،\s]+/).filter(Boolean); const sl = parseInt(document.getElementById('gameStripLen').value) || 21; if (!key || !name) return alert('المفتاح والاسم مطلوبين'); if (veg.length < 2 || meat.length < 2) return alert('رموز الخضار واللحوم (2 على الأقل)'); let clock = []; const cl = document.getElementById('gameClock').value.trim().split('\n').filter(Boolean); clock = cl.length === 8 ? cl.map(l => l.split(/[:：]\s*/).pop().trim()) : [...veg, ...meat].slice(0, 8); if (ek && ek !== key) delete G[ek]; G[key] = { n: name, v: veg, m: meat, a: [...veg, ...meat], clock, img, sl }; ss('kf_games', G); if (isOnline && db) db.ref('games').set(G).catch(() => {}); await buildGC(); switchGamesTab('list'); alert('✅ ' + name); addAdminLog('حفظ لعبة', name); }
+    async function deleteGame(key) { if (!confirm('حذف ' + (G[key]?.n || key) + '؟')) return; delete G[key]; ss('kf_games', G); if (isOnline && db) db.ref('games').set(G).catch(() => {}); await buildGC(); refreshGameList(); addAdminLog('حذف لعبة', key); }
     function cancelGameEdit() { switchGamesTab('list'); }
+    async function buildGC() { const c = document.getElementById('gameCardsContainer'); if (!c) return; c.innerHTML = Object.entries(G).map(([k, g]) => { const icon = g.img?.startsWith('http') ? `<img class="game-icon" src="${g.img}" style="width:55px;height:55px;border-radius:50%;object-fit:cover;">` : `<span class="game-icon">${g.img || g.n.split(' ')[0] || '🎯'}</span>`; return `<div class="game-card" onclick="startGame('${k}')">${icon}<h3>${g.n}</h3></div>`; }).join(''); }
 
-    async function buildGC() {
-        const c = document.getElementById('gameCardsContainer');
-        if (!c) return;
-        c.innerHTML = Object.entries(G).map(([k, g]) => {
-            const icon = g.img && g.img.startsWith('http') ? `<img class="game-icon" src="${g.img}" style="width:55px;height:55px;border-radius:50%;object-fit:cover;">` : `<span class="game-icon">${g.img || g.n.split(' ')[0] || '🎯'}</span>`;
-            return `<div class="game-card" onclick="startGame('${k}')">${icon}<h3>${g.n}</h3><small style="color:var(--muted);">شريط: ${g.sl || 21}</small></div>`;
-        }).join('');
-    }
+    async function addPlayer() { const id = document.getElementById('newId').value.trim(), key = document.getElementById('newKey').value.trim(); const mode = document.getElementById('newMode').value, hrs = parseInt(document.getElementById('newHours').value) || 0, dys = parseInt(document.getElementById('newDays').value) || 0; if (!id || !key) return alert('املأ'); let pl = ls('kf_pl', {}); if (Object.keys(pl).length >= 200) return alert('200 حد أقصى'); if (pl[id]) return alert('موجود'); pl[id] = { id, key, mode, maxHours: hrs, maxDays: dys, ld: null, ca: null, createdAt: new Date().toISOString() }; ss('kf_pl', pl); if (isOnline && db) db.ref('players').set(pl).catch(() => {}); ['newId','newKey'].forEach(d => document.getElementById(d).value = ''); rpl(); alert('✅ ' + id); addAdminLog('إضافة مشترك', id); }
+    async function dp(id) { if (!confirm('⚠️ حذف: ' + id + '؟')) return; let pl = ls('kf_pl', {}); delete pl[id]; ss('kf_pl', pl); if (isOnline && db) db.ref('players').set(pl).catch(() => {}); rpl(); addAdminLog('حذف مشترك', id); }
+    async function up(id) { let pl = ls('kf_pl', {}); if (pl[id]) { pl[id].ld = null; pl[id].ca = null; ss('kf_pl', pl); if (isOnline && db) db.ref('players').set(pl).catch(() => {}); rpl(); addAdminLog('فك حظر', id); } }
+    function rpl() { const pl = ls('kf_pl', {}), arr = Object.values(pl); document.getElementById('passCount').textContent = arr.length; const c = document.getElementById('passList'); if (!c) return; if (!arr.length) { c.innerHTML = '<p style="color:#888;">📭 لا يوجد</p>'; return; } c.innerHTML = arr.map(p => { const token = gtk(p.key, p.mode), exp = p.ca ? cex(p).rm : 'غير مفعل'; return `<div class="pass-item"><strong>${p.id}</strong><span style="color:var(--gold);">${token}</span><small>[${p.mode}]</small><span>${p.ld ? '🔒' : '🔓'}</span><small>${exp}</small><button class="unlock" onclick="up('${p.id}')">🔓</button><button onclick="dp('${p.id}')">🗑</button></div>`; }).join(''); }
+    async function deleteAllPlayers() { if (!confirm('⚠️ حذف الكل؟')) return; ss('kf_pl', {}); if (isOnline && db) db.ref('players').set({}).catch(() => {}); rpl(); addAdminLog('حذف كل المشتركين'); }
+    async function unlockAllPlayers() { if (!confirm('🔓 فك الكل؟')) return; let pl = ls('kf_pl', {}); for (const p of Object.values(pl)) { p.ld = null; p.ca = null; } ss('kf_pl', pl); if (isOnline && db) db.ref('players').set(pl).catch(() => {}); rpl(); addAdminLog('فك حظر الكل'); }
 
-    // ==================== إدارة المشتركين ====================
-    async function addPlayer() {
-        const id = document.getElementById('newId').value.trim(), key = document.getElementById('newKey').value.trim();
-        const mode = document.getElementById('newMode').value, hrs = parseInt(document.getElementById('newHours').value) || 0, dys = parseInt(document.getElementById('newDays').value) || 0;
-        if (!id || !key) return alert('املأ');
-        let pl = ls('kf_pl', {});
-        if (Object.keys(pl).length >= 200) return alert('200 حد أقصى');
-        if (pl[id]) return alert('موجود');
-        pl[id] = { id, key, mode, maxHours: hrs, maxDays: dys, ld: null, ca: null };
-        ss('kf_pl', pl);
-        if (isOnline && db) db.ref('players').set(pl).catch(() => {});
-        ['newId', 'newKey'].forEach(d => document.getElementById(d).value = '');
-        document.getElementById('newHours').value = '0';
-        document.getElementById('newDays').value = '0';
-        rpl();
-        alert('✅ ' + id);
-    }
+    function refAds() { ADS = ls('kf_ads', {}); if (document.getElementById('loginScreen')?.classList.contains('active')) setTimeout(showFullscreenAd, 500); ['login','games','predict'].forEach(pl => { const bg = Object.values(ADS).filter(a => a.place === pl && a.type === 'background'); const bEl = document.getElementById(pl === 'login' ? 'loginScreenBg' : pl === 'games' ? 'gamesScreenBg' : 'predictScreenBg'); if (bEl) { bEl.style.display = bg.length ? 'block' : 'none'; if (bg.length) bEl.style.backgroundImage = `url(${bg[bg.length-1].content})`; } const ct = document.getElementById(pl === 'login' ? 'loginAd' : pl === 'games' ? 'gamesAd' : 'predictAd'); if (!ct) return; ct.innerHTML = ''; ct.style.display = 'none'; const vid = Object.values(ADS).filter(a => a.place === pl && a.type === 'video')[0]; if (vid) { ct.style.display = 'flex'; ct.className = 'ad-banner video-ad'; const v = document.createElement('video'); v.src = vid.content; v.autoplay = true; v.loop = true; v.muted = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.style.cssText = 'width:100%;height:100%;object-fit:fill;border-radius:8px;'; v.play().catch(() => {}); ct.appendChild(v); activeVideos.push(v); return; } const imgs = Object.values(ADS).filter(a => a.place === pl && a.type === 'image'); if (imgs.length) { ct.style.display = 'flex'; ct.className = 'ad-banner image-ad'; const sd = document.createElement('div'); sd.className = 'ad-slide-image'; sd.style.cssText = 'width:100%;height:100%;position:relative;'; imgs.forEach((a, i) => { const img = document.createElement('img'); img.src = a.content; img.style.cssText = 'height:200px;width:400px;object-fit:cover;border-radius:8px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0;transition:opacity 1s;'; if (!i) img.classList.add('active'); sd.appendChild(img); }); ct.appendChild(sd); if (imgs.length > 1) { if (slideIntervals[pl]) clearInterval(slideIntervals[pl]); let cur = 0; slideIntervals[pl] = setInterval(() => { const sls = sd.querySelectorAll('img'); if (sls.length) { sls[cur].classList.remove('active'); cur = (cur + 1) % sls.length; sls[cur].classList.add('active'); } }, 3000); } return; } const txts = Object.values(ADS).filter(a => a.place === pl && a.type === 'text'); if (txts.length) { ct.style.display = 'flex'; ct.className = 'ad-banner text-ad'; ct.innerHTML = `<div class="ad-slide-text">${txts.map(a => a.content).join(' ★★★ ')}</div>`; } }); }
+    async function addAd() { const type = document.getElementById('adType').value, place = document.getElementById('adPlace').value, content = document.getElementById('adContent').value.trim(); if (!content) return alert('أدخل المحتوى'); if (Object.keys(ADS).length >= 50) return alert('⚠️ حد أقصى 50'); ADS['ad_' + Date.now()] = { id: 'ad_' + Date.now(), type, place, content, createdAt: new Date().toISOString() }; ss('kf_ads', ADS); if (isOnline && db) db.ref('ads').set(ADS).catch(() => {}); document.getElementById('adContent').value = ''; ral(); refAds(); alert('✅'); addAdminLog('إضافة إعلان', type); }
+    async function dad(id) { if (!confirm('حذف الإعلان؟')) return; delete ADS[id]; ss('kf_ads', ADS); if (isOnline && db) db.ref('ads').set(ADS).catch(() => {}); ral(); refAds(); }
+    function ral() { const c = document.getElementById('adListContainer'), cd = document.getElementById('adCountDisplay'); if (!c) return; ADS = ls('kf_ads', {}); const arr = Object.values(ADS); if (cd) cd.textContent = arr.length; if (!arr.length) { c.innerHTML = '<p style="color:#888;">📭 لا توجد</p>'; return; } const tn = { image:'🖼️ صورة', text:'📝 نص', video:'🎬 فيديو', background:'🎨 خلفية', fullscreen:'📱 ملء الشاشة' }, pn = { login:'🔐 الدخول', games:'🎮 البرامج', predict:'🎯 التوقعات' }; c.innerHTML = arr.map(a => `<div class="ad-list-item"><div><b style="color:var(--gold)">${tn[a.type]}</b><br><small>${pn[a.place]}</small><br>${a.content.substring(0,30)}</div><button onclick="dad('${a.id}')" class="btn-delete-ad">🗑️</button></div>`).join(''); }
+    async function deleteAllAds() { if (!confirm('⚠️ مسح الكل؟')) return; ADS = {}; ss('kf_ads', ADS); if (isOnline && db) db.ref('ads').set({}).catch(() => {}); ral(); refAds(); addAdminLog('مسح كل الإعلانات'); }
 
-    async function dp(id) {
-        if (!confirm('⚠️ حذف: ' + id + '؟')) return;
-        let pl = ls('kf_pl', {});
-        delete pl[id];
-        ss('kf_pl', pl);
-        if (isOnline && db) db.ref('players').set(pl).catch(() => {});
-        rpl();
-    }
+    function renderAdminLogs() { const c = document.getElementById('adminLogsContainer'); if (!c) return; adminLogs = ls('kf_admin_logs', []); c.innerHTML = adminLogs.slice(0, 200).map(l => `<div style="margin:2px 0;padding:3px;background:rgba(0,0,0,0.2);border-radius:3px;"><small>${new Date(l.t).toLocaleString('ar-EG')}</small> | <b>${l.u}</b> | ${l.a} ${l.d ? '| ' + l.d : ''}</div>`).join('') || '<p style="color:#888;">لا توجد سجلات</p>'; }
 
-    async function up(id) {
-        let pl = ls('kf_pl', {});
-        if (pl[id]) {
-            pl[id].ld = null;
-            pl[id].ca = null;
-            ss('kf_pl', pl);
-            if (isOnline && db) db.ref('players').set(pl).catch(() => {});
-            rpl();
-        }
-    }
-
-    function rpl() {
-        const pl = ls('kf_pl', {}), arr = Object.values(pl);
-        document.getElementById('passCount').textContent = arr.length;
-        const c = document.getElementById('passList');
-        if (!c) return;
-        if (!arr.length) { c.innerHTML = '<p style="color:#888;text-align:center;">📭 لا يوجد</p>'; return; }
-        c.innerHTML = arr.map(p => {
-            const token = gtk(p.key, p.mode), exp = p.ca ? cex(p).rm : 'غير مفعل';
-            const locked = p.ld ? '🔒' : '🔓';
-            return `<div class="pass-item"><strong>${p.id}</strong><span style="color:var(--gold);">${token}</span><small>[${p.mode}]</small><span>${locked}</span><small>${exp}</small><button class="unlock" onclick="up('${p.id}')">🔓</button><button onclick="dp('${p.id}')">🗑</button></div>`;
-        }).join('');
-    }
-
-    async function deleteAllPlayers() {
-        if (!confirm('⚠️ تأكيد حذف جميع المشتركين؟')) return;
-        ss('kf_pl', {});
-        if (isOnline && db) db.ref('players').set({}).catch(() => {});
-        rpl();
-    }
-
-    async function unlockAllPlayers() {
-        if (!confirm('🔓 تأكيد فك حظر جميع المشتركين؟')) return;
-        let pl = ls('kf_pl', {});
-        for (const p of Object.values(pl)) { p.ld = null; p.ca = null; }
-        ss('kf_pl', pl);
-        if (isOnline && db) db.ref('players').set(pl).catch(() => {});
-        rpl();
-    }
-
-    // ==================== إدارة الإعلانات ====================
-    function refAds() {
-        ADS = ls('kf_ads', {});
-        if (document.getElementById('loginScreen')?.classList.contains('active')) {
-            setTimeout(showFullscreenAd, 500);
-        }
-        ['login', 'games', 'predict'].forEach(pl => {
-            const bg = Object.values(ADS).filter(a => a.place === pl && a.type === 'background');
-            const bEl = document.getElementById(pl === 'login' ? 'loginScreenBg' : pl === 'games' ? 'gamesScreenBg' : 'predictScreenBg');
-            if (bEl) {
-                if (bg.length > 0) {
-                    bEl.style.display = 'block';
-                    bEl.style.backgroundImage = `url(${bg[bg.length-1].content})`;
-                } else {
-                    bEl.style.display = 'none';
-                    bEl.style.backgroundImage = 'none';
-                }
-            }
-            const ct = document.getElementById(pl === 'login' ? 'loginAd' : pl === 'games' ? 'gamesAd' : 'predictAd');
-            if (!ct) return;
-            ct.innerHTML = '';
-            ct.style.display = 'none';
-            const vid = Object.values(ADS).filter(a => a.place === pl && a.type === 'video')[0];
-            if (vid) {
-                ct.style.display = 'flex';
-                ct.className = 'ad-banner video-ad';
-                const v = document.createElement('video');
-                v.src = vid.content;
-                v.autoplay = true;
-                v.loop = true;
-                v.muted = true;
-                v.playsInline = true;
-                v.setAttribute('playsinline', '');
-                v.style.cssText = 'width:100%;height:100%;object-fit:fill;border-radius:8px;';
-                v.play().catch(() => {});
-                ct.appendChild(v);
-                return;
-            }
-            const imgs = Object.values(ADS).filter(a => a.place === pl && a.type === 'image');
-            if (imgs.length > 0) {
-                ct.style.display = 'flex';
-                ct.className = 'ad-banner image-ad';
-                const sd = document.createElement('div');
-                sd.className = 'ad-slide-image';
-                sd.style.cssText = 'width:100%;height:100%;position:relative;';
-                imgs.forEach((a, i) => {
-                    const img = document.createElement('img');
-                    img.src = a.content;
-                    img.style.cssText = 'height:200px;width:400px;object-fit:cover;border-radius:8px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0;transition:opacity 1s;';
-                    if (i === 0) img.classList.add('active');
-                    sd.appendChild(img);
-                });
-                ct.appendChild(sd);
-                if (imgs.length > 1) {
-                    if (slideIntervals[pl]) clearInterval(slideIntervals[pl]);
-                    let cur = 0;
-                    slideIntervals[pl] = setInterval(() => {
-                        const slides = sd.querySelectorAll('img');
-                        if (slides.length > 0) {
-                            slides[cur].classList.remove('active');
-                            cur = (cur + 1) % slides.length;
-                            slides[cur].classList.add('active');
-                        }
-                    }, 3000);
-                }
-                return;
-            }
-            const txts = Object.values(ADS).filter(a => a.place === pl && a.type === 'text');
-            if (txts.length > 0) {
-                ct.style.display = 'flex';
-                ct.className = 'ad-banner text-ad';
-                ct.innerHTML = `<div class="ad-slide-text">${txts.map(a => a.content).join(' ★★★ ')}</div>`;
-                return;
-            }
-        });
-    }
-
-    async function addAd() {
-        const type = document.getElementById('adType').value, place = document.getElementById('adPlace').value, content = document.getElementById('adContent').value.trim();
-        if (!content) return alert('أدخل المحتوى');
-        ADS['ad_' + Date.now()] = { id: 'ad_' + Date.now(), type, place, content };
-        ss('kf_ads', ADS);
-        if (isOnline && db) db.ref('ads').set(ADS).catch(() => {});
-        document.getElementById('adContent').value = '';
-        ral();
-        refAds();
-        alert('✅');
-    }
-
-    async function dad(id) {
-        if (!confirm('حذف الإعلان؟')) return;
-        delete ADS[id];
-        ss('kf_ads', ADS);
-        if (isOnline && db) db.ref('ads').set(ADS).catch(() => {});
-        ral();
-        refAds();
-    }
-
-    function ral() {
-        const c = document.getElementById('adListContainer'), cd = document.getElementById('adCountDisplay');
-        if (!c) return;
-        ADS = ls('kf_ads', {});
-        const arr = Object.values(ADS);
-        if (cd) cd.textContent = arr.length;
-        if (!arr.length) { c.innerHTML = '<p style="color:#888;text-align:center;">📭 لا توجد</p>'; return; }
-        const tn = { image: '🖼️ صورة', text: '📝 نص', video: '🎬 فيديو', background: '🎨 خلفية', fullscreen: '📱 ملء الشاشة' }, pn = { login: '🔐 الدخول', games: '🎮 البرامج', predict: '🎯 التوقعات' };
-        c.innerHTML = arr.map(a => `<div class="ad-list-item"><div><b style="color:var(--gold)">${tn[a.type]}</b><br><small>${pn[a.place]}</small><br>${a.content.substring(0,30)}</div><button onclick="dad('${a.id}')" class="btn-delete-ad">🗑️</button></div>`).join('');
-    }
-
-    async function deleteAllAds() {
-        if (!confirm('⚠️ تأكيد حذف جميع الإعلانات؟')) return;
-        ADS = {};
-        ss('kf_ads', ADS);
-        if (isOnline && db) db.ref('ads').set({}).catch(() => {});
-        ral();
-        refAds();
-    }
-
-    // ==================== تسجيل الدخول ====================
     async function cpw() {
-        const inp = document.getElementById('passInput').value.trim();
-        if (!inp) return;
+        const inp = document.getElementById('passInput').value.trim(); if (!inp) return;
         document.getElementById('loginError').textContent = '';
-        
-        if (inp === ADMIN) {
-            document.getElementById('passInput').value = '';
-            showScreen('adminScreen');
-            return;
-        }
-        
-        let pl = ls('kf_pl', {});
-        if (!Object.keys(pl).length) {
-            pl['player01'] = { id: 'player01', key: 'Khali2024', mode: 'fixed', maxHours: 0, maxDays: 0, ld: null, ca: null };
-            ss('kf_pl', pl);
-        }
-        
+        if (inp === ADMIN_PASS || simpleHash(inp) === ADMIN_HASH) { document.getElementById('passInput').value = ''; showScreen('adminScreen'); addAdminLog('دخول مسؤول'); return; }
+        let pl = ls('kf_pl', {}); if (!Object.keys(pl).length) { pl['player01'] = { id:'player01', key:'Khali2024', mode:'fixed', maxHours:0, maxDays:0, ld:null, ca:null, createdAt:new Date().toISOString() }; ss('kf_pl', pl); }
         let found = null;
-        for (const p of Object.values(pl)) {
-            if ([p.key + '_master', p.key + '_static', gtk(p.key, p.mode), p.key].includes(inp)) {
-                found = p;
-                break;
-            }
-        }
-        
-        if (!found) {
-            document.getElementById('loginError').textContent = '❌ خطأ';
-            return;
-        }
-        
-        if (cex(found).ex) {
-            document.getElementById('loginError').textContent = '⏰ منتهي';
-            return;
-        }
-        
-        // السماح بتغيير الجهاز بعد 3 أيام
-        if (found.ld && found.ld !== devId) {
-            const lastLogin = found.ca ? new Date(found.ca) : null;
-            const now = new Date();
-            const daysSinceLastLogin = lastLogin ? (now - lastLogin) / (1000 * 60 * 60 * 24) : 999;
-            
-            if (daysSinceLastLogin < 3) {
-                document.getElementById('loginError').textContent = '🚫 جهاز آخر (حاول بعد 3 أيام)';
-                return;
-            }
-        }
-        
-        if (!found.ld || found.ld !== devId) {
-            found.ld = devId;
-            found.ca = found.ca || new Date().toISOString();
-            pl[found.id] = found;
-            ss('kf_pl', pl);
-            if (isOnline && db) db.ref('players/' + found.id).set(found).catch(() => {});
-        }
-        
-        cu = found;
-        document.getElementById('selectUser').textContent = '👤 ' + found.id;
-        document.getElementById('passInput').value = '';
-        showScreen('gameSelectScreen');
+        for (const p of Object.values(pl)) { if ([p.key+'_master', p.key+'_static', gtk(p.key, p.mode), p.key].includes(inp)) { found = p; break; } }
+        if (!found) { document.getElementById('loginError').textContent = '❌ خطأ'; return; }
+        if (cex(found).ex) { document.getElementById('loginError').textContent = '⏰ منتهي'; return; }
+        if (found.ld && found.ld !== devId) { const ll = found.ca ? new Date(found.ca) : null; if (ll && (new Date() - ll) / 86400000 < 3) { document.getElementById('loginError').textContent = '🚫 جهاز آخر'; return; } }
+        if (!found.ld || found.ld !== devId) { found.ld = devId; found.ca = found.ca || new Date().toISOString(); pl[found.id] = found; ss('kf_pl', pl); if (isOnline && db) db.ref('players/' + found.id).set(found).catch(() => {}); }
+        cu = found; document.getElementById('selectUser').textContent = '👤 ' + found.id; document.getElementById('passInput').value = ''; showScreen('gameSelectScreen'); addAdminLog('دخول', found.id);
     }
 
-    // ==================== Firebase ====================
     function initFB() {
-        try {
-            if (!firebase.apps.length) { firebase.initializeApp(fc); }
-            db = firebase.database();
-            firebase.database().ref('.info/connected').on('value', s => {
-                isOnline = s.val() === true;
-                document.querySelectorAll('#connectionStatus,#adminConnStatus').forEach(el => {
-                    if (el) el.textContent = isOnline ? '🟢 متصل' : '🔴 غير متصل';
-                });
-                if (isOnline && cg) {
-                    downloadFromCloud();
-                    uploadToCloud();
-                }
-            });
+        try { if (!firebase.apps.length) firebase.initializeApp(fc); db = firebase.database();
+            firebase.database().ref('.info/connected').on('value', s => { isOnline = s.val() === true; document.querySelectorAll('#connectionStatus,#adminConnStatus').forEach(el => { if (el) el.textContent = isOnline ? '🟢' : '🔴'; }); if (isOnline && cg) { downloadFromCloud(); } });
             db.ref('ads').on('value', s => { if (s.val()) { ADS = s.val(); ss('kf_ads', ADS); refAds(); } });
             db.ref('games').on('value', s => { if (s.val()) { G = s.val(); ss('kf_games', G); buildGC(); } });
             db.ref('players').on('value', s => { if (s.val()) { ss('kf_pl', s.val()); rpl(); } });
-            // ✅ مراقبة تغييرات التعلم المشترك
-            db.ref('shared_learning').on('value', s => {
-                if (s.val() && cg) {
-                    const gameData = s.val()[cg];
-                    if (gameData && gameData.history && gameData.deviceId !== devId) {
-                        // تحديث فقط إذا جاء من جهاز آخر
-                        cloudHistory = gameData.history;
-                        mergeHistories();
-                        updateSyncStatus('cloud', '☁️ تحديث تلقائي: ' + cloudHistory.length + ' رمز');
-                        renderWheel();
-                    }
-                }
-            });
-        } catch (e) { console.error("Firebase Error:", e); }
+            db.ref('shared_learning').on('value', s => { if (s.val() && cg) { const gd = s.val()[cg]; if (gd?.history && gd.deviceId !== devId) { cloudHistory = gd.history; mergeHistories(); } } });
+        } catch (e) { console.error("Firebase:", e); }
     }
 
-    async function init() {
-        initFB();
-        await buildGC();
-        refAds();
-        showFullscreenAd();
-        document.getElementById('passInput').addEventListener('keydown', e => { if (e.key === 'Enter') cpw(); });
-    }
+    async function init() { initFB(); await buildGC(); refAds(); showFullscreenAd(); document.getElementById('passInput').addEventListener('keydown', e => { if (e.key === 'Enter') cpw(); }); }
     document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
